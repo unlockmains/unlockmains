@@ -1,24 +1,39 @@
 html,
 body {
 	--custom-font-family: "Inter", sans-serif;
-	--custom-bg-color: #fff;
-	--custom-panel-color: #222;
-	--custom-box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.8);
-	--custom-color: #000;
-	--custom-color-brand: #24b47e;
+	--custom-bg-color: #ffffff;
+	--custom-color-brand: rgb(227, 148, 37);
 	--custom-color-secondary: #666;
 	--custom-border: 1px solid #333;
 	--custom-border-radius: 5px;
 	--custom-spacing: 5px;
 
+	--color-zinc-300: rgb(199, 197, 197);
 	--color-zinc-400: #a1a1aa;
 	--color-zinc-700: #3f3f46;
-	
+	--color-zinc-800: rgb(65, 64, 64);
+	--color-black-600: rgba(0, 0, 0, 0.624);
+	--color-black-800: #0F0F0F;
+	--color-black-900: #000;
+	--color-purple-400: rgb(147, 147, 227);
+	--color-white-800: whitesmoke;
+	--color-white-900: #fff;
+	--color-yellow-100: rgb(253, 232, 110);
+	--color-yellow-200: rgb(251, 228, 100);
+	--color-yellow-500: rgb(243, 211, 0);
+	--color-cyan-100: rgb(110, 229, 253);
+	--color-cyan-300: rgb(100, 206, 251);
+	--color-cyan-700: rgb(0, 198, 243);
+	--color-blue-800: #0158fa;
+	--color-orange-700: rgb(215, 78, 9);
+	--color-magenta-700: rgb(110, 14, 10);
+	--color-indigo-600: rgb(18, 78, 120);
 
 	padding: 0;
 	margin: 0;
 	font-family: var(--custom-font-family);
 	background-color: var(--custom-bg-color);
+	font-size: 1em;
 }
 
 * {
@@ -159,30 +174,6 @@ body {
 		width: 90%;
 		max-width: 60rem;
 	}
-}
-
-/* Forms */
-
-label {
-	display: block;
-	margin: 5px 0;
-	color: var(--custom-color-secondary);
-	font-size: 0.8rem;
-	text-transform: uppercase;
-}
-
-input {
-	width: 100%;
-	border-radius: 5px;
-	border: var(--custom-border);
-	padding: 8px;
-	font-size: 0.9rem;
-	background-color: var(--custom-bg-color);
-	color: var(--custom-color);
-}
-
-input[disabled] {
-	color: var(--custom-color-secondary);
 }
 
 /* Utils */

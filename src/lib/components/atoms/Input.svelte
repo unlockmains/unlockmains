@@ -16,6 +16,10 @@
 	label {
 		text-transform: capitalize;
 		color: grey;
+		display: block;
+		margin: 5px 0;
+		color: var(--custom-color-secondary);
+		font-size: 0.8rem;
 	}
 	input {
 		border: 2px solid var(--color-zinc-700);
@@ -24,6 +28,7 @@
 		padding: 1em;
 		font-size: 1rem;
 		background-color: var(--custom-bg-color);
+		width: 100%;
 
 		&:focus-visible {
 			border: 3px solid var(--color-zinc-700);

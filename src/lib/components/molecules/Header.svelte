@@ -23,6 +23,8 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 10px;
+		border: 1px solid var(--color-zinc-400);
+		height: 5em;
         
         button {
             outline: none;

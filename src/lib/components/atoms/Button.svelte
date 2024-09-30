@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let label: string
-	export let type: 'default' | 'google-login' | 'email-login' | 'register' | 'link' = 'default'
+	export let type: 'default' | 'google-login' | 'email-login' | 'register' | 'link' | 'nav' = 'default'
 	export let onClick: (event: MouseEvent) => void = () => {}
 	export let withLoader: boolean = false
 	export let disabled: boolean = false
@@ -18,12 +18,12 @@
 	button {
 		--btn-width: 6em;
 		--btn-height: 2.5em;
-		--btn-background: whitesmoke;
-		--btn-background-hover: #fff;
+		--btn-background: var(--color-white-800);
+		--btn-background-hover: var(--color-white-900);
 		--btn-outline: none;
-		--btn-color: rgb(65, 64, 64);
+		--btn-color: var(--color-zinc-800);
 		--btn-radius: 1em;
-		--btn-box-color: rgb(199, 197, 197);
+		--btn-box-color: var(--color-zinc-300);
 		--btn-border: 2px solid var(--btn-box-color);
 		--btn-box-shadow: 0 4px 0 var(--btn-box-color);
 		width: var(--btn-width);
@@ -66,27 +66,27 @@
 		&.google-login {
 			--btn-width: 16em;
 			--btn-height: 3em;
-			--btn-background: whitesmoke;
-			--btn-color: #000;
-			--btn-box-color: rgb(147, 147, 227);
+			--btn-background: var(--color-white-800);
+			--btn-color: var(--color-black-900);
+			--btn-box-color: var(--color-purple-400);
 		}
 
 		&.email-login {
 			--btn-width: 100%;
 			--btn-height: 3em;
-			--btn-background: rgb(253, 232, 110);
-			--btn-background-hover: rgb(251, 228, 100);
-			--btn-color: #000;
-			--btn-box-color: rgb(243, 211, 0);
+			--btn-background: var(--color-yellow-100);
+			--btn-background-hover: var(--color-yellow-200);
+			--btn-color: var(--color-black-900);
+			--btn-box-color: var(--color-yellow-500);
 		}
 
 		&.register {
 			--btn-width: 100%;
 			--btn-height: 3em;
-			--btn-background: rgb(110, 229, 253);
-			--btn-background-hover: rgb(100, 206, 251);
-			--btn-color: #000;
-			--btn-box-color: rgb(0, 198, 243);
+			--btn-background: var(--color-cyan-100);
+			--btn-background-hover: var(--color-cyan-300);
+			--btn-color: var(--color-black-900);
+			--btn-box-color: var(--color-cyan-700);
 		}
 
 		&.link {
@@ -94,7 +94,7 @@
 			--btn-height: 2em;
 			--btn-background: transparent;
 			--btn-background-hover: transparent;
-			--btn-color: #0158fa;
+			--btn-color: var(--color-blue-800);
 			--btn-box-color: transparent;
 			font-weight: 700;
 			font-size: 0.875em;
@@ -104,12 +104,21 @@
 			}
 		}
 
+		&.nav {
+			--btn-width: 100%;
+			--btn-height: 3em;
+			--btn-background: var(--color-zinc-300);
+			--btn-background-hover: var(--color-zinc-400);
+			--btn-color: var(--color-black-900);
+			--btn-box-color: var(--color-zinc-700);
+		}
+
 		&:disabled {
 			cursor: not-allowed;
 			--btn-background: var(--color-zinc-400);
 			--btn-background-hover: var(--color-zinc-400);
 			--btn-box-color: var(--color-zinc-700);
-			--btn-color: #fff;
+			--btn-color: var(--color-white-900);
 
 			&:active {
 				transform: translateY(0);

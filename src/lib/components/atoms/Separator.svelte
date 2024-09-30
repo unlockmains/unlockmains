@@ -7,7 +7,7 @@
 <style lang="scss">
 	.separator {
 		--_line-thickness: 3px;
-		--_color: #000;
+		--_color: var(--color-black-900);
 		--_size: 3.5rem;
 		--radius-full: 9999px;
 		display: block;

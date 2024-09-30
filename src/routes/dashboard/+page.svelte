@@ -1,5 +1,17 @@
-<script lang="ts"></script>
+<script lang="ts">
+	import { alwaysShow } from '$lib/stores/sideNavStore'
+</script>
 
-<h1>Welcome dashboard</h1>
+<main class:sideBarSpace={$alwaysShow}>
+	<h1>Dashboard</h1>
+</main>
 
-<style lang="scss"></style>
+<style lang="scss">
+	main {
+		margin: 0 2rem;
+
+		&.sideBarSpace {
+			margin-left: max(15rem + 1rem, 15% + 1rem);
+		}
+	}
+</style>

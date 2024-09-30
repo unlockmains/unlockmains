@@ -20,7 +20,7 @@
 
 <style lang="scss">
 	.backdrop {
-		background-color: rgba(0, 0, 0, 0.624);
+		background-color: var(--color-black-600);
 		position: absolute;
 		height: 100vh;
 		width: 100vw;

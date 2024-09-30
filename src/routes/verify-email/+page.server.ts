@@ -33,9 +33,7 @@ export const actions: Actions = {
       token,
       type
     });
-    console.log("---", error, searchParams.get("email")!,
-      token,
-      type)
+
     if (error) {
       return fail(400, {
         success: false,

@@ -1,7 +1,8 @@
 <script lang="ts">
 	import Sidebar from '$lib/components/molecules/Sidebar.svelte'
-	import { sideNavOpen, toggleSideNav } from '$lib/stores/sideNavStore'
+	import { alwaysShow, sideNavOpen, toggleSideNav } from '$lib/stores/sideNavStore'
 	import { Toaster } from 'svelte-sonner'
+	export let data;
 </script>
 
 <svelte:head>
@@ -9,8 +10,8 @@
 </svelte:head>
 
 <div>
-	<Sidebar />
-	{#if $sideNavOpen}
+	<Sidebar slug={data.slug}/>
+	{#if $sideNavOpen && !$alwaysShow}
 		<div class="backdrop" on:click={toggleSideNav} />
 	{/if}
 	<slot />

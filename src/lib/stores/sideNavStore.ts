@@ -12,9 +12,9 @@ export const alwaysShow = readable(false, set => {
 
     updateAlwaysShow();
 
-    window.addEventListener('resize', updateAlwaysShow);
+    window?.addEventListener('resize', updateAlwaysShow);
 
     return () => {
-        window.removeEventListener('resize', updateAlwaysShow);
+        window?.removeEventListener('resize', updateAlwaysShow);
     };
 });

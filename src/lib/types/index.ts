@@ -5,3 +5,10 @@ export type IToast = {
     timeout: number;
     message: string;
 }
+
+export type INewSubmissionType = {
+    text: string;
+    value: string;
+    disabled?: boolean;
+    options?: INewSubmissionType[]
+}

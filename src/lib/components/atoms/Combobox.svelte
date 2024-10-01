@@ -87,7 +87,6 @@
 
 	function onInputClick(event: MouseEvent) {
 		showList((event.target as HTMLInputElement).value)
-		// Scroll selected option into view.
 		listElement.querySelector(`[role="option"][data-value="${value}"]`)?.scrollIntoView()
 	}
 
@@ -184,7 +183,7 @@
 </script>
 
 <div class="combobox">
-	<label class="combobox__label label">{label}</label>
+	<label class="combobox__label">{label}</label>
 	<div class="input-container" use:onClickOutside={hideList}>
 		<slot name="icon-start" />
 		<input
@@ -265,6 +264,7 @@
 								<polyline points="20 6 9 17 4 12"></polyline>
 							</svg>
 						{/if}
+						<span style="font-size: 0.6em; height: 1em; width: 4em">Remaining unlimited</span>
 					</li>
 				{/if}
 			{:else}
@@ -277,7 +277,7 @@
 	</div>
 </div>
 
-<style>
+<style lang="scss">
 	.combobox {
 		--accent-color: var(--custom-color-brand);
 		--background-color: var(--color-white-900);
@@ -287,6 +287,14 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5em;
+
+		.combobox__label {
+			text-transform: capitalize;
+			display: block;
+			margin: 5px 0;
+			color: var(--custom-color-secondary);
+			font-size: 0.8rem;
+		}
 	}
 
 	.input-container {
@@ -296,13 +304,14 @@
 	.combobox__input {
 		margin: 0;
 		width: var(--combobox-width);
-		padding: 0.8rem 1rem;
-		border: 0.175rem solid gray;
-		border-radius: 0.3rem;
-	}
+		padding: 1em;
+		border: 2px solid var(--color-zinc-700);
+		border-radius: 1em;
+		font-size: 1em;
 
-	.combobox__input:focus {
-		outline: none;
+		&:focus {
+			outline: none;
+		}
 	}
 
 	.combobox:focus-within .combobox__input {

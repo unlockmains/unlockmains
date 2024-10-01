@@ -2,8 +2,11 @@
 	import Combobox from '$lib/components/atoms/Combobox.svelte'
 	import FileUpload from '$lib/components/atoms/FileUpload.svelte'
 	import Input from '$lib/components/atoms/Input.svelte'
+	import RadioGroup from '$lib/components/atoms/RadioGroup.svelte'
 	import ComboboxContext from '$lib/context/ComboboxContext.svelte'
 	import { alwaysShow } from '$lib/stores/sideNavStore'
+
+	let radioValue: string = "no";
 </script>
 
 <main class:sideBarSpace={$alwaysShow}>
@@ -56,13 +59,29 @@
 				id="question-quantity"
 				name="question-quantity"
 				placeholder="Enter Number"
-				type="string"
+				type="number"
 				label="Number of Questions"
 				value=""
 			/>
 		</div>
 		<div class="question-file">
 			<FileUpload />
+		</div>
+		<div class="question-pyq">
+			<RadioGroup
+				options={[
+					{
+						value: 'yes',
+						label: 'Yes'
+					},
+					{
+						value: 'no',
+						label: 'No'
+					}
+				]}
+				label="Is PYQ"
+				bind:userSelected={radioValue}
+			/>
 		</div>
 	</div>
 </main>
@@ -116,6 +135,9 @@
 			.question-type,
 			.question-quantity {
 				width: 15em;
+			}
+			.question-file {
+				width: 90%;
 			}
 		}
 	}

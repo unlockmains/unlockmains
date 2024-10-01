@@ -1,7 +1,13 @@
 <script lang="ts">
+	import BinIcon from '../icons/BinIcon.svelte'
+	import ImageIcon from '../icons/ImageIcon.svelte'
+	import PdfIcon from '../icons/PDFIcon.svelte'
+	import UploadIcon from '../icons/UploadIcon.svelte'
+
 	let uploadArea: HTMLDivElement
 	let fileInput: HTMLInputElement
-	let fileList: HTMLDivElement
+
+	let files: File[] = []
 
 	const uploadAreaDragOver = (event: DragEvent) => {
 		event.preventDefault()
@@ -16,59 +22,35 @@
 	const uploadAreaDrop = (event: DragEvent) => {
 		event.preventDefault()
 		uploadArea.classList.remove('hover')
-		if (event?.dataTransfer?.files) handleFiles(event?.dataTransfer?.files)
+		if (event?.dataTransfer?.files) files = [...files, ...Object.values(event?.dataTransfer?.files)]
 	}
 
 	const fileInputChange = (event: Event) => {
 		const input = event.target as HTMLInputElement
 		if (input.files) {
-			handleFiles(input.files)
+			files = [...files, ...Object.values(input.files)]
 		}
 	}
 
-	function getFileIcon(fileType: string) {
-		if (fileType.startsWith('image/')) {
-			return 'https://via.placeholder.com/24?text=📷' // Placeholder for image icon
-		} else if (fileType.startsWith('video/')) {
-			return 'https://via.placeholder.com/24?text=🎥' // Placeholder for video icon
-		} else if (fileType.startsWith('audio/')) {
-			return 'https://via.placeholder.com/24?text=🎵' // Placeholder for audio icon
-		} else {
-			return 'https://via.placeholder.com/24?text=📄' // Placeholder for other file types
-		}
+	const removeFile = (fileToRemove: File) => {
+		files = files.filter((file) => file.name !== fileToRemove.name)
 	}
 
-	function handleFiles(files: FileList) {
-		for (const file of files) {
-			const fileItem = document.createElement('div')
-			fileItem.classList.add('file-item')
-
-			const fileIcon = document.createElement('img')
-			fileIcon.classList.add('file-icon')
-			fileIcon.src = getFileIcon(file.type)
-			fileIcon.alt = file.name
-
-			const fileName = document.createElement('span')
-			fileName.textContent = file.name
-
-			const removeButton = document.createElement('button')
-			removeButton.classList.add('remove-button')
-			removeButton.textContent = 'Remove'
-
-			removeButton.onclick = (event) => {
-				event.stopPropagation()
-				fileList.removeChild(fileItem)
-			}
-
-			fileItem.appendChild(fileIcon)
-			fileItem.appendChild(fileName)
-			fileItem.appendChild(removeButton)
-			fileList.appendChild(fileItem)
-		}
-	}
+	// const testFileData = async () => {
+	// 	console.log('files', files)
+	// 	const reader = new FileReader()
+	// 	reader.readAsDataURL(files[0])
+	// 	reader.onload = function () {
+	// 		console.log(reader.result)
+	// 	}
+	// 	reader.onerror = function (error) {
+	// 		console.log('Error: ', error)
+	// 	}
+	// }
 </script>
 
 <!-- svelte-ignore a11y-no-static-element-interactions -->
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <div
 	id="upload-area"
 	class="upload-area"
@@ -76,59 +58,104 @@
 	on:dragover={uploadAreaDragOver}
 	on:dragleave={uploadAreaDragLeave}
 	on:drop={uploadAreaDrop}
+	on:click={() => fileInput.click()}
 >
-	<div class="upload-icon">📤</div>
-	<p>Drag & drop your files here or click to upload</p>
-	<input type="file" id="file-input" multiple bind:this={fileInput} on:change={fileInputChange} />
-	<div id="file-list" class="file-list" bind:this={fileList}></div>
+	<div class="upload-icon"><UploadIcon /></div>
+	<p>Drag & drop your files here or click to upload!</p>
+	<input
+		type="file"
+		id="file-input"
+		multiple
+		bind:this={fileInput}
+		on:change={fileInputChange}
+		accept="image/png, image/jpeg, application/pdf"
+	/>
+	<div class="file-list">
+		{#if files}
+			{#each files as file}
+				<div class="file-item">
+					{#if file.type.startsWith('image/')}
+						<ImageIcon />
+					{:else if file.type === 'application/pdf'}
+						<PdfIcon />
+					{:else}
+						<span>No icon available</span>
+					{/if}
+					<span>{file.name}</span>
+					<button
+						on:click={(event) => {
+							event.stopPropagation()
+							removeFile(file)
+						}}
+					>
+						<BinIcon />
+					</button>
+				</div>
+			{/each}
+		{/if}
+	</div>
 </div>
 
 <style lang="scss">
 	.upload-area {
-		border: 2px dashed #007bff;
+		border: 2px dashed var(--custom-color-brand);
 		border-radius: 10px;
-		padding: 20px;
+		padding: 0.8em;
 		text-align: center;
-		margin: 50px;
+		margin: 1em;
 		transition: background-color 0.3s;
+		user-select: none;
 
-		.upload-area:hover {
-			background-color: #f0f8ff;
+		&:hover {
+			background-color: var(--color-gold-400);
 		}
 
 		.upload-icon {
-			font-size: 50px;
-			margin-bottom: 10px;
+			font-size: 1em;
+			margin-bottom: 0.8em;
+		}
+
+		p {
+			font-size: 0.8em;
+		}
+
+		input[type='file'] {
+			display: none;
 		}
 
 		.file-list {
-			margin-top: 20px;
-		}
-
-		.file-item {
 			display: flex;
+			flex-flow: row wrap;
 			align-items: center;
-			justify-content: space-between;
-			margin: 5px 0;
-		}
+			justify-content: flex-start;
 
-		.file-icon {
-			width: 24px;
-			height: 24px;
-			margin-right: 10px;
-		}
+			.file-item {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: space-between;
+				width: 6em;
+				gap: 6px;
+				border: 2px dashed black;
+				border-radius: 8px;
+				padding: 0.2em;
+				margin: 0.2em;
+				background-color: var(--color-white-900);
 
-		.remove-button {
-			background-color: #ff4d4d;
-			color: white;
-			border: none;
-			border-radius: 5px;
-			padding: 5px 10px;
-			cursor: pointer;
-		}
+				span {
+					font-size: 0.7em;
+					max-width: 100%;
+					text-overflow: ellipsis;
+					overflow: hidden;
+					white-space: pre;
+				}
 
-		.remove-button:hover {
-			background-color: #ff1a1a;
+				button {
+					outline: none;
+					border: none;
+					background: none;
+				}
+			}
 		}
 	}
 </style>

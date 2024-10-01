@@ -184,13 +184,9 @@
 </script>
 
 <div class="combobox">
-	<label class="combobox__label label">
-		{label}
-	</label>
-
+	<label class="combobox__label label">{label}</label>
 	<div class="input-container" use:onClickOutside={hideList}>
 		<slot name="icon-start" />
-
 		<input
 			bind:this={inputElement}
 			on:focus
@@ -213,7 +209,6 @@
 			aria-expanded={isListOpen}
 			aria-required={required ? 'true' : undefined}
 		/>
-
 		<ul
 			class="combobox__list"
 			role="listbox"
@@ -276,7 +271,6 @@
 				<li class="list__no-results">No results available</li>
 			{/each}
 		</ul>
-
 		<div class="visually-hidden" role="status" aria-live="polite">
 			{list.length} results available.
 		</div>
@@ -288,10 +282,8 @@
 		--accent-color: var(--custom-color-brand);
 		--background-color: var(--color-white-900);
 		--border-radius: 1em;
-
-		--option-border: ;
-		--option-padding: ;
-
+		--combobox-width: 100%;
+		--combobox-dropdown-width: 100%;
 		display: flex;
 		flex-direction: column;
 		gap: 0.5em;
@@ -303,7 +295,7 @@
 
 	.combobox__input {
 		margin: 0;
-		width: 100%;
+		width: var(--combobox-width);
 		padding: 0.8rem 1rem;
 		border: 0.175rem solid gray;
 		border-radius: 0.3rem;
@@ -318,20 +310,17 @@
 	}
 
 	.combobox__list {
-		/* Reset */
 		list-style: none;
 		margin: 0;
 		padding: 0.3rem;
-		/* Position and Size */
 		position: absolute;
 		inset-inline-start: 0;
 		inset-block-start: calc(100% + 0.3rem);
-		min-width: 100%;
+		min-width: var(--combobox-dropdown-width);
 		max-height: 40vh;
 		overflow-y: auto;
 		-webkit-overflow-scrolling: touch;
 		z-index: 100;
-
 		background-color: var(--background-color);
 		border-radius: 0.3em;
 		border: 0.175rem solid var(--accent-color);

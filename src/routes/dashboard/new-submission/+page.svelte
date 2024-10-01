@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Combobox from '$lib/components/atoms/Combobox.svelte'
-	import Select from '$lib/components/atoms/Select.svelte'
+	import FileUpload from '$lib/components/atoms/FileUpload.svelte'
+	import Input from '$lib/components/atoms/Input.svelte'
 	import ComboboxContext from '$lib/context/ComboboxContext.svelte'
 	import { alwaysShow } from '$lib/stores/sideNavStore'
 </script>
@@ -36,18 +37,33 @@
 		</ul>
 	</div>
 	<div class="submission-area">
-		<ComboboxContext>
-			<Combobox
-				label="Question Type"
-				name="questionType"
-				placeholder="Type to find..."
-				options={[
-					{ text: 'Option 1', value: 'option-1' },
-					{ text: 'Option 2', value: 'option-2' },
-					{ text: 'Option 3', value: 'option-3' }
-				]}
+		<div class="question-type">
+			<ComboboxContext>
+				<Combobox
+					label="Question Type"
+					name="questionType"
+					placeholder="Type to find..."
+					options={[
+						{ text: 'Option 1', value: 'option-1' },
+						{ text: 'Option 2', value: 'option-2' },
+						{ text: 'Option 3', value: 'option-3' }
+					]}
+				/>
+			</ComboboxContext>
+		</div>
+		<div class="question-quantity">
+			<Input
+				id="question-quantity"
+				name="question-quantity"
+				placeholder="Enter Number"
+				type="string"
+				label="Number of Questions"
+				value=""
 			/>
-		</ComboboxContext>
+		</div>
+		<div class="question-file">
+			<FileUpload />
+		</div>
 	</div>
 </main>
 
@@ -66,15 +82,12 @@
 			margin-left: max(15rem, 15%);
 		}
 
-		div {
+		.note {
 			box-shadow: 0 0 4px 4px var(--color-zinc-300);
 			border-radius: 4px;
 			width: 80%;
 			padding: 1em;
 			background-color: var(--color-white-900);
-		}
-
-		.note {
 			h3 {
 				margin: 0;
 				padding: 0;
@@ -90,6 +103,20 @@
 
 		.submission-area {
 			min-height: 10rem;
+			box-shadow: 0 0 4px 4px var(--color-zinc-300);
+			border-radius: 4px;
+			width: 80%;
+			padding: 1em;
+			background-color: var(--color-white-900);
+			display: flex;
+			justify-content: center;
+			flex-flow: column wrap;
+			align-items: center;
+
+			.question-type,
+			.question-quantity {
+				width: 15em;
+			}
 		}
 	}
 </style>

@@ -2,6 +2,7 @@
 	export let options
 	export let label
 	export let userSelected = options[0].value
+	export let name: string = '';
 
 	const uniqueID = Math.floor(Math.random() * 100)
 
@@ -16,7 +17,7 @@
 	id={`group-${uniqueID}`}
 >
 	{#each options as { value, label }}
-		<input class="sr-only" type="radio" id={slugify(label)} bind:group={userSelected} {value} />
+		<input class="sr-only" type="radio" id={slugify(label)} {name} bind:group={userSelected} {value} />
 		<label for={slugify(label)}> {label} </label>
 	{/each}
 </div>

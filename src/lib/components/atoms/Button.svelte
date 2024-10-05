@@ -1,6 +1,6 @@
 <script lang="ts">
 	export let label: string
-	export let type: 'default' | 'google-login' | 'email-login' | 'register' | 'link' | 'nav' = 'default'
+	export let type: 'default' | 'google-login' | 'email-login' | 'register' | 'link' | 'nav' | 'submit' = 'default'
 	export let onClick: (event: MouseEvent) => void = () => {}
 	export let withLoader: boolean = false
 	export let disabled: boolean = false
@@ -108,9 +108,18 @@
 			--btn-width: 100%;
 			--btn-height: 3em;
 			--btn-background: var(--color-zinc-300);
-			--btn-background-hover: var(--color-zinc-400);
+			--btn-background-hover: var(--color-zincß-400);
 			--btn-color: var(--color-black-900);
 			--btn-box-color: var(--color-zinc-700);
+		}
+
+		&.submit {
+			--btn-width: 10em;
+			--btn-height: 3em;
+			--btn-background: var(--color-gold-400);
+			--btn-background-hover: var(--color-gold-600);
+			--btn-color: var(--color-black-900);
+			--btn-box-color: var(--color-gold-800);
 		}
 
 		&:disabled {

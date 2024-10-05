@@ -1,12 +1,25 @@
 <script lang="ts">
+	import { enhance } from '$app/forms'
+	import Button from '$lib/components/atoms/Button.svelte'
 	import Combobox from '$lib/components/atoms/Combobox.svelte'
 	import FileUpload from '$lib/components/atoms/FileUpload.svelte'
 	import Input from '$lib/components/atoms/Input.svelte'
 	import RadioGroup from '$lib/components/atoms/RadioGroup.svelte'
 	import ComboboxContext from '$lib/context/ComboboxContext.svelte'
 	import { alwaysShow } from '$lib/stores/sideNavStore'
+	import type { ActionData, SubmitFunction } from './$types'
 
-	let radioValue: string = "no";
+	export let form: ActionData
+	let radioValue: 'yes' | 'no' | undefined = undefined
+	let loadingSubmission: boolean = false
+
+	const handleQuestionSubmission: SubmitFunction = () => {
+		loadingSubmission = true
+		return async ({ update }) => {
+			update()
+			loadingSubmission = false
+		}
+	}
 </script>
 
 <main class:sideBarSpace={$alwaysShow}>
@@ -39,18 +52,24 @@
 			</li>
 		</ul>
 	</div>
-	<div class="submission-area">
+	<form
+		class="submission-area"
+		enctype="multipart/form-data"
+		method="post"
+		use:enhance={handleQuestionSubmission}
+	>
 		<div class="question-type">
 			<ComboboxContext>
 				<Combobox
 					label="Question Type"
-					name="questionType"
-					placeholder="Type to find..."
+					name="question-type"
+					placeholder="Click or Search"
 					options={[
 						{ text: 'Option 1', value: 'option-1' },
 						{ text: 'Option 2', value: 'option-2' },
 						{ text: 'Option 3', value: 'option-3' }
 					]}
+					style="--height: 3em;--font-size: 0.8em;"
 				/>
 			</ComboboxContext>
 		</div>
@@ -62,10 +81,11 @@
 				type="number"
 				label="Number of Questions"
 				value=""
+				style="--height: 3em;--font-size: 0.8em;"
 			/>
 		</div>
 		<div class="question-file">
-			<FileUpload />
+			<FileUpload name="question-files" />
 		</div>
 		<div class="question-pyq">
 			<RadioGroup
@@ -79,11 +99,20 @@
 						label: 'No'
 					}
 				]}
-				label="Is PYQ"
+				label="Is PYQ (optional)"
+				name="question-pyq"
 				bind:userSelected={radioValue}
 			/>
 		</div>
-	</div>
+		<div style="align-self: center;">
+			<Button
+				label={'Submit'}
+				type="submit"
+				withLoader={loadingSubmission}
+				disabled={loadingSubmission}
+			/>
+		</div>
+	</form>
 </main>
 
 <style lang="scss">
@@ -104,7 +133,7 @@
 		.note {
 			box-shadow: 0 0 4px 4px var(--color-zinc-300);
 			border-radius: 4px;
-			width: 80%;
+			width: 95%;
 			padding: 1em;
 			background-color: var(--color-white-900);
 			h3 {
@@ -121,23 +150,22 @@
 		}
 
 		.submission-area {
-			min-height: 10rem;
 			box-shadow: 0 0 4px 4px var(--color-zinc-300);
 			border-radius: 4px;
-			width: 80%;
+			width: 95%;
 			padding: 1em;
 			background-color: var(--color-white-900);
 			display: flex;
-			justify-content: center;
 			flex-flow: column wrap;
-			align-items: center;
+			align-items: flex-start;
+			gap: 1em;
 
 			.question-type,
 			.question-quantity {
 				width: 15em;
 			}
 			.question-file {
-				width: 90%;
+				width: 100%;
 			}
 		}
 	}

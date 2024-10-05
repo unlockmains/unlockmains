@@ -6,6 +6,7 @@
 
 	let uploadArea: HTMLDivElement
 	let fileInput: HTMLInputElement
+	export let name: string = '';
 
 	let files: File[] = []
 
@@ -66,6 +67,7 @@
 		type="file"
 		id="file-input"
 		multiple
+		{name}
 		bind:this={fileInput}
 		on:change={fileInputChange}
 		accept="image/png, image/jpeg, application/pdf"
@@ -102,7 +104,6 @@
 		border-radius: 10px;
 		padding: 0.8em;
 		text-align: center;
-		margin: 1em;
 		transition: background-color 0.3s;
 		user-select: none;
 

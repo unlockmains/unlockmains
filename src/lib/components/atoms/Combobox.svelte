@@ -10,6 +10,7 @@
 	export let readonly: boolean = false
 	export let required: boolean = false
 	export let value: string | undefined = ''
+	export let style: string = ''
 	let listElement: HTMLUListElement
 	let inputElement: HTMLInputElement
 	let list: INewSubmissionType[] = []
@@ -207,6 +208,7 @@
 			aria-autocomplete="list"
 			aria-expanded={isListOpen}
 			aria-required={required ? 'true' : undefined}
+			{style}
 		/>
 		<ul
 			class="combobox__list"
@@ -284,6 +286,8 @@
 		--border-radius: 1em;
 		--combobox-width: 100%;
 		--combobox-dropdown-width: 100%;
+		--height: 4em;
+		--font-size: 1em;
 		display: flex;
 		flex-direction: column;
 		gap: 0.5em;
@@ -295,92 +299,93 @@
 			color: var(--custom-color-secondary);
 			font-size: 0.8rem;
 		}
-	}
 
-	.input-container {
-		position: relative;
-	}
+		.input-container {
+			position: relative;
 
-	.combobox__input {
-		margin: 0;
-		width: var(--combobox-width);
-		padding: 1em;
-		border: 2px solid var(--color-zinc-700);
-		border-radius: 1em;
-		font-size: 1em;
+			.combobox__input {
+				margin: 0;
+				width: var(--combobox-width);
+				padding: 1em;
+				border: 2px solid var(--color-zinc-700);
+				border-radius: 1em;
+				font-size: var(--font-size);
+				height: var(--height);
 
-		&:focus {
-			outline: none;
+				&:focus {
+					outline: none;
+				}
+			}
+
+			.combobox__list {
+				list-style: none;
+				margin: 0;
+				padding: 0.3rem;
+				position: absolute;
+				inset-inline-start: 0;
+				inset-block-start: calc(100% + 0.3rem);
+				min-width: var(--combobox-dropdown-width);
+				max-height: 40vh;
+				overflow-y: auto;
+				-webkit-overflow-scrolling: touch;
+				z-index: 100;
+				background-color: var(--background-color);
+				border-radius: 0.3em;
+				border: 0.175rem solid var(--accent-color);
+				box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+				.list__option-heading {
+					font-size: 0.9em;
+					padding-inline: 1rem;
+					padding-block-start: 0.4rem;
+					color: gray;
+				}
+
+				.list__no-results {
+					padding: 0.8rem 1rem;
+				}
+
+				.list__option {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					padding: 0.8rem 1rem;
+					border: 0.2rem solid transparent;
+					border-radius: 0.3rem;
+
+					& > :global(*) {
+						pointer-events: none;
+					}
+
+					&.--disabled {
+						pointer-events: none;
+						opacity: 0.4;
+					}
+
+					&:focus,
+					&:not([aria-disabled='true']):hover {
+						outline: none;
+						cursor: pointer;
+						background-color: rgba(0, 0, 0, 0.1);
+					}
+
+					&:active {
+						cursor: pointer;
+						outline: none;
+						color: white;
+						background-color: var(--accent-color) !important;
+					}
+
+					&:focus :global(svg),
+					&:hover :global(svg) {
+						--icon-color: white !important;
+					}
+				}
+			}
 		}
-	}
 
-	.combobox:focus-within .combobox__input {
-		border-color: var(--accent-color);
-	}
-
-	.combobox__list {
-		list-style: none;
-		margin: 0;
-		padding: 0.3rem;
-		position: absolute;
-		inset-inline-start: 0;
-		inset-block-start: calc(100% + 0.3rem);
-		min-width: var(--combobox-dropdown-width);
-		max-height: 40vh;
-		overflow-y: auto;
-		-webkit-overflow-scrolling: touch;
-		z-index: 100;
-		background-color: var(--background-color);
-		border-radius: 0.3em;
-		border: 0.175rem solid var(--accent-color);
-		box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-	}
-
-	.list__option-heading {
-		font-size: 0.9em;
-		padding-inline: 1rem;
-		padding-block-start: 0.4rem;
-		color: gray;
-	}
-
-	.list__no-results {
-		padding: 0.8rem 1rem;
-	}
-
-	.list__option {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 0.8rem 1rem;
-		border: 0.2rem solid transparent;
-		border-radius: 0.3rem;
-	}
-
-	.list__option > :global(*) {
-		pointer-events: none;
-	}
-
-	.list__option.--disabled {
-		pointer-events: none;
-		opacity: 0.4;
-	}
-
-	.list__option:focus,
-	.list__option:not([aria-disabled='true']):hover {
-		outline: none;
-		cursor: pointer;
-		background-color: rgba(0, 0, 0, 0.1);
-	}
-
-	.list__option:active {
-		cursor: pointer;
-		outline: none;
-		color: white;
-		background-color: var(--accent-color) !important;
-	}
-
-	.list__option:focus :global(svg),
-	.list__option:hover :global(svg) {
-		--icon-color: white !important;
+		&:focus-within .combobox__input {
+			border-color: var(--accent-color);
+		}
 	}
 </style>

@@ -5,6 +5,7 @@
 	export let type: string
 	export let placeholder: string
 	export let value: string
+	export let style: string;
 
 	const onChangeNumberInput = (event: Event) => {
 		if (type === 'number') {
@@ -18,7 +19,7 @@
 {#if label}
 	<label for={name}>{label}</label>
 {/if}
-<input {id} {name} {...{ type }} {placeholder} bind:value on:change={onChangeNumberInput} />
+<input {id} {name} {...{ type }} {placeholder} bind:value on:change={onChangeNumberInput} {style}/>
 
 <style lang="scss">
 	label {
@@ -30,11 +31,12 @@
 	}
 	input {
 		--height: 4em;
+		--font-size: 1em;
 		border: 2px solid var(--color-zinc-700);
 		height: var(--height);
 		border-radius: 1em;
 		padding: 1em;
-		font-size: 1rem;
+		font-size: var(--font-size);
 		background-color: var(--custom-bg-color);
 		width: 100%;
 

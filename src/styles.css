@@ -27,8 +27,12 @@ body {
 	--color-blue-800: #0158fa;
 	--color-orange-700: rgb(215, 78, 9);
 	--color-magenta-700: rgb(110, 14, 10);
+	--color-indigo-400:  rgb(59, 151, 217);
 	--color-indigo-600: rgb(18, 78, 120);
+	--color-indigo-800: rgb(22, 52, 73);
 	--color-gold-400: rgb(240 170 71);
+	--color-gold-600: rgb(181, 129, 55);
+	--color-gold-800: rgb(134, 98, 48);
 
 	padding: 0;
 	margin: 0;

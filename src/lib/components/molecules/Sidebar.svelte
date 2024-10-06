@@ -5,6 +5,7 @@
 	import CollapsibleSection from '../atoms/CollapsibleSection.svelte'
 	import CrossIcon from '../icons/CrossIcon.svelte'
 	export let slug: string = ''
+	export let parentSlug: string = ''
 
 	let showSidebar = false
 
@@ -22,7 +23,7 @@
 		<button on:click={toggleSideNav}><CrossIcon /></button>
 	{/if}
 	<nav>
-		<Button label="New Submission" type="nav" onClick={() => goto(`${slug}/new-submission`)} />
+		<Button label="New Submission" type="nav" onClick={() => goto(`${parentSlug}/new-submission`)} />
 		<div class="section">
 			<a class="section-link" href="/dashboard">Home</a>
 		</div>
@@ -42,7 +43,7 @@
 		<CollapsibleSection headerText="Question Bank" noOfLinks={2}>
 			<div class="section">
 				<a class="section-link" href="/dashboard/question-bank?query=essay">Essay</a>
-			<a class="section-link" href="/dashboard/question-bank?query=mains">Mains</a>
+				<a class="section-link" href="/dashboard/question-bank?query=mains">Mains</a>
 			</div>
 		</CollapsibleSection>
 	</nav>

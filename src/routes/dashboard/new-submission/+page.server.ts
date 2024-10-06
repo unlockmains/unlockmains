@@ -5,6 +5,15 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 // Make sure this is set to false to allow for form handling
 export const prerender = false;
 
+export const load: PageServerLoad = async ({ locals: { safeGetSession } }) => {
+    const { session } = await safeGetSession()
+    if (!session) {
+        redirect(303, '/')
+    }
+
+    return { session }
+}
+
 export const actions: Actions = {
     default: async (event) => {
         const {
@@ -23,7 +32,7 @@ export const actions: Actions = {
 
         // Handle file uploads
         const files = formData.getAll("question-files");
-        console.log("files", files)
+        console.log("files", type, quantity, isPyq, files)
         for (const file of files) {
             if (file instanceof File) {
                 // You might want to implement a utility function for saving files
@@ -38,7 +47,7 @@ export const actions: Actions = {
         console.log("Uploaded Files:", uploadedFiles);
 
         // You can add further processing here (e.g., save to database)
-        
+
         return { success: true }; // Return success or failure state
     }
 }

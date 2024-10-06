@@ -13,7 +13,7 @@
 
 	onMount(() => {
 		const { data } = supabase.auth.onAuthStateChange((_, _session) => {
-			if (session) goto('/account')
+			if (session) goto('/dashboard')
 			if (_session?.expires_at !== session?.expires_at) {
 				invalidate('supabase:auth')
 			}
@@ -34,9 +34,8 @@
 </svelte:head>
 
 <div>
-	<Header />
+	<Header user={session ? session.user : null} />
 	<slot />
 </div>
 
 <Toaster richColors closeButton />
-

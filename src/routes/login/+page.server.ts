@@ -5,7 +5,7 @@ import type { Actions, PageServerLoad } from './$types'
 export const load: PageServerLoad = async ({ url, locals: { safeGetSession } }) => {
 	const { session } = await safeGetSession()
 	if (session) {
-		redirect(303, '/account')
+		redirect(303, '/dashboard')
 	}
 
 	return { url: url.origin }

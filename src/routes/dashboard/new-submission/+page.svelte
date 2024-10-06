@@ -9,7 +9,7 @@
 	import { alwaysShow } from '$lib/stores/sideNavStore'
 	import type { ActionData, SubmitFunction } from './$types'
 
-	export let form: ActionData
+	// export let form: ActionData
 	let radioValue: 'yes' | 'no' | undefined = undefined
 	let loadingSubmission: boolean = false
 
@@ -81,7 +81,7 @@
 				type="number"
 				label="Number of Questions"
 				value=""
-				style="--height: 3em;--font-size: 0.8em;"
+				style="--height: 3em;--font-size: 0.8em;--border-size-focus: 2px; --border-color-focus: var(--custom-color-brand);"
 			/>
 		</div>
 		<div class="question-file">

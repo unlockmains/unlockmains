@@ -2,7 +2,7 @@ html,
 body {
 	--custom-font-family: "Inter", sans-serif;
 	--custom-bg-color: #ffffff;
-	--custom-color-brand: rgb(227, 148, 37);
+	--custom-color-brand: #2c6de6;
 	--custom-color-secondary: #666;
 	--custom-border: 1px solid #333;
 	--custom-border-radius: 5px;

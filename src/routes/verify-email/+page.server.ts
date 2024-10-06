@@ -5,7 +5,7 @@ import type { EmailOtpType } from "@supabase/supabase-js"
 export const load: PageServerLoad = async ({ url, locals: { safeGetSession } }) => {
   const { session } = await safeGetSession()
   if (session) {
-    redirect(303, '/account')
+    redirect(303, '/dashboard')
   }
 
   const searchParams = url.searchParams;

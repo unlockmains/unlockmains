@@ -10,7 +10,7 @@
 </svelte:head>
 
 <div>
-	<Sidebar slug={data.slug}/>
+	<Sidebar slug={data.slug} parentSlug={data.parentSlug}/>
 	{#if $sideNavOpen && !$alwaysShow}
 		<div class="backdrop" on:click={toggleSideNav} />
 	{/if}

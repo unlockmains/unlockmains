@@ -32,6 +32,8 @@
 	input {
 		--height: 4em;
 		--font-size: 1em;
+		--border-size-focus: 3px;
+		--border-color-focus: var(--color-zinc-700);
 		border: 2px solid var(--color-zinc-700);
 		height: var(--height);
 		border-radius: 1em;
@@ -41,7 +43,7 @@
 		width: 100%;
 
 		&:focus-visible {
-			border: 3px solid var(--color-zinc-700);
+			border: var(--border-size-focus) solid var(--border-color-focus);
 			outline: none;
 		}
 

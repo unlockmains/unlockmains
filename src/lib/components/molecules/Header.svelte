@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation'
 	import { toggleSideNav } from '$lib/stores/sideNavStore'
 	import Button from '../atoms/Button.svelte'
+	import Popover from '../atoms/Popover.svelte'
 	import HamburgerIcon from '../icons/HamburgerIcon.svelte'
 	export let user
 </script>
@@ -16,7 +17,8 @@
 	<nav></nav>
 	<div>
 		{#if user}
-			<span>{user.email}</span>
+			<!-- <span>{user.email}</span> -->
+			 <Popover />
 			<Button label="Logout" onClick={() => goto('/auth/logout')} />
 		{:else}
 			<Button label="Login" onClick={() => goto('/login')} />

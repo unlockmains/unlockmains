@@ -21,7 +21,9 @@
 <div class="popover" use:onClickOutside={hidePopover}>
 	<button class="avatar" on:click={togglePopover}>
 		{#if user_metadata.avatar_url}
-			<img src={user_metadata.avatar_url} alt="User" />
+			<span
+				style={`background-image: url(${user_metadata.avatar_url});background-size: cover;height: 100%;width: 100%`}
+			/>
 		{:else}
 			<UserAvatarIcon />
 		{/if}
@@ -33,6 +35,9 @@
 		class:show={showPopoverContent}
 		transition:fade={{ duration: 1000 }}
 	>
+		<div>
+			{user.email}
+		</div>
 		<ul>
 			<li><a href="#account">Account</a></li>
 			<li><a href="#profile">Profile</a></li>
@@ -53,32 +58,36 @@
 			outline: none;
 			padding: 0;
 			margin: 0;
+            border: 1px solid grey;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 		}
 
 		.popover-content {
-			--width: 10em;
-			display: none;
+			--width: 15em;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			gap: 1em;
+			visibility: hidden;
 			position: fixed;
 			top: 4em;
 			right: 0;
 			width: var(--width);
 			background-color: white;
 			border: 1px solid #ccc;
-			border-radius: 4px;
+			border-radius: 0.5em;
 			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 			z-index: 1000;
 			opacity: 0;
-			transition:
-				opacity 0.2s ease,
-				transform 0.2s ease;
+			padding: 1em;
+			transition: all 0.2s ease;
 
 			&.show {
-				display: block;
+				visibility: visible;
 				opacity: 1;
-				transform: translate(-50px, 0);
+				transform: translate(-10px, 0);
 			}
 
 			ul {

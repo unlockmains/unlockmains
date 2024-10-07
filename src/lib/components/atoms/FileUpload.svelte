@@ -62,15 +62,15 @@
 	on:click={() => fileInput.click()}
 >
 	<div class="upload-icon"><UploadIcon /></div>
-	<p>Drag & drop your files here or click to upload!</p>
+	<p>Drag & drop your file here or click to upload!</p>
+	<!-- multiple and image/png, image/jpeg, application/pdf -->
 	<input
 		type="file"
 		id="file-input"
-		multiple
 		{name}
 		bind:this={fileInput}
 		on:change={fileInputChange}
-		accept="image/png, image/jpeg, application/pdf"
+		accept="application/pdf"
 	/>
 	<div class="file-list">
 		{#if files}

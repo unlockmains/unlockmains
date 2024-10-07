@@ -1,6 +1,8 @@
-import { fail, redirect, type Actions } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "../$types";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { v4 as uuidv4 } from "uuid";
+import type { Actions } from "./$types";
 
 // Make sure this is set to false to allow for form handling
 export const prerender = false;
@@ -19,45 +21,58 @@ export const actions: Actions = {
         const {
             url,
             request,
-            locals: { supabase }
+            locals: { supabase, safeGetSession }
         } = event;
+
+        let success = false;
+        let message = "";
+        const user = (await safeGetSession()).user;
 
         const formData = await request.formData();
         const type = formData.get('question-type') as string;
         const quantity = formData.get("question-quantity")!;
         const isPyq = formData.get("question-pyq") as string;
 
-        // Prepare an array to hold the file upload promises
         const filePromises = [];
 
-        // Handle file uploads
         const files = formData.getAll("question-files");
         console.log("files", type, quantity, isPyq, files)
         for (const file of files) {
             if (file instanceof File) {
-                // You might want to implement a utility function for saving files
                 filePromises.push(saveFile(file, supabase));
             }
         }
 
-        // Wait for all file uploads to complete
-        const uploadedFiles = await Promise.all(filePromises);
+        try {
+            const uploadedFiles = await Promise.all(filePromises);
+            const { error: dbError } = await supabase.from("question_submissions").upsert({
+                question_type: type,
+                question_qty: quantity,
+                storage_id: uploadedFiles[0]?.id,
+                is_pyq: isPyq,
+                user_id: user.id
+            });
 
-        // Log or process the uploaded files
-        console.log("Uploaded Files:", uploadedFiles);
+            if (dbError) {
+                success = false;
+                message = `Failed: Try again in some time! - ${dbError.message}`
+            }
+            success = true;
+            message = ''
+        } catch (e) {
+            success = false;
+            message = `Failed: Try again in some time! - ${(e as Error).message}`
+        }
 
-        // You can add further processing here (e.g., save to database)
-
-        return { success: true }; // Return success or failure state
+        return fail(400, { success, message });
     }
 }
 
-// Utility function to save the file
 async function saveFile(file: File, supabase: SupabaseClient<any, "public", any>) {
-    const { data, error } = await supabase.storage.from('sample-ias').upload(`upload-test/${file.name}`, file);
+    const { data, error } = await supabase.storage.from('sample-ias').upload(`${uuidv4()}_${file.name}`, file);
     if (error) {
         console.error('File upload error:', error);
         return null;
     }
-    return data; // Return the uploaded file's metadata or URL
+    return data;
 }

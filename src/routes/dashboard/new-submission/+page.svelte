@@ -7,9 +7,12 @@
 	import RadioGroup from '$lib/components/atoms/RadioGroup.svelte'
 	import ComboboxContext from '$lib/context/ComboboxContext.svelte'
 	import { alwaysShow } from '$lib/stores/sideNavStore'
+	import { afterUpdate } from 'svelte'
 	import type { ActionData, SubmitFunction } from './$types'
+	import { toast } from 'svelte-sonner'
+	import { goto } from '$app/navigation'
 
-	// export let form: ActionData
+	export let form: ActionData
 	let radioValue: 'yes' | 'no' | undefined = undefined
 	let loadingSubmission: boolean = false
 
@@ -20,6 +23,13 @@
 			loadingSubmission = false
 		}
 	}
+
+	afterUpdate(() => {
+		if (form?.success) {
+			toast.success('Submission Successfull')
+			goto(`/dashbaord`)
+		} else toast.error(form?.message as string)
+	})
 </script>
 
 <main class:sideBarSpace={$alwaysShow}>
@@ -28,8 +38,8 @@
 		<h3>Note:</h3>
 		<ul>
 			<li>
-				<b>File Format:</b> You can upload multiple images or a single PDF file. We recommend using a
-				PDF for optimal quality and ease of processing.
+				<b>File Format:</b> You can upload a single PDF file. We recommend using a PDF for optimal quality
+				and ease of processing.
 			</li>
 			<li>
 				<b>Handwriting Accuracy:</b> In case of any discrepancies in handwriting it may result in rejection

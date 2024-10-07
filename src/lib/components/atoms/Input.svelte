@@ -5,7 +5,7 @@
 	export let type: string
 	export let placeholder: string
 	export let value: string
-	export let style: string;
+	export let style: string = '';
 
 	const onChangeNumberInput = (event: Event) => {
 		if (type === 'number') {

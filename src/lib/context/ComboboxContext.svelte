@@ -21,16 +21,13 @@
 </div>
 
 <style>
-	/* Default styles */
 	.ui :global(*) {
 		box-sizing: border-box;
 	}
 
-	/* Design tokens */
 	.ui {
 	}
 
-	/* Utility classes */
 	.ui :global(.visually-hidden) {
 		clip: rect(0 0 0 0);
 		clip-path: inset(50%);
@@ -39,9 +36,6 @@
 		position: absolute;
 		white-space: nowrap;
 		width: 1px;
-	}
-
-	.ui :global(.input) {
 	}
 
 	.ui :global(.label) {

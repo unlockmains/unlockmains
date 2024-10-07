@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
+	import ClickOutsideContext from '$lib/context/ClickOutsideContext.svelte'
 	import { toggleSideNav } from '$lib/stores/sideNavStore'
 	import Button from '../atoms/Button.svelte'
 	import Popover from '../atoms/Popover.svelte'
@@ -12,14 +13,14 @@
 		<HamburgerIcon />
 	</button>
 	<div>
-		<img src="/unlockmains.png" alt="logo 1" style="height: 4em"/>
+		<img src="/unlockmains.png" alt="logo 1" style="height: 4em" />
 	</div>
 	<nav></nav>
 	<div>
 		{#if user}
-			<!-- <span>{user.email}</span> -->
-			 <Popover />
-			<Button label="Logout" onClick={() => goto('/auth/logout')} />
+			<ClickOutsideContext>
+				<Popover {user} />
+			</ClickOutsideContext>
 		{:else}
 			<Button label="Login" onClick={() => goto('/login')} />
 		{/if}

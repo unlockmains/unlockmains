@@ -8,18 +8,11 @@
 
 	export let data
 
-	let { supabase, session } = data
-	$: ({ supabase, session } = data)
+	let { user } = data
+	$: ({ user } = data)
 
 	onMount(() => {
-		const { data } = supabase.auth.onAuthStateChange((_, _session) => {
-			if (session) goto('/dashboard')
-			if (_session?.expires_at !== session?.expires_at) {
-				invalidate('supabase:auth')
-			}
-		})
-
-		return () => data.subscription.unsubscribe()
+		if (user) goto('/dashboard')
 	})
 </script>
 
@@ -34,7 +27,7 @@
 </svelte:head>
 
 <div>
-	<Header user={session ? session.user : null} />
+	<Header user={user ?? null} />
 	<slot />
 </div>
 

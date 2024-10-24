@@ -2,10 +2,10 @@
 import { redirect } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 
-export const load: PageServerLoad = async ({ url, locals: { safeGetSession } }) => {
-  const { session } = await safeGetSession()
+export const load: PageServerLoad = async ({ url, locals: { pocketbase } }) => {
+  const user = pocketbase.authStore.model;
   // if the user is already logged in return them to the account page
-  if (session) {
+  if (user) {
     redirect(303, '/account')
   }
 

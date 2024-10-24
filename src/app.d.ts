@@ -1,12 +1,9 @@
-import { SupabaseClient, Session } from '@supabase/supabase-js'
-// See https://kit.svelte.dev/docs/types#app
-// for information about these interfaces
+import PocketBase, {AuthModel} from 'pocketbase'
 declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			supabase: SupabaseClient
-			safeGetSession(): Promise<{ session: Session | null; user: User | null }>
+			pocketbase: PocketBase,
 		}
 		interface PageData {
 			session: Session | null

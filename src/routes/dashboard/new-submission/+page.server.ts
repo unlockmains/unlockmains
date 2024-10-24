@@ -3,17 +3,18 @@ import type { PageServerLoad } from "../$types";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
 import type { Actions } from "./$types";
+import type { AuthModel } from "pocketbase";
 
 // Make sure this is set to false to allow for form handling
 export const prerender = false;
 
-export const load: PageServerLoad = async ({ locals: { safeGetSession } }) => {
-    const { session } = await safeGetSession()
-    if (!session) {
+export const load: PageServerLoad = async ({ locals: { pocketbase } }) => {
+    const user = pocketbase.authStore.model;
+    if (!user) {
         redirect(303, '/')
     }
 
-    return { session }
+    return { user }
 }
 
 export const actions: Actions = {
@@ -21,58 +22,38 @@ export const actions: Actions = {
         const {
             url,
             request,
-            locals: { supabase, safeGetSession }
+            locals: { pocketbase }
         } = event;
 
         let success = false;
         let message = "";
-        const user = (await safeGetSession()).user;
+        const user: AuthModel = pocketbase.authStore.model;
 
         const formData = await request.formData();
         const type = formData.get('question-type') as string;
         const quantity = formData.get("question-quantity")!;
         const isPyq = formData.get("question-pyq") as string;
 
-        const filePromises = [];
+        const saveFormData = new FormData();
 
         const files = formData.getAll("question-files");
-        console.log("files", type, quantity, isPyq, files)
         for (const file of files) {
             if (file instanceof File) {
-                filePromises.push(saveFile(file, supabase));
+                saveFormData.append("submitted_file", file)
             }
         }
-
+        saveFormData.append("question_type", type)
+        saveFormData.append("no_of_questions", quantity)
+        saveFormData.append("is_pyq", isPyq)
+        saveFormData.append("submitted_by", user?.id)
         try {
-            const uploadedFiles = await Promise.all(filePromises);
-            const { error: dbError } = await supabase.from("question_submissions").upsert({
-                question_type: type,
-                question_qty: quantity,
-                storage_id: uploadedFiles[0]?.id,
-                is_pyq: isPyq,
-                user_id: user.id
-            });
+            const createdRecord = await pocketbase.collection('question_submissions').create(saveFormData);
+            console.log("createdRecord", createdRecord)
 
-            if (dbError) {
-                success = false;
-                message = `Failed: Try again in some time! - ${dbError.message}`
-            }
-            success = true;
-            message = ''
-        } catch (e) {
-            success = false;
-            message = `Failed: Try again in some time! - ${(e as Error).message}`
+        } catch(err){
+            console.log("custom err2", err)
+            return fail(400, { success, message });
         }
-
-        return fail(400, { success, message });
+        
     }
-}
-
-async function saveFile(file: File, supabase: SupabaseClient<any, "public", any>) {
-    const { data, error } = await supabase.storage.from('sample-ias').upload(`${uuidv4()}_${file.name}`, file);
-    if (error) {
-        console.error('File upload error:', error);
-        return null;
-    }
-    return data;
 }

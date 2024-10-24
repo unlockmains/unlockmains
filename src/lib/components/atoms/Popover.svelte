@@ -6,8 +6,6 @@
 	import { onClickOutside } from '$lib/context/ClickOutsideContext.svelte'
 	export let user
 
-	let { user_metadata } = user
-
 	let popoverContent: HTMLDivElement
 	let showPopoverContent: boolean = false
 	const togglePopover = () => {
@@ -20,9 +18,9 @@
 
 <div class="popover" use:onClickOutside={hidePopover}>
 	<button class="avatar" on:click={togglePopover}>
-		{#if user_metadata.avatar_url}
+		{#if user.avatar}
 			<span
-				style={`background-image: url(${user_metadata.avatar_url});background-size: cover;height: 100%;width: 100%`}
+				style={`background-image: url(${user.avatar});background-size: cover;height: 100%;width: 100%`}
 			/>
 		{:else}
 			<UserAvatarIcon />
@@ -58,7 +56,7 @@
 			outline: none;
 			padding: 0;
 			margin: 0;
-            border: 1px solid grey;
+			border: 1px solid grey;
 			display: flex;
 			align-items: center;
 			justify-content: center;

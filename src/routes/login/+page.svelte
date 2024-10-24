@@ -45,17 +45,17 @@
 		}
 	}
 
-	afterUpdate(() => {
-		if (form?.signInOtp?.message) {
-			if (form.signInOtp.success) {
-				toast.success(form?.signInOtp?.message)
-				goto(`/verify-email?email=${form.signInOtp.email}&type=email`)
-			} else toast.error(form?.signInOtp?.message)
-		} else if (form?.registerWithPassword?.message) {
-			if (form.registerWithPassword.success) toast.success(form?.registerWithPassword?.message)
-			else toast.error(form?.registerWithPassword?.message)
-		}
-	})
+	// afterUpdate(() => {
+	// 	if (form?.signInOtp?.message) {
+	// 		if (form.signInOtp.success) {
+	// 			toast.success(form?.signInOtp?.message)
+	// 			goto(`/verify-email?email=${form.signInOtp.email}&type=email`)
+	// 		} else toast.error(form?.signInOtp?.message)
+	// 	} else if (form?.registerWithPassword?.message) {
+	// 		if (form.registerWithPassword.success) toast.success(form?.registerWithPassword?.message)
+	// 		else toast.error(form?.registerWithPassword?.message)
+	// 	}
+	// })
 </script>
 
 <svelte:head>
@@ -118,13 +118,16 @@
 				</div>
 			</form>
 			{#if !password}
-				<h5 class="otp-information">We will send you an email with a 6 digit code that you can use to sign in.</h5>
+				<h5 class="otp-information">
+					We will send you an email with a 6 digit code that you can use to sign in.
+				</h5>
 			{/if}
 			<div class="flex row items-center gap-4">
-				<h5>Forgot your Password?</h5> <Button type="link" label="Reset it!" />
+				<h5>Forgot your Password?</h5>
+				<Button type="link" label="Reset it!" />
 			</div>
 		</div>
-		<div class="flex column col-6-sm">
+		<!-- <div class="flex column col-6-sm">
 			<h1>New User? Register</h1>
 			<h5>Welcome aboard! Registration is easy and quick.</h5>
 			<form
@@ -164,6 +167,6 @@
 					</div>
 				</div>
 			</form>
-		</div>
+		</div> -->
 	</div>
 </div>

@@ -2,9 +2,8 @@ import { fail, redirect, type Actions } from "@sveltejs/kit"
 import type { PageServerLoad } from "./$types"
 import type { EmailOtpType } from "@supabase/supabase-js"
 
-export const load: PageServerLoad = async ({ url, locals: { safeGetSession } }) => {
-  const { session } = await safeGetSession()
-  if (session) {
+export const load: PageServerLoad = async ({ url, locals: { user } }) => {
+  if (user) {
     redirect(303, '/dashboard')
   }
 
@@ -20,15 +19,15 @@ export const actions: Actions = {
     const {
       url,
       request,
-      locals: { supabase }
+      locals: { pocketbase }
     } = event;
     const formData = await request.formData()
     const searchParams = url.searchParams;
     const token = formData.get('token') as string
     const email = searchParams.get("email")!
     const type = searchParams.get("type") as EmailOtpType ?? "magiclink"
-
-    const { error } = await supabase.auth.verifyOtp({
+/* 
+    const { error } = await pocketbase.collection("users").auth({
       email,
       token,
       type
@@ -47,6 +46,6 @@ export const actions: Actions = {
         type: "success",
         message: 'Ahoy! Verified.'
       }
-    }
+    } */
   }
 }

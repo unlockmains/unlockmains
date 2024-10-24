@@ -1,44 +1,41 @@
 // src/routes/+page.server.ts
 import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
+import { env } from "$env/dynamic/private";
 
-export const load: PageServerLoad = async ({ url, locals: { safeGetSession } }) => {
-	const { session } = await safeGetSession()
-	if (session) {
-		redirect(303, '/dashboard')
+export const load: PageServerLoad = async ({ url, locals: { pocketbase } }) => {
+	const user = pocketbase.authStore.model;
+	if (user) {
+	  redirect(303, "/dashboard");
 	}
-
-	return { url: url.origin }
+  
+	const authMethods = await pocketbase.collection("users").listAuthMethods();
+	const fail = url.searchParams.get("fail") === "true";
+  
+	return { providers: authMethods.authProviders, fail };
 }
 
 export const actions: Actions = {
 	googleAuth: async (event) => {
 		const {
-			locals: { supabase }
+		  locals: { pocketbase },
+		  cookies,
 		} = event;
+		const provider = (
+		  await pocketbase.collection("users").listAuthMethods()
+		).authProviders.find((p) => p.name === "google");
 
-		const { data, error } = await supabase.auth.signInWithOAuth({
-			provider: "google",
+		cookies.set("provider", JSON.stringify(provider), {
+		  httpOnly: true,
+		  path: `/auth/callback/google`,
 		});
-
-		if (error) {
-			return fail(400, {
-				googleAuth: {
-					success: false,
-					message: `There was an issue, Please contact support.`
-				}
-			})
-		}
-
-		if (data.url) {
-			throw redirect(303, data.url ?? "/");
-		}
-
-	},
+	
+		throw redirect(303, provider?.authUrl + env.REDIRECT_URL + provider?.name);
+	  },
 	signInOtp: async (event) => {
 		const {
 			request,
-			locals: { supabase }
+			locals: { pocketbase }
 		} = event
 		const formData = await request.formData()
 		const email = formData.get('email') as string
@@ -50,11 +47,11 @@ export const actions: Actions = {
 		}
 		let error = null;
 		if (email && password) {
-			const { error: signInWithPasswordError } = await supabase.auth.signInWithPassword({ email, password })
-			error = signInWithPasswordError
+			const authData = await pocketbase.collection("users").authWithPassword(email, password)
+			// error = "error while login"
 		} else {
-			const { error: signInWithOtpError } = await supabase.auth.signInWithOtp({ email })
-			error = signInWithOtpError
+			const authData = await pocketbase.collection('users').requestVerification(email);
+			// error = "error while login"
 		}
 
 		if (error) {
@@ -64,7 +61,7 @@ export const actions: Actions = {
 					type: "error",
 					email,
 					password,
-					message: `There was an issue. ${error.message}. If error still persists please contact support.`
+					message: `There was an issue. ${error}. If error still persists please contact support.`
 				}
 			})
 		}
@@ -79,43 +76,43 @@ export const actions: Actions = {
 			}
 		}
 	},
-	registerWithPassword: async (event) => {
-		const {
-			request,
-			locals: { supabase }
-		} = event
-		const formData = await request.formData()
-		const email = formData.get('email') as string
-		const password = formData.get('password') as string
-		const validEmail = /^[\w-\.+]+@([\w-]+\.)+[\w-]{2,8}$/.test(email)
+	// registerWithPassword: async (event) => {
+	// 	const {
+	// 		request,
+	// 		locals: { supabase }
+	// 	} = event
+	// 	const formData = await request.formData()
+	// 	const email = formData.get('email') as string
+	// 	const password = formData.get('password') as string
+	// 	const validEmail = /^[\w-\.+]+@([\w-]+\.)+[\w-]{2,8}$/.test(email)
 
-		if (!validEmail) {
-			return fail(400, { registerWithPassword: { success: false, type: "error", message: "Please enter a valid email address", email, password } })
-		}
-		if (!password) {
-			return fail(400, { registerWithPassword: { success: false, type: "error", message: "Please enter the password", email, password } })
-		}
-		const { error } = await supabase.auth.signUp({ email, password })
-		if (error) {
-			return fail(400, {
-				registerWithPassword: {
-					success: false,
-					type: "error",
-					email,
-					password,
-					message: `There was an issue, Please contact support.`
-				}
-			})
-		}
+	// 	if (!validEmail) {
+	// 		return fail(400, { registerWithPassword: { success: false, type: "error", message: "Please enter a valid email address", email, password } })
+	// 	}
+	// 	if (!password) {
+	// 		return fail(400, { registerWithPassword: { success: false, type: "error", message: "Please enter the password", email, password } })
+	// 	}
+	// 	const { error } = await supabase.auth.signUp({ email, password })
+	// 	if (error) {
+	// 		return fail(400, {
+	// 			registerWithPassword: {
+	// 				success: false,
+	// 				type: "error",
+	// 				email,
+	// 				password,
+	// 				message: `There was an issue, Please contact support.`
+	// 			}
+	// 		})
+	// 	}
 
-		return {
-			registerWithPassword: {
-				success: true,
-				type: "success",
-				email,
-				password,
-				message: 'Please check your email. You wil receive a 6 digit code to register yourself.'
-			}
-		}
-	}
+	// 	return {
+	// 		registerWithPassword: {
+	// 			success: true,
+	// 			type: "success",
+	// 			email,
+	// 			password,
+	// 			message: 'Please check your email. You wil receive a 6 digit code to register yourself.'
+	// 		}
+	// 	}
+	// }
 }

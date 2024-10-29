@@ -18,7 +18,7 @@
 </script>
 
 <svelte:head>
-	<title>Login</title>
+	<title>Verify Email</title>
 </svelte:head>
 
 <div class="container">
@@ -37,24 +37,24 @@
 	.container {
 		align-items: center;
 		justify-content: space-between;
-        align-items: center;
-        justify-content: space-between;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+		align-items: center;
+		justify-content: space-between;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
 
-        .otp-heading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
+		.otp-heading {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+		}
 
-        .otp-form {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 0.5rem;
-        }
+		.otp-form {
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			gap: 0.5rem;
+		}
 	}
 </style>

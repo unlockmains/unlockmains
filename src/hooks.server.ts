@@ -20,7 +20,7 @@ export const authentication: Handle = async ({ event, resolve }) => {
   return response;
 }
 
-const unprotectedPrefix = ['/login', '/register', '/auth'];
+const unprotectedPrefix = ['/login', '/register', '/auth', '/verify-email'];
 export const authorization: Handle = async ({ event, resolve }) => {
   const {
     locals: {pocketbase}

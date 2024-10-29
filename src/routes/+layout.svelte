@@ -10,10 +10,6 @@
 
 	let { user } = data
 	$: ({ user } = data)
-
-	onMount(() => {
-		if (user) goto('/dashboard')
-	})
 </script>
 
 <svelte:head>

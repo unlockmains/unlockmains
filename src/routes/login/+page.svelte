@@ -45,17 +45,19 @@
 		}
 	}
 
-	// afterUpdate(() => {
-	// 	if (form?.signInOtp?.message) {
-	// 		if (form.signInOtp.success) {
-	// 			toast.success(form?.signInOtp?.message)
-	// 			goto(`/verify-email?email=${form.signInOtp.email}&type=email`)
-	// 		} else toast.error(form?.signInOtp?.message)
-	// 	} else if (form?.registerWithPassword?.message) {
-	// 		if (form.registerWithPassword.success) toast.success(form?.registerWithPassword?.message)
-	// 		else toast.error(form?.registerWithPassword?.message)
-	// 	}
-	// })
+	afterUpdate(() => {
+		if (form?.signInOtp?.message) {
+			console.log('SignInOtp message received', form.signInOtp)
+			if (form.signInOtp.success) {
+				console.log('SignInOtp successful, attempting navigation')
+				toast.success(form?.signInOtp?.message)
+				goto(`/verify-email?email=${form.signInOtp.email}&type=email`)
+			} else {
+				console.log('SignInOtp failed')
+				toast.error(form?.signInOtp?.message)
+			}
+		}
+	})
 </script>
 
 <svelte:head>

@@ -1,14 +1,18 @@
 import { fail, redirect, type Actions } from "@sveltejs/kit"
 import type { PageServerLoad } from "./$types"
-import type { EmailOtpType } from "@supabase/supabase-js"
+import { env } from "$env/dynamic/private"
 
-export const load: PageServerLoad = async ({ url, locals: { user } }) => {
+export const load: PageServerLoad = async ({ url, locals: { pocketbase } }) => {
+  console.log('load')
+  const user = pocketbase.authStore.model;
+  console.log('user', user)
   if (user) {
     redirect(303, '/dashboard')
   }
 
-  const searchParams = url.searchParams;
-  if (!searchParams.get("email")) {
+  const email = url.searchParams.get("email");
+  console.log('email', email)
+  if (!email) {
     redirect(303, '/login')
   }
   return { url: url.origin }
@@ -19,33 +23,52 @@ export const actions: Actions = {
     const {
       url,
       request,
-      locals: { pocketbase }
+      cookies,
     } = event;
     const formData = await request.formData()
-    const searchParams = url.searchParams;
     const token = formData.get('token') as string
-    const email = searchParams.get("email")!
-    const type = searchParams.get("type") as EmailOtpType ?? "magiclink"
-/* 
-    const { error } = await pocketbase.collection("users").auth({
-      email,
-      token,
-      type
-    });
+    const email = url.searchParams.get("email")!
+    try {
+      const response = await fetch(`${env.PB_URL}api/otp/verify`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, code: token })
+      });
 
-    if (error) {
-      return fail(400, {
-        success: false,
-        message: `There was an issue, Please contact support. ${error.message}`
-      })
-    }
-
-    return {
-      signInOtp: {
-        success: true,
-        type: "success",
-        message: 'Ahoy! Verified.'
+      if (!response.ok) {
+        throw new Error('Failed to verify OTP');
       }
-    } */
+
+      const data = await response.json();
+      console.log('data', data.token)
+      if (data.token) {
+        cookies.set('pb_auth', JSON.stringify({ token: data.token, model: data.record }), {
+          httpOnly: true,
+          secure: false,
+          sameSite: 'lax',
+          path: '/',
+        });
+        return {
+          signInOtp: {
+            success: true,
+            type: "success",
+            message: 'Ahoy! Verified.'
+          }
+        };
+      } else {
+        return fail(400, {
+          success: false,
+          message: 'Invalid OTP. Please try again.'
+        });
+      }
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      return fail(500, {
+        success: false,
+        message: 'There was an issue. Please contact support.'
+      });
+    }
   }
 }

@@ -24,6 +24,7 @@ export const actions: Actions = {
       url,
       request,
       cookies,
+      locals: { pocketbase }
     } = event;
     const formData = await request.formData()
     const token = formData.get('token') as string
@@ -44,12 +45,7 @@ export const actions: Actions = {
       const data = await response.json();
       console.log('data', data.token)
       if (data.token) {
-        cookies.set('pb_auth', JSON.stringify({ token: data.token, model: data.record }), {
-          httpOnly: true,
-          secure: false,
-          sameSite: 'lax',
-          path: '/',
-        });
+        pocketbase.authStore.save(data.token, data.record)
         return {
           signInOtp: {
             success: true,

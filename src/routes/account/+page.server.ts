@@ -20,30 +20,29 @@ export const actions: Actions = {
 
     const user = pocketbase.authStore.model;
 
-    // const { error } = await supabase.from('profiles').upsert({
-    //   id: session?.user.id,
-    //   full_name: fullName,
-    //   username,
-    //   website,
-    //   avatar_url: avatarUrl,
-    //   updated_at: new Date(),
-    // })
+    const { error } = await pocketbase.collection('user').update(
+      user?.id,
+      {
+      fullName: fullName,
+      username,
+      avatar: avatarUrl
+    })
 
-    // if (error) {
-    //   return fail(500, {
-    //     fullName,
-    //     username,
-    //     website,
-    //     avatarUrl,
-    //   })
-    // }
+    if (error) {
+      return fail(500, {
+        fullName,
+        username,
+        website,
+        avatarUrl,
+      })
+    }
 
-    // return {
-    //   fullName,
-    //   username,
-    //   website,
-    //   avatarUrl,
-    // }
+    return {
+      fullName,
+      username,
+      website,
+      avatarUrl,
+    }
   },
   signout: async ({ locals: { pocketbase } }) => {
     pocketbase.authStore.clear();

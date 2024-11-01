@@ -23,15 +23,19 @@
 		<button on:click={toggleSideNav}><CrossIcon /></button>
 	{/if}
 	<nav>
-		<Button label="New Submission" type="nav" onClick={() => goto(`${parentSlug}/new-submission`)} />
+		<Button
+			label="New Submission"
+			type="nav"
+			onClick={() => goto(`${parentSlug}/new-submission`)}
+		/>
 		<div class="section">
 			<a class="section-link" href="/dashboard">Home</a>
 		</div>
 		<CollapsibleSection headerText="Submissions" noOfLinks={3}>
 			<div class="section">
-				<a class="section-link" href="/dashboard/submission?query=all">All</a>
-				<a class="section-link" href="/dashboard/submission?query=evaluated">Evaluated</a>
-				<a class="section-link" href="/dashboard/submission?query=pending">Pending</a>
+				<a class="section-link" href="/dashboard/submissions?query=all">All</a>
+				<a class="section-link" href="/dashboard/submissions?query=evaluated">Evaluated</a>
+				<a class="section-link" href="/dashboard/submissions?query=pending">Pending</a>
 			</div>
 		</CollapsibleSection>
 		<CollapsibleSection headerText="Evaluation Plan" noOfLinks={2}>

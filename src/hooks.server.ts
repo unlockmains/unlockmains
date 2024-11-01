@@ -23,7 +23,7 @@ export const authentication: Handle = async ({ event, resolve }) => {
 const unprotectedPrefix = ['/login', '/register', '/auth', '/verify-email'];
 export const authorization: Handle = async ({ event, resolve }) => {
   const {
-    locals: {pocketbase}
+    locals: { pocketbase }
   } = event;
   if (!unprotectedPrefix.some((path) => event.url.pathname.startsWith(path)) && event.url.pathname !== '/') {
     const loggedIn = pocketbase.authStore.model;

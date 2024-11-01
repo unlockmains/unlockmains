@@ -1,11 +1,9 @@
 <!-- src/routes/account/Avatar.svelte -->
 <script lang="ts">
-	import type { SupabaseClient } from '@supabase/supabase-js'
 	import { createEventDispatcher } from 'svelte'
 
 	export let size = 10
 	export let url: string
-	export let supabase: SupabaseClient
 
 	let avatarUrl: string | null = null
 	let uploading = false
@@ -15,13 +13,13 @@
 
 	const downloadImage = async (path: string) => {
 		try {
-			const { data, error } = await supabase.storage.from('avatars').download(path)
+			// const { data, error } = await supabase.storage.from('avatars').download(path)
 
-			if (error) {
-				throw error
-			}
+			// if (error) {
+			// 	throw error
+			// }
 
-			const url = URL.createObjectURL(data)
+			// const url = URL.createObjectURL(data)
 			avatarUrl = url
 		} catch (error) {
 			if (error instanceof Error) {
@@ -42,11 +40,11 @@
 			const fileExt = file.name.split('.').pop()
 			const filePath = `${Math.random()}.${fileExt}`
 
-			const { error } = await supabase.storage.from('avatars').upload(filePath, file)
+			// const { error } = await supabase.storage.from('avatars').upload(filePath, file)
 
-			if (error) {
-				throw error
-			}
+			// if (error) {
+			// 	throw error
+			// }
 
 			url = filePath
 			setTimeout(() => {

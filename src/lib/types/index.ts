@@ -12,3 +12,24 @@ export type INewSubmissionType = {
     disabled?: boolean;
     options?: INewSubmissionType[]
 }
+
+export enum INewSubmittedStatus {
+    DRAFT = "Draft",
+    SUBMITTED = "Submitted",
+    UNDER_REVIEW = "Under Review",
+    EVALUATED = "Evaluated",
+    COMPLETED = "Completed"
+}
+
+export type ISubmission = {
+    collectionId: string,
+    collectionName: string,
+    id: string,
+    isPyq: boolean,
+    name: string,
+    noOfQuestions: number,
+    questionType: string,
+    status: INewSubmittedStatus,
+    submissionDate: string,
+    submittedFile: string[]
+}

@@ -39,19 +39,16 @@ export const actions: Actions = {
         const files = formData.getAll("question-files");
         for (const file of files) {
             if (file instanceof File) {
-                saveFormData.append("submitted_file", file)
+                saveFormData.append("submittedFile", file)
             }
         }
-        saveFormData.append("question_type", type)
-        saveFormData.append("no_of_questions", quantity)
-        saveFormData.append("is_pyq", isPyq)
-        saveFormData.append("submitted_by", user?.id)
+        saveFormData.append("questionType", type)
+        saveFormData.append("noOfQuestions", quantity)
+        saveFormData.append("isPyq", isPyq)
+        saveFormData.append("submittedBy", user?.id)
         try {
-            const createdRecord = await pocketbase.collection('question_submissions').create(saveFormData);
-            console.log("createdRecord", createdRecord)
-
+            await pocketbase.collection('question_submissions').create(saveFormData);
         } catch(err){
-            console.log("custom err2", err)
             return fail(400, { success, message });
         }
         

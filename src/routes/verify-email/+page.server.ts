@@ -3,15 +3,12 @@ import type { PageServerLoad } from "./$types"
 import { env } from "$env/dynamic/private"
 
 export const load: PageServerLoad = async ({ url, locals: { pocketbase } }) => {
-  console.log('load')
   const user = pocketbase.authStore.model;
-  console.log('user', user)
   if (user) {
     redirect(303, '/dashboard')
   }
 
   const email = url.searchParams.get("email");
-  console.log('email', email)
   if (!email) {
     redirect(303, '/login')
   }
@@ -23,7 +20,6 @@ export const actions: Actions = {
     const {
       url,
       request,
-      cookies,
       locals: { pocketbase }
     } = event;
     const formData = await request.formData()
@@ -43,7 +39,7 @@ export const actions: Actions = {
       }
 
       const data = await response.json();
-      console.log('data', data.token)
+
       if (data.token) {
         pocketbase.authStore.save(data.token, data.record)
         return {

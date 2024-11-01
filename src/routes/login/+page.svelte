@@ -47,13 +47,10 @@
 
 	afterUpdate(() => {
 		if (form?.signInOtp?.message) {
-			console.log('SignInOtp message received', form.signInOtp)
 			if (form.signInOtp.success) {
-				console.log('SignInOtp successful, attempting navigation')
 				toast.success(form?.signInOtp?.message)
 				goto(`/verify-email?email=${form.signInOtp.email}&type=email`)
 			} else {
-				console.log('SignInOtp failed')
 				toast.error(form?.signInOtp?.message)
 			}
 		}

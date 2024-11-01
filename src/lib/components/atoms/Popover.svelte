@@ -18,10 +18,8 @@
 
 <div class="popover" use:onClickOutside={hidePopover}>
 	<button class="avatar" on:click={togglePopover}>
-		{#if user.avatar}
-			<span
-				style={`background-image: url(${user.avatar});background-size: cover;height: 100%;width: 100%`}
-			/>
+		{#if user.picture}
+			<img src={user.picture} alt="user avatar" style={`height: 100%;width: 100%`} />
 		{:else}
 			<UserAvatarIcon />
 		{/if}
@@ -37,7 +35,7 @@
 			{user.email}
 		</div>
 		<ul>
-			<li><a href="#account">Account</a></li>
+			<li><a href="/account">Account</a></li>
 			<li><a href="#profile">Profile</a></li>
 			<Button label="Logout" onClick={() => goto('/auth/logout')} />
 		</ul>

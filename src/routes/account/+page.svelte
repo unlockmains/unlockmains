@@ -1,21 +1,20 @@
 <!-- src/routes/account/+page.svelte -->
 <script lang="ts">
-	import { enhance } from '$app/forms';
-	import type { SubmitFunction } from '@sveltejs/kit';
-    import Avatar from './Avatar.svelte'
+	import { enhance } from '$app/forms'
+	import type { SubmitFunction } from '@sveltejs/kit'
+	import Avatar from './Avatar.svelte'
 
 	export let data
 	export let form
 
-	let { session, supabase, profile } = data
-	$: ({ session, supabase, profile } = data)
+	let { profile } = data
+	$: ({ profile } = data)
 
 	let profileForm: HTMLFormElement
 	let loading = false
-	let fullName: string = profile?.full_name ?? ''
+	let fullName: string = profile?.fullName ?? ''
 	let username: string = profile?.username ?? ''
-	let website: string = profile?.website ?? ''
-	let avatarUrl: string = profile?.avatar_url ?? ''
+	let avatar: string = profile?.avatar ?? ''
 
 	const handleSubmit: SubmitFunction = () => {
 		loading = true
@@ -41,17 +40,16 @@
 		use:enhance={handleSubmit}
 		bind:this={profileForm}
 	>
-        <Avatar
-            {supabase}
-            bind:url={avatarUrl}
-            size={10}
-            on:upload={() => {
-                profileForm.requestSubmit();
-            }}
-        />
+		<Avatar
+			bind:url={avatar}
+			size={10}
+			on:upload={() => {
+				profileForm.requestSubmit()
+			}}
+		/>
 		<div>
 			<label for="email">Email</label>
-			<input id="email" type="text" value={session.user.email} disabled />
+			<input id="email" type="text" value={profile?.email} disabled />
 		</div>
 
 		<div>
@@ -66,7 +64,7 @@
 
 		<div>
 			<label for="website">Website</label>
-			<input id="website" name="website" type="url" value={form?.website ?? website} />
+			<!-- <input id="website" name="website" type="url" value={form?.website ?? website} /> -->
 		</div>
 
 		<div>

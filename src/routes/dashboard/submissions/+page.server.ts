@@ -2,7 +2,7 @@ import { redirect } from "@sveltejs/kit"
 import type { PageServerLoad } from "./$types"
 import type { ISubmission } from "$lib/types";
 
-export const csr = true
+export const ssr = false
 
 export const load: PageServerLoad = async ({ locals: { pocketbase }, url }) => {
     const user = pocketbase.authStore.model;
@@ -20,9 +20,14 @@ export const load: PageServerLoad = async ({ locals: { pocketbase }, url }) => {
         }); 
     } else if(query === 'pending') {
         submissions = await pocketbase.collection('student_submissions').getFullList({
-            filter: `status = "Pending"`
+            filter: `status != "Evaluated"`
         });
     }
-    console.log("submissions", submissions)
+    submissions = submissions.map(submission => ({
+        ...submission,
+        submissionDate: new Date(submission.submissionDate).toLocaleDateString() + " " + new Date(submission.submissionDate).toLocaleTimeString(),
+        pyq: submission.isPyq ? "Yes" : "No",
+        submittedFileName: submission.submittedFile[0]
+    }))
     return { user, submissions }
 }

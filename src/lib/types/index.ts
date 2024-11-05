@@ -33,3 +33,12 @@ export type ISubmission = {
     submissionDate: string,
     submittedFile: string[]
 }
+
+export type IAnnotation = {
+    type: string
+    data: object & { text: string }
+}
+
+export interface IPageAnnotations {
+    [pageNumber: number]: IAnnotation[]
+}

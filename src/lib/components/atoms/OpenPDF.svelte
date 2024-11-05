@@ -1,242 +1,522 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
+	import { onMount, onDestroy } from 'svelte'
 	import * as pdfjsLib from 'pdfjs-dist'
 	import { Canvas, Point, Rect, Circle, Line, Triangle, IText, PencilBrush, Group } from 'fabric'
 	import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api'
+	import { writable } from 'svelte/store'
+	import type { IAnnotation, IPageAnnotations } from '$lib/types'
 
+	// Props
+	export let pdfUrl: string
+	export let initialScale = 1.0
+	export let maxScale = 3.0
+	export let minScale = 0.5
+	export let onSave: (annotations: IPageAnnotations) => Promise<void>
+	export let savedAnnotations: IPageAnnotations
+
+	// State
 	let pdfCanvas: HTMLCanvasElement
 	let canvas: HTMLCanvasElement
 	let fabricCanvas: Canvas
 	let currentPage = 1
 	let numPages = 0
-	let currentTool = 'select'
-	let currentColor = '#ff0000'
-	let currentPDF: PDFDocumentProxy = {} as PDFDocumentProxy
-	export let pdfUrl: string
-	let activeShape: Rect | Circle | Line | Triangle | Group | null = null
+	let currentPDF: PDFDocumentProxy | null = null
+	let isLoading = true
+	let error: string | null = null
+	let scale = initialScale
+
+	const annotationsStore = writable<IPageAnnotations>({})
+
+	// Tool state
+	const toolState = writable({
+		currentTool: 'select',
+		currentColor: '#ff0000',
+		isDrawing: false,
+		activeShape: null as any,
+		startPoint: { x: 0, y: 0 } as Point
+	})
 
 	// Initialize PDF.js worker
 	pdfjsLib.GlobalWorkerOptions.workerSrc = '/lib/pdf.worker.min.mjs'
 
 	onMount(async () => {
-		fabricCanvas = new Canvas(canvas, {
-			isDrawingMode: false
-		})
-
-		fabricCanvas.backgroundColor = 'transparent'
-
-		fabricCanvas.on('mouse:down', handleMouseDown)
-		fabricCanvas.on('mouse:move', handleMouseMove)
-		fabricCanvas.on('mouse:up', handleMouseUp)
-
-		fabricCanvas.on('selection:created', function (e) {
-			if (e.selected[0] instanceof IText) {
-				currentTool = 'select'
-			}
-		})
+		if (savedAnnotations) {
+			annotationsStore.set(savedAnnotations)
+		}
 	})
 
 	onMount(async () => {
-		await loadPDF(pdfUrl)
+		try {
+			// Initialize Fabric canvas
+			fabricCanvas = new Canvas(canvas, {
+				isDrawingMode: false,
+				selection: true,
+				backgroundColor: 'transparent'
+			})
+
+			// Set up event listeners
+			fabricCanvas.on('mouse:down', handleMouseDown)
+			fabricCanvas.on('mouse:move', handleMouseMove)
+			fabricCanvas.on('mouse:up', handleMouseUp)
+			fabricCanvas.on('selection:created', handleSelection)
+
+			// Listen for object modifications to update stored annotations
+			fabricCanvas.on('object:modified', saveCurrentPageAnnotations)
+			fabricCanvas.on('object:added', saveCurrentPageAnnotations)
+			fabricCanvas.on('object:removed', saveCurrentPageAnnotations)
+
+			// Load PDF
+			await loadPDF(pdfUrl)
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Failed to initialize PDF viewer'
+		}
 	})
 
-	async function loadPDF(pdfUrl: string) {
-		currentPDF = await pdfjsLib.getDocument(pdfUrl).promise
-		numPages = currentPDF.numPages
-		renderPage(currentPage)
+	onDestroy(() => {
+		// Cleanup
+		if (fabricCanvas) {
+			fabricCanvas.dispose()
+		}
+		if (currentPDF) {
+			currentPDF.destroy()
+		}
+	})
+
+	async function loadPDF(url: string) {
+		try {
+			isLoading = true
+			error = null
+
+			// Load PDF document
+			currentPDF = await pdfjsLib.getDocument(url).promise
+			numPages = currentPDF.numPages
+
+			// Render first page
+			await renderPage(currentPage)
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Failed to load PDF'
+		} finally {
+			isLoading = false
+		}
+	}
+
+	// Function to convert Fabric objects to serializable format
+	function serializeFabricObject(obj: any): IAnnotation {
+		const json = obj.toObject()
+		return {
+			type: obj.type,
+			data: json
+		}
+	}
+
+	function deserializeFabricObject(annotation: IAnnotation): Promise<any> {
+		return new Promise((resolve) => {
+			switch (annotation.type) {
+				case 'rect':
+					resolve(new Rect(annotation.data))
+					break
+				case 'circle':
+					resolve(new Circle(annotation.data))
+					break
+				// case 'path':
+				// 	resolve(new Path(annotation.data))
+				// 	break
+				// case 'group':
+				// 	// Handle arrow groups specially
+				// 	if (annotation.data.objects) {
+				// 		Promise.all(
+				// 			annotation.data.objects.map((obj: any) =>
+				// 				deserializeFabricObject({ type: obj.type, data: obj })
+				// 			)
+				// 		).then((objects) => {
+				// 			resolve(new Group(objects, annotation.data))
+				// 		})
+				// 	}
+				// 	break
+				case 'i-text':
+					resolve(new IText(annotation.data.text, annotation.data))
+					break
+				default:
+					resolve(null)
+			}
+		})
+	}
+
+	// Save current page annotations
+	async function saveCurrentPageAnnotations() {
+		const objects = fabricCanvas.getObjects()
+		const serializedObjects = objects.map(serializeFabricObject)
+
+		annotationsStore.update((store) => ({
+			...store,
+			[currentPage]: serializedObjects
+		}))
+
+		// If onSave callback is provided, call it with current annotations
+		if (onSave) {
+			let currentStore: IPageAnnotations
+			annotationsStore.subscribe(async (value) => {
+				currentStore = value
+				await onSave(currentStore)
+			})()
+		}
+	}
+
+	// Load annotations for current page
+	async function loadPageAnnotations(pageNumber: number) {
+		let annotations: IAnnotation[] = []
+		annotationsStore.subscribe((store) => {
+			annotations = store[pageNumber] || []
+		})()
+
+		// Clear current annotations
+		fabricCanvas.clear()
+
+		// Recreate and add stored annotations
+		for (const annotation of annotations) {
+			const obj = await deserializeFabricObject(annotation)
+			if (obj) {
+				fabricCanvas.add(obj)
+			}
+		}
+
+		fabricCanvas.requestRenderAll()
 	}
 
 	async function renderPage(pageNumber: number) {
-		const page = await currentPDF?.getPage(pageNumber)
-		const viewport = page.getViewport({ scale: 1.0 })
-		if (viewport) {
-			canvas.width = viewport.width
-			canvas.height = viewport.height
-			fabricCanvas.setDimensions({ width: viewport.width, height: viewport.height })
-			pdfCanvas.width = viewport.width
-			pdfCanvas.height = viewport.height
-		}
+		if (!currentPDF) return
 
-		const renderContext = {
-			canvasContext: canvas.getContext('2d') as CanvasRenderingContext2D,
-			viewport: viewport
+		try {
+			isLoading = true
+			const page = await currentPDF.getPage(pageNumber)
+			const viewport = page.getViewport({ scale })
+
+			// Set canvas dimensions
+			const dimensions = {
+				width: viewport.width,
+				height: viewport.height
+			}
+
+			pdfCanvas.width = dimensions.width
+			pdfCanvas.height = dimensions.height
+			canvas.width = dimensions.width
+			canvas.height = dimensions.height
+			fabricCanvas.setDimensions(dimensions)
+
+			// Render PDF page
+			const renderContext = {
+				canvasContext: pdfCanvas.getContext('2d') as CanvasRenderingContext2D,
+				viewport
+			}
+
+			await page.render(renderContext).promise
+			// fabricCanvas.requestRenderAll()
+			await loadPageAnnotations(pageNumber)
+		} catch (err) {
+			error = err instanceof Error ? err.message : 'Failed to render page'
+		} finally {
+			isLoading = false
 		}
-		await page?.render(renderContext).promise
 	}
 
+	// Tool management
 	function setTool(tool: string) {
-		currentTool = tool
-		fabricCanvas.isDrawingMode = tool === 'freehand'
-		fabricCanvas.freeDrawingBrush = new PencilBrush(fabricCanvas)
-		fabricCanvas.freeDrawingBrush.color = currentColor
-		fabricCanvas.freeDrawingBrush.width = 2
+		toolState.update((state) => {
+			// Cancel any active drawing
+			if (state.isDrawing) {
+				cancelDrawing()
+			}
 
-		if (tool === 'freehand') {
-			fabricCanvas.freeDrawingBrush.color = currentColor
-			fabricCanvas.freeDrawingBrush.width = 2
-		}
+			const newState = {
+				...state,
+				currentTool: tool
+			}
+
+			// Update fabric canvas mode
+			fabricCanvas.isDrawingMode = tool === 'freehand'
+			if (tool === 'freehand') {
+				const brush = new PencilBrush(fabricCanvas)
+				brush.color = state.currentColor
+				brush.width = 2
+				fabricCanvas.freeDrawingBrush = brush
+			}
+
+			return newState
+		})
 	}
 
 	function setColor(color: string) {
-		currentColor = color
-		fabricCanvas.freeDrawingBrush = new PencilBrush(fabricCanvas)
-		if (fabricCanvas.isDrawingMode) {
-			fabricCanvas.freeDrawingBrush.color = color
-		}
+		toolState.update((state) => {
+			const newState = {
+				...state,
+				currentColor: color
+			}
+			fabricCanvas.freeDrawingBrush = new PencilBrush(fabricCanvas)
+			if (fabricCanvas.isDrawingMode) {
+				fabricCanvas.freeDrawingBrush.color = color
+			}
+
+			return newState
+		})
 	}
 
-	let isDrawing = false
-	let startPoint: Point = { x: 0, y: 0 } as Point
-
+	// Drawing handlers
 	function handleMouseDown(event: any) {
-		if (currentTool === 'select') return
+		let state = { currentTool: $toolState.currentTool, currentColor: $toolState.currentColor }
+		toolState.update((s) => {
+			state = s
+			return s
+		})
 
-		const pointer = fabricCanvas.getViewportPoint(event.e)
+		if (state.currentTool === 'select') return
 
-		if (currentTool === 'text') {
+		const pointer = fabricCanvas.getPointer(event.e)
+
+		if (state.currentTool === 'text') {
 			addTextAnnotation(pointer)
 			return
 		}
 
-		isDrawing = true
-		activeShape = null
-		startPoint = pointer
+		toolState.update((s) => ({
+			...s,
+			isDrawing: true,
+			startPoint: pointer,
+			activeShape: null
+		}))
 	}
 
 	function handleMouseMove(event: any) {
-		if (!isDrawing) return
+		let state = {
+			currentTool: $toolState.currentTool,
+			currentColor: $toolState.currentColor,
+			isDrawing: $toolState.isDrawing,
+			startPoint: $toolState.startPoint,
+			activeShape: $toolState.activeShape
+		}
+		toolState.update((s) => {
+			state = s
+			return s
+		})
+
+		if (!state.isDrawing) return
 
 		const pointer = fabricCanvas.getViewportPoint(event.e)
 
-		switch (currentTool) {
+		switch (state.currentTool) {
 			case 'rectangle':
-				updateRectangle(startPoint, pointer)
+				updateRectangle(state.startPoint, pointer, state.currentColor)
 				break
 			case 'circle':
-				updateCircle(startPoint, pointer)
+				updateCircle(state.startPoint, pointer, state.currentColor)
 				break
 			case 'arrow':
-				updateArrow(startPoint, pointer)
+				updateArrow(state.startPoint, pointer, state.currentColor)
 				break
 		}
 	}
 
 	function handleMouseUp() {
-		isDrawing = false
-		activeShape = null
+		toolState.update((state) => ({
+			...state,
+			isDrawing: false,
+			activeShape: null
+		}))
 	}
 
-	function drawRectangle(start: Point, end: Point) {
-		console.log(start, end)
-		activeShape = new Rect({
-			left: Math.min(start.x, end.x),
-			top: Math.min(start.y, end.y),
-			width: Math.abs(end.x - start.x),
-			height: Math.abs(end.y - start.y),
-			fill: 'transparent',
-			stroke: currentColor,
-			strokeWidth: 2
+	function handleSelection(e: any) {
+		if (e.selected?.[0] instanceof IText) {
+			setTool('select')
+		}
+	}
+
+	function cancelDrawing() {
+		let state = {
+			currentTool: $toolState.currentTool,
+			currentColor: $toolState.currentColor,
+			isDrawing: $toolState.isDrawing,
+			startPoint: $toolState.startPoint,
+			activeShape: $toolState.activeShape
+		}
+		toolState.update((s) => {
+			state = s
+			return s
 		})
 
-		fabricCanvas.add(activeShape)
-	}
-
-	function updateRectangle(start: Point, end: Point) {
-		if (!activeShape) {
-			drawRectangle(start, end)
-			return
+		if (state.activeShape) {
+			fabricCanvas.remove(state.activeShape)
+			fabricCanvas.requestRenderAll()
 		}
 
-		activeShape.set({
-			left: Math.min(start.x, end.x),
-			top: Math.min(start.y, end.y),
-			width: Math.abs(end.x - start.x),
-			height: Math.abs(end.y - start.y)
-		})
-
-		fabricCanvas.renderAll()
+		toolState.update((s) => ({
+			...s,
+			isDrawing: false,
+			activeShape: null
+		}))
 	}
 
-	function drawCircle(start: Point, end: Point) {
-		const radius = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2)) / 2
-
-		activeShape = new Circle({
-			left: start.x,
-			top: start.y,
-			radius: radius,
-			fill: 'transparent',
-			stroke: currentColor,
-			strokeWidth: 2
+	// Drawing functions
+	function updateRectangle(start: Point, end: Point, color: string) {
+		let state = {
+			currentTool: $toolState.currentTool,
+			currentColor: $toolState.currentColor,
+			isDrawing: $toolState.isDrawing,
+			startPoint: $toolState.startPoint,
+			activeShape: $toolState.activeShape
+		}
+		toolState.update((s) => {
+			state = s
+			return s
 		})
 
-		fabricCanvas.add(activeShape)
-	}
+		if (!state.activeShape) {
+			const rect = new Rect({
+				left: Math.min(start.x, end.x),
+				top: Math.min(start.y, end.y),
+				width: Math.abs(end.x - start.x),
+				height: Math.abs(end.y - start.y),
+				fill: 'transparent',
+				stroke: color,
+				strokeWidth: 2
+			})
 
-	function updateCircle(start: Point, end: Point) {
-		if (!activeShape) {
-			drawCircle(start, end)
-			return
+			fabricCanvas.add(rect)
+			toolState.update((s) => ({ ...s, activeShape: rect }))
+		} else {
+			state.activeShape.set({
+				left: Math.min(start.x, end.x),
+				top: Math.min(start.y, end.y),
+				width: Math.abs(end.x - start.x),
+				height: Math.abs(end.y - start.y)
+			})
 		}
 
-		const radius = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2)) / 2
+		fabricCanvas.requestRenderAll()
+	}
 
-		if (activeShape instanceof Circle) {
-			activeShape.set({
+	function updateCircle(start: Point, end: Point, color: string) {
+		let state = {
+			activeShape: $toolState.activeShape
+		}
+		toolState.update((s) => {
+			state = s
+			return s
+		})
+
+		const radius = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2)) / 2
+		const centerX = (start.x + end.x) / 2
+		const centerY = (start.y + end.y) / 2
+
+		if (!state.activeShape) {
+			const circle = new Circle({
+				left: centerX - radius,
+				top: centerY - radius,
+				radius: radius,
+				fill: 'transparent',
+				stroke: color,
+				strokeWidth: 2,
+				originX: 'center',
+				originY: 'center'
+			})
+
+			fabricCanvas.add(circle)
+			toolState.update((s) => ({ ...s, activeShape: circle }))
+		} else {
+			state.activeShape.set({
+				left: centerX,
+				top: centerY,
 				radius: radius
 			})
 		}
 
-		fabricCanvas.renderAll()
+		fabricCanvas.requestRenderAll()
 	}
 
-	function drawArrow(start: Point, end: Point) {
-		const group = new Group([], {
-			left: start.x,
-			top: start.y
+	function updateArrow(start: Point, end: Point, color: string) {
+		let state = {
+			activeShape: $toolState.activeShape
+		}
+		toolState.update((s) => {
+			state = s
+			return s
 		})
 
-		const deltaX = end.x - start.x
-		const deltaY = end.y - start.y
-		const angle = Math.atan2(deltaY, deltaX)
-
-		const line = new Line([start.x, start.y, end.x, end.y], {
-			stroke: currentColor,
-			strokeWidth: 2
-		})
-
-		const arrowHead = new Triangle({
-			left: end.x,
-			top: end.y,
-			pointType: 'arrow_start',
-			angle: angle * (180 / Math.PI),
-			width: 20,
-			height: 20,
-			fill: currentColor
-		})
-
-		group.add(line as any)
-		group.add(arrowHead as any)
-		activeShape = group
-
-		fabricCanvas.add(group as any)
-	}
-
-	function updateArrow(start: Point, end: Point) {
-		if (!activeShape) {
-			drawArrow(start, end)
-			return
+		// Remove previous arrow if it exists
+		if (state.activeShape) {
+			fabricCanvas.remove(state.activeShape)
 		}
 
-		fabricCanvas.remove(activeShape as any)
-		drawArrow(start, end)
+		// Calculate angle for arrow head
+		const deltaX = end.x - start.x
+		const deltaY = end.y - start.y
+		const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI)
+
+		// Create arrow line
+		const line = new Line([0, 0, deltaX, deltaY], {
+			stroke: color,
+			strokeWidth: 2,
+			originX: 'center',
+			originY: 'center'
+		})
+
+		// Create arrow head
+		const headLength = 15
+		const headAngle = 35
+
+		// Calculate points for arrow head
+		const leftHeadX = -headLength * Math.cos(((angle + headAngle) * Math.PI) / 180)
+		const leftHeadY = -headLength * Math.sin(((angle + headAngle) * Math.PI) / 180)
+		const rightHeadX = -headLength * Math.cos(((angle - headAngle) * Math.PI) / 180)
+		const rightHeadY = -headLength * Math.sin(((angle - headAngle) * Math.PI) / 180)
+
+		const arrowHead = new Triangle({
+			width: headLength * 2,
+			height: headLength,
+			fill: color,
+			left: end.x,
+			top: end.y,
+			angle: angle + 90,
+			originX: 'center',
+			originY: 'center'
+		})
+
+		// Group arrow parts together
+		const arrow = new Group([line], {
+			left: start.x,
+			top: start.y,
+			originX: 'center',
+			originY: 'center'
+		})
+
+		fabricCanvas.add(arrow)
+		toolState.update((s) => ({ ...s, activeShape: arrow }))
+		fabricCanvas.requestRenderAll()
 	}
 
+	// Helper function to calculate distance between two points
+	function getDistance(point1: Point, point2: Point): number {
+		return Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2))
+	}
+
+	// Similar updates for updateCircle and updateArrow functions...
+
 	function addTextAnnotation(pointer: Point) {
+		let state = {
+			currentTool: $toolState.currentTool,
+			currentColor: $toolState.currentColor,
+			isDrawing: $toolState.isDrawing,
+			startPoint: $toolState.startPoint,
+			activeShape: $toolState.activeShape
+		}
+		toolState.update((s) => {
+			state = s
+			return s
+		})
+
 		const text = new IText('Enter text', {
 			left: pointer.x,
 			top: pointer.y,
 			fontFamily: 'Arial',
-			fill: currentColor,
+			fill: state.currentColor,
 			fontSize: 16
 		})
 
@@ -246,13 +526,14 @@
 		text.selectAll()
 	}
 
-	function clearAnnotations() {
-		fabricCanvas.clear()
+	function changeScale(newScale: number) {
+		scale = Math.max(minScale, Math.min(maxScale, newScale))
 		renderPage(currentPage)
 	}
 
 	async function nextPage() {
 		if (currentPage < numPages) {
+			await saveCurrentPageAnnotations()
 			currentPage++
 			await renderPage(currentPage)
 		}
@@ -260,38 +541,93 @@
 
 	async function prevPage() {
 		if (currentPage > 1) {
+			await saveCurrentPageAnnotations()
 			currentPage--
 			await renderPage(currentPage)
 		}
 	}
+
+	// function exportAnnotations(): IPageAnnotations {
+	// 	let annotations: IPageAnnotations
+	// 	annotationsStore.subscribe((value) => {
+	// 		annotations = value
+	// 	})()
+	// 	// return annotations
+	// }
+
+	async function importAnnotations(annotations: IPageAnnotations) {
+		annotationsStore.set(annotations)
+		await loadPageAnnotations(currentPage)
+	}
+
+	async function clearAnnotations() {
+		fabricCanvas.clear()
+		annotationsStore.update((store) => {
+			const newStore = { ...store }
+			delete newStore[currentPage]
+			return newStore
+		})
+		await saveCurrentPageAnnotations()
+	}
+
+	// Keyboard shortcuts
+	function handleKeyDown(event: KeyboardEvent) {
+		if (event.key === 'Escape') {
+			cancelDrawing()
+		}
+	}
 </script>
 
+<svelte:window on:keydown={handleKeyDown} />
+
 <div class="pdf-viewer">
+	{#if error}
+		<div class="error-message">
+			{error}
+		</div>
+	{/if}
+
 	<div class="toolbar">
 		<div class="tool-group">
-			<button class:active={currentTool === 'select'} on:click={() => setTool('select')}>
+			<button class:active={$toolState.currentTool === 'select'} on:click={() => setTool('select')}>
 				Select
 			</button>
-			<button class:active={currentTool === 'rectangle'} on:click={() => setTool('rectangle')}>
+			<button
+				class:active={$toolState.currentTool === 'rectangle'}
+				on:click={() => setTool('rectangle')}
+			>
 				Rectangle
 			</button>
-			<button class:active={currentTool === 'circle'} on:click={() => setTool('circle')}>
+			<button class:active={$toolState.currentTool === 'circle'} on:click={() => setTool('circle')}>
 				Circle
 			</button>
-			<button class:active={currentTool === 'arrow'} on:click={() => setTool('arrow')}>
+			<button class:active={$toolState.currentTool === 'arrow'} on:click={() => setTool('arrow')}>
 				Arrow
 			</button>
-			<button class:active={currentTool === 'freehand'} on:click={() => setTool('freehand')}>
+			<button
+				class:active={$toolState.currentTool === 'freehand'}
+				on:click={() => setTool('freehand')}
+			>
 				Freehand
 			</button>
-			<button class:active={currentTool === 'text'} on:click={() => setTool('text')}> Text </button>
+			<button class:active={$toolState.currentTool === 'text'} on:click={() => setTool('text')}>
+				Text
+			</button>
 		</div>
 
-		<input
-			type="color"
-			bind:value={currentColor}
-			on:input={(e) => setColor(e.currentTarget.value)}
-		/>
+		<div class="color-picker">
+			<input
+				type="color"
+				value={$toolState.currentColor}
+				on:input={(e) => setColor(e.currentTarget.value)}
+			/>
+		</div>
+
+		<div class="zoom-controls">
+			<button on:click={() => changeScale(scale - 0.1)} disabled={scale <= minScale}>-</button>
+			<span>{(scale * 100).toFixed(0)}%</span>
+			<button on:click={() => changeScale(scale + 0.1)} disabled={scale >= maxScale}>+</button>
+		</div>
 
 		<button on:click={clearAnnotations}>Clear</button>
 
@@ -302,7 +638,12 @@
 		</div>
 	</div>
 
-	<div class="canvas-container">
+	<div class="canvas-container" class:loading={isLoading}>
+		{#if isLoading}
+			<div class="loading-overlay">
+				<span>Loading...</span>
+			</div>
+		{/if}
 		<div class="canvas-wrapper">
 			<canvas bind:this={pdfCanvas} class="pdf-canvas" />
 			<canvas bind:this={canvas} class="annotation-canvas" />
@@ -316,6 +657,7 @@
 		flex-direction: column;
 		gap: 1rem;
 		padding: 1rem;
+		height: 100%;
 	}
 
 	.toolbar {
@@ -325,11 +667,60 @@
 		padding: 0.5rem;
 		background: #f5f5f5;
 		border-radius: 4px;
+		flex-wrap: wrap;
 	}
 
 	.tool-group {
 		display: flex;
 		gap: 0.5rem;
+		flex-wrap: wrap;
+	}
+
+	.canvas-container {
+		position: relative;
+		flex-grow: 1;
+		border: 1px solid #ccc;
+		overflow: auto;
+		background: #f0f0f0;
+	}
+
+	.canvas-wrapper {
+		position: relative;
+		width: fit-content;
+		margin: 0 auto;
+	}
+
+	.pdf-canvas {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: 1;
+	}
+
+	.annotation-canvas {
+		position: relative;
+		z-index: 2;
+	}
+
+	.loading-overlay {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(255, 255, 255, 0.8);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		z-index: 3;
+	}
+
+	.error-message {
+		padding: 1rem;
+		background: #fee;
+		color: #c00;
+		border-radius: 4px;
+		margin-bottom: 1rem;
 	}
 
 	button {
@@ -341,41 +732,31 @@
 		transition: all 0.2s ease;
 	}
 
+	button:disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+	}
+
 	button.active {
 		background: #007bff;
 		color: white;
 		border-color: #0056b3;
 	}
 
-	.canvas-container {
-		border: 1px solid #ccc;
-		overflow: auto;
-		max-width: 100%;
-		margin: 0 auto;
-	}
-
-	.canvas-wrapper {
-		position: relative;
-		width: fit-content;
-	}
-
-	.pdf-canvas {
-		position: absolute;
-		top: 0;
-		left: 0;
-		z-index: 1;
-	}
-
-	.annotation-canvas {
-		position: absolute;
-		top: 0;
-		left: 0;
-		z-index: 2;
-	}
-
 	.page-navigation {
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
+	}
+
+	.zoom-controls {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.color-picker {
+		display: flex;
+		align-items: center;
 	}
 </style>

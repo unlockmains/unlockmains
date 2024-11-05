@@ -19,6 +19,9 @@
 	on:click={(e) => {
 		if (e.target === dialog) dialog.close()
 	}}
+	on:focus|preventDefault
+	on:keydown|preventDefault
+	on:keypress|preventDefault
 >
 	<div>
 		<slot />

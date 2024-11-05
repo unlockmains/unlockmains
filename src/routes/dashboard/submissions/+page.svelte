@@ -42,6 +42,7 @@
 	let showModal = false
 
 	async function handleSave(annotations: IPageAnnotations) {
+		console.log('saveing', annotations)
 		try {
 			// Save to localStorage
 			localStorage.setItem('pdfAnnotations', JSON.stringify(annotations))

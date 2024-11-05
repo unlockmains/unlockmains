@@ -17,15 +17,13 @@
 	import { writable } from 'svelte/store'
 	import type { IAnnotation, IPageAnnotations } from '$lib/types'
 
-	// Props
 	export let pdfUrl: string
 	export let initialScale = 1.0
 	export let maxScale = 3.0
 	export let minScale = 0.5
-	export let onSave: (annotations: IPageAnnotations) => Promise<void>
+	export let onSave: (annotations: IPageAnnotations) => Promise<void> | undefined
 	export let savedAnnotations: IPageAnnotations
 
-	// State
 	let pdfCanvas: HTMLCanvasElement
 	let canvas: HTMLCanvasElement
 	let fabricCanvas: Canvas
@@ -38,7 +36,6 @@
 
 	const annotationsStore = writable<IPageAnnotations>({})
 
-	// Tool state
 	const toolState = writable({
 		currentTool: 'select',
 		currentColor: '#ff0000',
@@ -47,7 +44,6 @@
 		startPoint: { x: 0, y: 0 } as Point
 	})
 
-	// Initialize PDF.js worker
 	pdfjsLib.GlobalWorkerOptions.workerSrc = '/lib/pdf.worker.min.mjs'
 
 	onMount(async () => {
@@ -58,25 +54,21 @@
 
 	onMount(async () => {
 		try {
-			// Initialize Fabric canvas
 			fabricCanvas = new Canvas(canvas, {
 				isDrawingMode: false,
 				selection: true,
 				backgroundColor: 'transparent'
 			})
 
-			// Set up event listeners
 			fabricCanvas.on('mouse:down', handleMouseDown)
 			fabricCanvas.on('mouse:move', handleMouseMove)
 			fabricCanvas.on('mouse:up', handleMouseUp)
 			fabricCanvas.on('selection:created', handleSelection)
 
-			// Listen for object modifications to update stored annotations
 			fabricCanvas.on('object:modified', saveCurrentPageAnnotations)
 			fabricCanvas.on('object:added', saveCurrentPageAnnotations)
 			fabricCanvas.on('object:removed', saveCurrentPageAnnotations)
 
-			// Load PDF
 			await loadPDF(pdfUrl)
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Failed to initialize PDF viewer'
@@ -84,7 +76,6 @@
 	})
 
 	onDestroy(() => {
-		// Cleanup
 		if (fabricCanvas) {
 			fabricCanvas.dispose()
 		}
@@ -98,11 +89,9 @@
 			isLoading = true
 			error = null
 
-			// Load PDF document
 			currentPDF = await pdfjsLib.getDocument(url).promise
 			numPages = currentPDF.numPages
 
-			// Render first page
 			await renderPage(currentPage)
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Failed to load PDF'
@@ -111,7 +100,6 @@
 		}
 	}
 
-	// Function to convert Fabric objects to serializable format
 	function serializeFabricObject(obj: any): IAnnotation {
 		const json = obj.toObject()
 		return {
@@ -178,7 +166,6 @@
 		})
 	}
 
-	// Save current page annotations
 	async function saveCurrentPageAnnotations() {
 		const objects = fabricCanvas.getObjects()
 		const serializedObjects = objects.map(serializeFabricObject)
@@ -188,7 +175,6 @@
 			[currentPage]: serializedObjects
 		}))
 
-		// If onSave callback is provided, call it with current annotations
 		if (onSave) {
 			let currentStore: IPageAnnotations
 			annotationsStore.subscribe(async (value) => {
@@ -198,17 +184,14 @@
 		}
 	}
 
-	// Load annotations for current page
 	async function loadPageAnnotations(pageNumber: number) {
 		let annotations: IAnnotation[] = []
 		annotationsStore.subscribe((store) => {
 			annotations = store[pageNumber] || []
 		})()
 
-		// Clear current annotations
 		fabricCanvas.clear()
 
-		// Recreate and add stored annotations
 		for (const annotation of annotations) {
 			const obj = await deserializeFabricObject(annotation)
 			if (obj) {
@@ -227,7 +210,6 @@
 			const page = await currentPDF.getPage(pageNumber)
 			const viewport = page.getViewport({ scale })
 
-			// Set canvas dimensions
 			const dimensions = {
 				width: viewport.width,
 				height: viewport.height
@@ -239,14 +221,12 @@
 			canvas.height = dimensions.height
 			fabricCanvas.setDimensions(dimensions)
 
-			// Render PDF page
 			const renderContext = {
 				canvasContext: pdfCanvas.getContext('2d') as CanvasRenderingContext2D,
 				viewport
 			}
 
 			await page.render(renderContext).promise
-			// fabricCanvas.requestRenderAll()
 			await loadPageAnnotations(pageNumber)
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Failed to render page'
@@ -255,10 +235,8 @@
 		}
 	}
 
-	// Tool management
 	function setTool(tool: string) {
 		toolState.update((state) => {
-			// Cancel any active drawing
 			if (state.isDrawing) {
 				cancelDrawing()
 			}
@@ -268,7 +246,6 @@
 				currentTool: tool
 			}
 
-			// Update fabric canvas mode
 			fabricCanvas.isDrawingMode = tool === 'freehand'
 			if (tool === 'freehand') {
 				const brush = new PencilBrush(fabricCanvas)
@@ -296,7 +273,6 @@
 		})
 	}
 
-	// Drawing handlers
 	function handleMouseDown(event: any) {
 		let state = { currentTool: $toolState.currentTool, currentColor: $toolState.currentColor }
 		toolState.update((s) => {
@@ -364,6 +340,7 @@
 		if (e.selected?.[0] instanceof IText) {
 			setTool('select')
 		}
+		console.log('select', e)
 	}
 
 	function cancelDrawing() {
@@ -391,7 +368,6 @@
 		}))
 	}
 
-	// Drawing functions
 	function updateRectangle(start: Point, end: Point, color: string) {
 		let state = {
 			currentTool: $toolState.currentTool,
@@ -477,25 +453,20 @@
 			return s
 		})
 
-		// Remove previous arrow if it exists
 		if (state.activeShape) {
 			fabricCanvas.remove(state.activeShape)
 		}
 
-		// Calculate angle for arrow head
 		const deltaX = end.x - start.x
 		const deltaY = end.y - start.y
 		const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI)
 
-		// Create arrow line
 		const line = new Line([start.x, start.y, end.x, end.y], {
 			stroke: color,
 			strokeWidth: 2
 		})
 
-		// Create arrow head
 		const headLength = 15
-		const headAngle = 35
 
 		const arrowHead = new Triangle({
 			width: headLength * 2,
@@ -508,7 +479,6 @@
 			originY: 'center'
 		})
 
-		// Group arrow parts together
 		const arrow = new Group([line, arrowHead], {
 			left: start.x,
 			top: start.y,
@@ -520,13 +490,6 @@
 		toolState.update((s) => ({ ...s, activeShape: arrow }))
 		fabricCanvas.requestRenderAll()
 	}
-
-	// Helper function to calculate distance between two points
-	function getDistance(point1: Point, point2: Point): number {
-		return Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2))
-	}
-
-	// Similar updates for updateCircle and updateArrow functions...
 
 	function addTextAnnotation(pointer: Point) {
 		let state = {
@@ -599,10 +562,26 @@
 		await saveCurrentPageAnnotations()
 	}
 
-	// Keyboard shortcuts
+	function deleteSelectedObjects() {
+		const activeObjects = fabricCanvas.getActiveObjects()
+		if (activeObjects.length > 0) {
+			activeObjects.forEach((obj) => {
+				fabricCanvas.remove(obj)
+			})
+			fabricCanvas.discardActiveObject()
+			fabricCanvas.requestRenderAll()
+			saveCurrentPageAnnotations() // Save after deletion
+		}
+	}
+
 	function handleKeyDown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
 			cancelDrawing()
+		} else if (event.key === 'Delete' || event.key === 'Backspace') {
+			const activeObject = fabricCanvas.getActiveObject()
+			if (activeObject && !(activeObject instanceof IText && (activeObject as IText).isEditing)) {
+				deleteSelectedObjects()
+			}
 		}
 	}
 </script>
@@ -642,6 +621,7 @@
 			<button class:active={$toolState.currentTool === 'text'} on:click={() => setTool('text')}>
 				Text
 			</button>
+			<button on:click={saveCurrentPageAnnotations}> Save </button>
 		</div>
 
 		<div class="color-picker">

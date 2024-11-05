@@ -1,7 +1,18 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte'
 	import * as pdfjsLib from 'pdfjs-dist'
-	import { Canvas, Point, Rect, Circle, Line, Triangle, IText, PencilBrush, Group } from 'fabric'
+	import {
+		Canvas,
+		Point,
+		Rect,
+		Circle,
+		Line,
+		Triangle,
+		IText,
+		PencilBrush,
+		Group,
+		Path
+	} from 'fabric'
 	import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api'
 	import { writable } from 'svelte/store'
 	import type { IAnnotation, IPageAnnotations } from '$lib/types'
@@ -113,28 +124,53 @@
 		return new Promise((resolve) => {
 			switch (annotation.type) {
 				case 'rect':
-					resolve(new Rect(annotation.data))
+					resolve(new Rect(annotation.data as any))
 					break
 				case 'circle':
-					resolve(new Circle(annotation.data))
+					resolve(new Circle(annotation.data as any))
 					break
-				// case 'path':
-				// 	resolve(new Path(annotation.data))
-				// 	break
-				// case 'group':
-				// 	// Handle arrow groups specially
-				// 	if (annotation.data.objects) {
-				// 		Promise.all(
-				// 			annotation.data.objects.map((obj: any) =>
-				// 				deserializeFabricObject({ type: obj.type, data: obj })
-				// 			)
-				// 		).then((objects) => {
-				// 			resolve(new Group(objects, annotation.data))
-				// 		})
-				// 	}
-				// 	break
+				case 'path':
+					resolve(new Path(annotation.data.path as any, annotation.data as any))
+					break
+				case 'line':
+					resolve(
+						new Line(
+							[annotation.data.x1, annotation.data.y1, annotation.data.x2, annotation.data.y2],
+							annotation.data as any
+						)
+					)
+					break
+				case 'triangle':
+					resolve(new Triangle(annotation.data as any))
+					break
+				case 'group':
+					if (annotation.data.objects) {
+						const shapes = annotation.data.objects.map((obj: any) =>
+							deserializeFabricObject({ type: obj.type.toLowerCase(), data: obj })
+						)
+						console.log(shapes, annotation.data)
+						Promise.all(shapes).then((objects) => {
+							resolve(
+								new Group(objects, {
+									left: annotation.data.left,
+									top: annotation.data.top,
+									originX: 'center',
+									originY: 'center'
+								})
+							)
+						})
+					}
+					break
 				case 'i-text':
-					resolve(new IText(annotation.data.text, annotation.data))
+					resolve(
+						new IText(annotation.data.text, {
+							left: annotation.data.left,
+							top: annotation.data.top,
+							fontFamily: 'Arial',
+							fill: annotation.data.fill,
+							fontSize: annotation.data.fontSize
+						})
+					)
 					break
 				default:
 					resolve(null)
@@ -270,7 +306,7 @@
 
 		if (state.currentTool === 'select') return
 
-		const pointer = fabricCanvas.getPointer(event.e)
+		const pointer = fabricCanvas.getViewportPoint(event.e)
 
 		if (state.currentTool === 'text') {
 			addTextAnnotation(pointer)
@@ -319,7 +355,8 @@
 		toolState.update((state) => ({
 			...state,
 			isDrawing: false,
-			activeShape: null
+			activeShape: null,
+			currentTool: 'select'
 		}))
 	}
 
@@ -451,22 +488,14 @@
 		const angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI)
 
 		// Create arrow line
-		const line = new Line([0, 0, deltaX, deltaY], {
+		const line = new Line([start.x, start.y, end.x, end.y], {
 			stroke: color,
-			strokeWidth: 2,
-			originX: 'center',
-			originY: 'center'
+			strokeWidth: 2
 		})
 
 		// Create arrow head
 		const headLength = 15
 		const headAngle = 35
-
-		// Calculate points for arrow head
-		const leftHeadX = -headLength * Math.cos(((angle + headAngle) * Math.PI) / 180)
-		const leftHeadY = -headLength * Math.sin(((angle + headAngle) * Math.PI) / 180)
-		const rightHeadX = -headLength * Math.cos(((angle - headAngle) * Math.PI) / 180)
-		const rightHeadY = -headLength * Math.sin(((angle - headAngle) * Math.PI) / 180)
 
 		const arrowHead = new Triangle({
 			width: headLength * 2,
@@ -480,11 +509,11 @@
 		})
 
 		// Group arrow parts together
-		const arrow = new Group([line], {
+		const arrow = new Group([line, arrowHead], {
 			left: start.x,
 			top: start.y,
-			originX: 'center',
-			originY: 'center'
+			originX: start.x < end.x ? 'left' : 'right',
+			originY: start.y < end.y ? 'top' : 'bottom'
 		})
 
 		fabricCanvas.add(arrow)

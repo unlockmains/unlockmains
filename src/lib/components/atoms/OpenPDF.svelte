@@ -16,6 +16,7 @@
 	import type { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api'
 	import { writable } from 'svelte/store'
 	import type { IAnnotation, IPageAnnotations } from '$lib/types'
+	import PDFAnnotateIcons from '../icons/PDFAnnotateIcons.svelte'
 
 	export let pdfUrl: string
 	export let initialScale = 1.0
@@ -143,7 +144,8 @@
 									left: annotation.data.left,
 									top: annotation.data.top,
 									originX: 'center',
-									originY: 'center'
+									originY: 'center',
+									angle: annotation.data.angle
 								})
 							)
 						})
@@ -156,7 +158,8 @@
 							top: annotation.data.top,
 							fontFamily: 'Arial',
 							fill: annotation.data.fill,
-							fontSize: annotation.data.fontSize
+							fontSize: annotation.data.fontSize,
+							angle: annotation.data.angle
 						})
 					)
 					break
@@ -570,7 +573,7 @@
 			})
 			fabricCanvas.discardActiveObject()
 			fabricCanvas.requestRenderAll()
-			saveCurrentPageAnnotations() // Save after deletion
+			saveCurrentPageAnnotations()
 		}
 	}
 
@@ -589,39 +592,57 @@
 <svelte:window on:keydown={handleKeyDown} />
 
 <div class="pdf-viewer">
-	{#if error}
+	<!-- {#if error}
 		<div class="error-message">
 			{error}
 		</div>
-	{/if}
+	{/if} -->
 
 	<div class="toolbar">
 		<div class="tool-group">
-			<button class:active={$toolState.currentTool === 'select'} on:click={() => setTool('select')}>
-				Select
+			<button
+				class="tool-button"
+				class:active={$toolState.currentTool === 'select'}
+				on:click={() => setTool('select')}
+			>
+				<PDFAnnotateIcons name="hand" />
 			</button>
 			<button
+				class="tool-button"
 				class:active={$toolState.currentTool === 'rectangle'}
 				on:click={() => setTool('rectangle')}
 			>
-				Rectangle
-			</button>
-			<button class:active={$toolState.currentTool === 'circle'} on:click={() => setTool('circle')}>
-				Circle
-			</button>
-			<button class:active={$toolState.currentTool === 'arrow'} on:click={() => setTool('arrow')}>
-				Arrow
+				<PDFAnnotateIcons name="rect" />
 			</button>
 			<button
+				class="tool-button"
+				class:active={$toolState.currentTool === 'circle'}
+				on:click={() => setTool('circle')}
+			>
+				<PDFAnnotateIcons name="circle" />
+			</button>
+			<button
+				class="tool-button"
+				class:active={$toolState.currentTool === 'arrow'}
+				on:click={() => setTool('arrow')}
+			>
+				<PDFAnnotateIcons name="arrow" />
+			</button>
+			<button
+				class="tool-button"
 				class:active={$toolState.currentTool === 'freehand'}
 				on:click={() => setTool('freehand')}
 			>
-				Freehand
+				<PDFAnnotateIcons name="pencil" />
 			</button>
-			<button class:active={$toolState.currentTool === 'text'} on:click={() => setTool('text')}>
-				Text
+			<button
+				class="tool-button"
+				class:active={$toolState.currentTool === 'text'}
+				on:click={() => setTool('text')}
+			>
+				<PDFAnnotateIcons name="text" />
 			</button>
-			<button on:click={saveCurrentPageAnnotations}> Save </button>
+			<button on:click={saveCurrentPageAnnotations}> <PDFAnnotateIcons name="save" /> </button>
 		</div>
 
 		<div class="color-picker">
@@ -633,17 +654,25 @@
 		</div>
 
 		<div class="zoom-controls">
-			<button on:click={() => changeScale(scale - 0.1)} disabled={scale <= minScale}>-</button>
+			<button on:click={() => changeScale(scale - 0.1)} disabled={scale <= minScale}
+				><PDFAnnotateIcons name="zoom-out" /></button
+			>
 			<span>{(scale * 100).toFixed(0)}%</span>
-			<button on:click={() => changeScale(scale + 0.1)} disabled={scale >= maxScale}>+</button>
+			<button on:click={() => changeScale(scale + 0.1)} disabled={scale >= maxScale}
+				><PDFAnnotateIcons name="zoom-in" /></button
+			>
 		</div>
 
-		<button on:click={clearAnnotations}>Clear</button>
+		<button on:click={clearAnnotations}><PDFAnnotateIcons name="eraser" /></button>
 
 		<div class="page-navigation">
-			<button on:click={prevPage} disabled={currentPage === 1}>Previous</button>
+			<button on:click={prevPage} disabled={currentPage === 1}
+				><PDFAnnotateIcons name="prev" /></button
+			>
 			<span>{currentPage} / {numPages}</span>
-			<button on:click={nextPage} disabled={currentPage === numPages}>Next</button>
+			<button on:click={nextPage} disabled={currentPage === numPages}
+				><PDFAnnotateIcons name="next" /></button
+			>
 		</div>
 	</div>
 
@@ -660,13 +689,54 @@
 	</div>
 </div>
 
-<style>
+<style lang="scss">
 	.pdf-viewer {
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
 		padding: 1rem;
 		height: 100%;
+
+		button {
+			padding: 0.5rem 1rem;
+			cursor: pointer;
+			transition: all 0.2s ease;
+			outline: none;
+			border: none;
+			background: transparent;
+		}
+
+		button:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		button.active {
+			background: #878787;
+		}
+
+		button.tool-button {
+			cursor: pointer;
+			transition: all 0.2s ease;
+			outline: none;
+			border: none;
+			border-radius: 50%;
+			height: 36px;
+			width: 36px;
+			background: transparent;
+			display: grid;
+			align-content: center;
+			justify-content: center;
+		}
+
+		button.tool-button:disabled {
+			opacity: 0.5;
+			cursor: not-allowed;
+		}
+
+		button.tool-button.active {
+			background: #f2c7c7;
+		}
 	}
 
 	.toolbar {
@@ -691,24 +761,24 @@
 		border: 1px solid #ccc;
 		overflow: auto;
 		background: #f0f0f0;
-	}
 
-	.canvas-wrapper {
-		position: relative;
-		width: fit-content;
-		margin: 0 auto;
-	}
+		.canvas-wrapper {
+			position: relative;
+			width: fit-content;
+			margin: 0 auto;
 
-	.pdf-canvas {
-		position: absolute;
-		top: 0;
-		left: 0;
-		z-index: 1;
-	}
+			.pdf-canvas {
+				position: absolute;
+				top: 0;
+				left: 0;
+				z-index: 1;
+			}
 
-	.annotation-canvas {
-		position: relative;
-		z-index: 2;
+			.annotation-canvas {
+				position: relative;
+				z-index: 2;
+			}
+		}
 	}
 
 	.loading-overlay {
@@ -722,34 +792,6 @@
 		align-items: center;
 		justify-content: center;
 		z-index: 3;
-	}
-
-	.error-message {
-		padding: 1rem;
-		background: #fee;
-		color: #c00;
-		border-radius: 4px;
-		margin-bottom: 1rem;
-	}
-
-	button {
-		padding: 0.5rem 1rem;
-		border: 1px solid #ccc;
-		border-radius: 4px;
-		background: white;
-		cursor: pointer;
-		transition: all 0.2s ease;
-	}
-
-	button:disabled {
-		opacity: 0.5;
-		cursor: not-allowed;
-	}
-
-	button.active {
-		background: #007bff;
-		color: white;
-		border-color: #0056b3;
 	}
 
 	.page-navigation {

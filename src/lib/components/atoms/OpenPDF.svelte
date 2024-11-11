@@ -34,6 +34,8 @@
 	let isLoading = true
 	let error: string | null = null
 	let scale = initialScale
+	let thumbnailsLoaded = false
+	let thumbnailPages: { canvas: HTMLCanvasElement | null; pageNum: number }[] = []
 
 	const annotationsStore = writable<IPageAnnotations>({})
 
@@ -71,6 +73,7 @@
 			fabricCanvas.on('object:removed', saveCurrentPageAnnotations)
 
 			await loadPDF(pdfUrl)
+			await loadThumbnails()
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Failed to initialize PDF viewer'
 		}
@@ -92,7 +95,6 @@
 
 			currentPDF = await pdfjsLib.getDocument(url).promise
 			numPages = currentPDF.numPages
-
 			await renderPage(currentPage)
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Failed to load PDF'
@@ -137,7 +139,6 @@
 						const shapes = annotation.data.objects.map((obj: any) =>
 							deserializeFabricObject({ type: obj.type.toLowerCase(), data: obj })
 						)
-						console.log(shapes, annotation.data)
 						Promise.all(shapes).then((objects) => {
 							resolve(
 								new Group(objects, {
@@ -228,7 +229,6 @@
 				canvasContext: pdfCanvas.getContext('2d') as CanvasRenderingContext2D,
 				viewport
 			}
-
 			await page.render(renderContext).promise
 			await loadPageAnnotations(pageNumber)
 		} catch (err) {
@@ -343,7 +343,6 @@
 		if (e.selected?.[0] instanceof IText) {
 			setTool('select')
 		}
-		console.log('select', e)
 	}
 
 	function cancelDrawing() {
@@ -587,17 +586,60 @@
 			}
 		}
 	}
+
+	async function goToPage(pageNumber: number) {
+		if (pageNumber !== currentPage) {
+			await saveCurrentPageAnnotations()
+			currentPage = pageNumber
+			await renderPage(currentPage)
+			fabricCanvas.setViewportTransform([scale, 0, 0, scale, 0, 0])
+		}
+	}
+
+	async function renderThumbnail(pageNum: number) {
+		if (!currentPDF) return null
+
+		try {
+			const page = await currentPDF.getPage(pageNum)
+			const viewport = page.getViewport({ scale: 0.2 })
+
+			const canvas = document.createElement('canvas')
+			const context = canvas.getContext('2d')
+
+			canvas.height = viewport.height
+			canvas.width = viewport.width
+
+			const renderContext = {
+				canvasContext: context as CanvasRenderingContext2D,
+				viewport: viewport
+			}
+
+			await page.render(renderContext).promise
+			return canvas
+		} catch (error) {
+			console.error(`Error rendering thumbnail for page ${pageNum}:`, error)
+			return null
+		}
+	}
+
+	async function loadThumbnails() {
+		if (!currentPDF || thumbnailsLoaded) return
+
+		thumbnailPages = []
+		for (let i = 1; i <= numPages; i++) {
+			const canvas = await renderThumbnail(i)
+			if (canvas) {
+				thumbnailPages.push({ canvas, pageNum: i })
+			}
+		}
+		thumbnailsLoaded = true
+		thumbnailPages = thumbnailPages
+	}
 </script>
 
 <svelte:window on:keydown={handleKeyDown} />
 
 <div class="pdf-viewer">
-	<!-- {#if error}
-		<div class="error-message">
-			{error}
-		</div>
-	{/if} -->
-
 	<div class="toolbar">
 		<div class="tool-group">
 			<button
@@ -677,6 +719,20 @@
 	</div>
 
 	<div class="canvas-container" class:loading={isLoading}>
+		<div class="thumbnail-sidebar">
+			<div class="thumbnail-scroll">
+				{#each thumbnailPages as { canvas, pageNum }}
+					<div
+						class="thumbnail"
+						class:active={currentPage === pageNum}
+						on:click={() => goToPage(pageNum)}
+					>
+						<img src={canvas.toDataURL()} alt={`Page ${pageNum}`} class="thumbnail-image" />
+						<div class="thumbnail-number">Page {pageNum}</div>
+					</div>
+				{/each}
+			</div>
+		</div>
 		{#if isLoading}
 			<div class="loading-overlay">
 				<span>Loading...</span>
@@ -761,6 +817,9 @@
 		border: 1px solid #ccc;
 		overflow: auto;
 		background: #f0f0f0;
+		width: fit-content;
+		display: flex;
+		width: 100%;
 
 		.canvas-wrapper {
 			position: relative;
@@ -778,6 +837,59 @@
 				position: relative;
 				z-index: 2;
 			}
+		}
+
+		.thumbnail-sidebar {
+			width: 200px;
+			background: #f5f5f5;
+			border-right: 1px solid #ccc;
+			overflow: hidden;
+			flex-shrink: 0;
+		}
+
+		.thumbnail-scroll {
+			height: 100%;
+			overflow-y: auto;
+			padding: 1rem;
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+		}
+
+		.thumbnail {
+			position: relative;
+			cursor: pointer;
+			border: 2px solid transparent;
+			border-radius: 4px;
+			transition: all 0.2s ease;
+		}
+
+		.thumbnail:hover {
+			border-color: #0056b3;
+		}
+
+		.thumbnail.active {
+			border-color: #007bff;
+			background: rgba(0, 123, 255, 0.1);
+		}
+
+		.thumbnail-image {
+			width: 100%;
+			height: auto;
+			display: block;
+			border-radius: 2px;
+		}
+
+		.thumbnail-number {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background: rgba(0, 0, 0, 0.5);
+			color: white;
+			font-size: 0.8rem;
+			padding: 0.2rem;
+			text-align: center;
 		}
 	}
 

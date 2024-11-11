@@ -1,13 +1,10 @@
-<!-- src/routes/+page.svelte -->
 <script lang="ts">
-
 </script>
 
 <svelte:head>
-	<title>User Management</title>
+	<title>Unlock Mains</title>
 </svelte:head>
 
 <div>
-	<h1 class="header">Supabase + SvelteKit</h1>
+	<h1 class="header">Unlock Mains</h1>
 </div>
-

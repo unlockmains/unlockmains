@@ -42,7 +42,6 @@
 	let showModal = false
 
 	async function handleSave(annotations: IPageAnnotations) {
-		console.log('saveing', annotations)
 		try {
 			// Save to localStorage
 			localStorage.setItem('pdfAnnotations', JSON.stringify(annotations))
@@ -69,14 +68,14 @@
 	{/each} -->
 	<Grid bind:data={submissions} bind:columns />
 
-	<Button label="show modal" onClick={() => (showModal = true)} />
+	<!-- <Button label="show modal" onClick={() => (showModal = true)} /> -->
 
 	<!-- <Modal {showModal}> -->
-	<OpenPdf
+	<!-- <OpenPdf
 		pdfUrl="https://shrey.shreykumar.com/api/files/question_submissions/g97jfi4t6rc5sc8/sample_multiple_onil1GEFjd.pdf"
 		onSave={handleSave}
 		{savedAnnotations}
-	/>
+	/> -->
 	<!-- </Modal> -->
 
 	<!-- /bminycuzvo03uqb/sample_R2Li3rnQNX.pdf -->

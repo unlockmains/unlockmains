@@ -22,9 +22,32 @@
 	<title>Unlock Mains</title>
 </svelte:head>
 
-<div>
+<div class="container">
+	<div class="bg-container"><div class="bg-image" /></div>
 	<Header user={user ?? null} />
 	<slot />
 </div>
 
 <Toaster richColors closeButton />
+
+<style lang="scss">
+	.container {
+		.bg-container {
+			height: 100%;
+			pointer-events: none;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			z-index: 4;
+			.bg-image {
+				background: url('/lib/saltandpepper.png');
+				height: 100%;
+				background-size: 64px;
+				background-repeat: repeat;
+				opacity: 0.06;
+				border-radius: 0;
+			}
+		}
+	}
+</style>

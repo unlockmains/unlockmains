@@ -2,6 +2,7 @@
 import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
 import { env } from "$env/dynamic/private";
+import { goto } from '$app/navigation';
 
 export const load: PageServerLoad = async ({ url, locals: { pocketbase } }) => {
 	const user = pocketbase.authStore.model;
@@ -86,43 +87,44 @@ export const actions: Actions = {
 			}
 		}
 	},
-	// registerWithPassword: async (event) => {
-	// 	const {
-	// 		request,
-	// 		locals: { supabase }
-	// 	} = event
-	// 	const formData = await request.formData()
-	// 	const email = formData.get('email') as string
-	// 	const password = formData.get('password') as string
-	// 	const validEmail = /^[\w-\.+]+@([\w-]+\.)+[\w-]{2,8}$/.test(email)
+	registerWithPassword: async (event) => {
+		const {
+			request,
+			locals: { pocketbase }
+		} = event
+		// const formData = await request.formData()
+		// const email = formData.get('email') as string
+		// const password = formData.get('password') as string
+		// const validEmail = /^[\w-\.+]+@([\w-]+\.)+[\w-]{2,8}$/.test(email)
 
-	// 	if (!validEmail) {
-	// 		return fail(400, { registerWithPassword: { success: false, type: "error", message: "Please enter a valid email address", email, password } })
-	// 	}
-	// 	if (!password) {
-	// 		return fail(400, { registerWithPassword: { success: false, type: "error", message: "Please enter the password", email, password } })
-	// 	}
-	// 	const { error } = await supabase.auth.signUp({ email, password })
-	// 	if (error) {
-	// 		return fail(400, {
-	// 			registerWithPassword: {
-	// 				success: false,
-	// 				type: "error",
-	// 				email,
-	// 				password,
-	// 				message: `There was an issue, Please contact support.`
-	// 			}
-	// 		})
-	// 	}
+		// if (!validEmail) {
+		// 	return fail(400, { registerWithPassword: { success: false, type: "error", message: "Please enter a valid email address", email, password } })
+		// }
+		// if (!password) {
+		// 	return fail(400, { registerWithPassword: { success: false, type: "error", message: "Please enter the password", email, password } })
+		// }
+		// const { error } = await supabase.auth.signUp({ email, password })
+		// if (error) {
+		// 	return fail(400, {
+		// 		registerWithPassword: {
+		// 			success: false,
+		// 			type: "error",
+		// 			email,
+		// 			password,
+		// 			message: `There was an issue, Please contact support.`
+		// 		}
+		// 	})
+		// }
 
-	// 	return {
-	// 		registerWithPassword: {
-	// 			success: true,
-	// 			type: "success",
-	// 			email,
-	// 			password,
-	// 			message: 'Please check your email. You wil receive a 6 digit code to register yourself.'
-	// 		}
-	// 	}
-	// }
+		// return {
+		// 	registerWithPassword: {
+		// 		success: true,
+		// 		type: "success",
+		// 		email,
+		// 		password,
+		// 		message: 'Please check your email. You wil receive a 6 digit code to register yourself.'
+		// 	}
+		// }
+		goto("/register")
+	}
 }

@@ -33,9 +33,16 @@
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
-		padding: 10px;
+		padding: 2em;
 		border: 1px solid var(--color-zinc-400);
-		height: 5em;
+		height: 4em;
+		background-color: var(--color-white-900);
+		border-radius: 9999px;
+		position: fixed;
+		left: 50%;
+		transform: translate(-50%, 0%);
+		margin-top: 1em;
+		width: 90%;
 
 		button {
 			outline: none;

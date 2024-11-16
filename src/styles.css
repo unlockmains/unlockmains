@@ -1,8 +1,8 @@
 html,
 body {
 	--custom-font-family: "Inter", sans-serif;
-	--custom-bg-color: #ffffff;
-	--custom-color-brand: #2c6de6;
+	--custom-bg-color: #fff;
+	--custom-color-brand: #e69c2c;
 	--custom-color-secondary: #666;
 	--custom-border: 1px solid #333;
 	--custom-border-radius: 5px;
@@ -121,6 +121,9 @@ body {
 }
 .hidden-sm {
 	display: none;
+}
+.mt-6 {
+	margin-top: 6em;
 }
 
 @media only screen and (min-width: 33.75em) {

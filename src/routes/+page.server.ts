@@ -7,5 +7,7 @@ export const load: PageServerLoad = async ({ url, locals: { pocketbase } }) => {
     redirect(303, '/dashboard')
   }
 
-  return { url: url.origin }
+  const quotes = await pocketbase.collection('quotes').getFullList();
+
+  return { url: url.origin, quotes }
 }

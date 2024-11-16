@@ -22,32 +22,46 @@
 	<title>Unlock Mains</title>
 </svelte:head>
 
-<div class="container">
-	<div class="bg-container"><div class="bg-image" /></div>
-	<Header user={user ?? null} />
-	<slot />
+<div class="bg-container">
+	<div class="bg-image" />
+	<div class="bg-grain" />
+	<div class="bg-grain-blur" />
 </div>
+<Header user={user ?? null} />
+<slot />
 
 <Toaster richColors closeButton />
 
 <style lang="scss">
-	.container {
-		.bg-container {
+	.bg-container {
+		height: 100%;
+		pointer-events: none;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		z-index: 0;
+		opacity: 0.6;
+		.bg-image {
+			background: url('/lib/grid-bg.svg');
 			height: 100%;
-			pointer-events: none;
-			position: absolute;
-			top: 0;
-			left: 0;
 			width: 100%;
-			z-index: 4;
-			.bg-image {
-				background: url('/lib/saltandpepper.png');
-				height: 100%;
-				background-size: 64px;
-				background-repeat: repeat;
-				opacity: 0.06;
-				border-radius: 0;
-			}
+			background-repeat: no-repeat;
+			position: inherit;
+		}
+		.bg-grain {
+			background: url('/lib/grain-bg.svg');
+			height: 100%;
+			width: 100%;
+			background-repeat: no-repeat;
+			position: inherit;
+		}
+		.bg-grain-blur {
+			background: url('/lib/grain-blur.svg');
+			height: 100%;
+			width: 100%;
+			background-repeat: no-repeat;
+			position: inherit;
 		}
 	}
 </style>

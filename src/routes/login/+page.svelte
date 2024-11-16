@@ -61,7 +61,7 @@
 	<title>Login</title>
 </svelte:head>
 
-<div class="container">
+<div class="container mt-6">
 	<h1>Auth Provider</h1>
 	<h5>Login with an auth provider. If you don't have an account yet it will be created for you.</h5>
 	<form
@@ -126,46 +126,24 @@
 				<Button type="link" label="Reset it!" />
 			</div>
 		</div>
-		<!-- <div class="flex column col-6-sm">
-			<h1>New User? Register</h1>
-			<h5>Welcome aboard! Registration is easy and quick.</h5>
+		<div class="flex column col-6-sm">
+			<h1>Want to build your career?</h1>
+			<h5>Join us today.</h5>
 			<form
 				class="row flex"
 				method="POST"
 				action="?/registerWithPassword"
 				use:enhance={handleWithPassword}
 			>
-				<div class="form-widget">
-					<div>
-						<Input
-							label="Email Address"
-							id="email"
-							name="email"
-							type="email"
-							placeholder="Email Address"
-							value={form?.registerWithPassword?.email ?? ''}
-						/>
-					</div>
-					<div>
-						<Input
-							label="Password"
-							id="password"
-							name="password"
-							type="password"
-							placeholder="Password"
-							value={form?.registerWithPassword?.password ?? ''}
-						/>
-					</div>
-					<div>
-						<Button
-							label="Register"
-							type="register"
-							withLoader={loadingWithPassword}
-							disabled={loadingWithPassword}
-						/>
-					</div>
+				<div style="width: 100%;">
+					<Button
+						label="Join Now"
+						type="register"
+						withLoader={loadingWithPassword}
+						disabled={loadingWithPassword}
+					/>
 				</div>
 			</form>
-		</div> -->
+		</div>
 	</div>
 </div>

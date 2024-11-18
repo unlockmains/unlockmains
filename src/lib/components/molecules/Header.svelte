@@ -43,6 +43,7 @@
 		transform: translate(-50%, 0%);
 		margin-top: 1em;
 		width: 90%;
+		z-index: 20;
 
 		button {
 			outline: none;

@@ -46,21 +46,18 @@
 			background: url('/lib/grid-bg.svg');
 			height: 100%;
 			width: 100%;
-			background-repeat: no-repeat;
 			position: inherit;
 		}
 		.bg-grain {
 			background: url('/lib/grain-bg.svg');
 			height: 100%;
 			width: 100%;
-			background-repeat: no-repeat;
 			position: inherit;
 		}
 		.bg-grain-blur {
 			background: url('/lib/grain-blur.svg');
 			height: 100%;
 			width: 100%;
-			background-repeat: no-repeat;
 			position: inherit;
 		}
 	}

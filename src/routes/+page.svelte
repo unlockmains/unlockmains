@@ -38,6 +38,22 @@
 	<HomePageIcons type="penpencil" />
 	<h2 class="header">Get your ability validated and verified by interview appeared faculty.</h2>
 </section>
+<section class="more-details">
+	<div class="flex row flex-center items-center">
+		<div class="col-4 bordered flex flex-center items-center">
+			<span class="header">More details</span>
+		</div>
+		<div class="col-4 bordered flex flex-center items-center">
+			<span class="header">More details</span>
+		</div>
+		<div class="col-4 bordered flex flex-center items-center">
+			<span class="header">More details</span>
+		</div>
+		<div class="col-4 bordered flex flex-center items-center">
+			<span class="header">More details</span>
+		</div>
+	</div>
+</section>
 
 <style lang="scss">
 	.landing-page {
@@ -135,6 +151,19 @@
 				opacity: 0;
 				transform: translateY(-20px);
 			}
+		}
+	}
+	.more-details {
+		height: 20vh;
+
+		.row {
+			gap: 1em;
+		}
+
+		.header {
+			font-size: 1.5em;
+			font-weight: 700;
+			color: var(--color-orange-700);
 		}
 	}
 </style>

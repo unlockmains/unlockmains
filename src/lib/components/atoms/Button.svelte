@@ -1,6 +1,14 @@
 <script lang="ts">
 	export let label: string
-	export let type: 'default' | 'google-login' | 'email-login' | 'register' | 'link' | 'nav' | 'submit' = 'default'
+	export let type:
+		| 'default'
+		| 'google-login'
+		| 'email-login'
+		| 'register'
+		| 'link'
+		| 'nav'
+		| 'submit'
+		| 'home-register' = 'default'
 	export let onClick: (event: MouseEvent) => void = () => {}
 	export let withLoader: boolean = false
 	export let disabled: boolean = false
@@ -26,6 +34,7 @@
 		--btn-box-color: var(--color-zinc-300);
 		--btn-border: 2px solid var(--btn-box-color);
 		--btn-box-shadow: 0 4px 0 var(--btn-box-color);
+		--btn-font-weight: 500;
 		width: var(--btn-width);
 		height: var(--btn-height);
 		background: var(--btn-background);
@@ -39,7 +48,7 @@
 		gap: 0.5em;
 		justify-content: center;
 		position: relative;
-		font-weight: 500;
+		font-weight: var(--btn-font-weight);
 		font-size: 1em;
 
 		&:hover {
@@ -120,6 +129,16 @@
 			--btn-background-hover: var(--color-gold-600);
 			--btn-color: var(--color-black-900);
 			--btn-box-color: var(--color-gold-800);
+		}
+
+		&.home-register {
+			--btn-width: 50%;
+			--btn-height: 3em;
+			--btn-background: var(--color-purple-300);
+			--btn-background-hover: var(--color-purple-400);
+			--btn-color: var(--color-black-900);
+			--btn-box-color: var(--color-black-900);
+			--btn-font-weight: 400;
 		}
 
 		&:disabled {

@@ -19,6 +19,7 @@
 		padding: 1em 5%;
 		position: fixed;
 		width: 100%;
+		z-index: 10;
 
 		.left-banner-img {
 			position: absolute;

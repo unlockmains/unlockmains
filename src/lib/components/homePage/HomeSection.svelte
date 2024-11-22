@@ -1,72 +1,79 @@
 <script lang="ts">
+	import { goto } from '$app/navigation'
+	import Button from '../atoms/Button.svelte'
 	import Quotes from '../atoms/Quotes.svelte'
 	export let quotes
 </script>
 
-<section class="landing-page">
-	<div class="rocket-container">
-		<h1>launch your mains dream through us</h1>
-		<div class="home-page-rocket">
-			<div class="rocket" />
-			<div class="rocket-fire" />
-		</div>
-	</div>
+<section class="home-section">
 	<div class="main-details">
 		<div class="main-title">Answer writing made easy with Unlock Mains</div>
-		<Quotes {quotes} />
-		<h2 class="header">Get your ability validated and verified by interview appeared faculty.</h2>
+		<p class="sub-text">Get your ability validated and verified by interview appeared faculty.</p>
+		<Button type="home-register" label="Register" onClick={() => goto('/login')} />
 	</div>
-	<div class="more-details">
-		<div class="flex row flex-center items-center">
-			<div class="col-4 bordered flex flex-center items-center column">
-				<span class="header">Expert Faculty</span>
-				<span
-					>Our skilled evaluators guarantee that the quality of the assessments remains flawless.</span
-				>
-			</div>
-			<div class="col-4 bordered flex flex-center items-center column">
-				<span class="header">Quick Evaluation</span>
-				<span>Receive your answers evaluated within 48 hours (up to 5 questions / 1 essay).</span>
-			</div>
-			<div class="col-4 bordered flex flex-center items-center column">
-				<span class="header">Budget Friendly</span>
-				<span
-					>All our subscriptions are carefully priced, keeping the needs of students in mind.</span
-				>
-			</div>
-			<div class="col-4 bordered flex flex-center items-center column">
-				<span class="header">Tailored dashboard</span>
-				<span
-					>Having all your answers in one place allows you to track your progress and boost your
-					learning.</span
-				>
+	<div class="side-details">
+		<div class="rocket-container">
+			<div class="home-page-rocket">
+				<div class="rocket" />
+				<div class="rocket-fire" />
 			</div>
 		</div>
+		<p>Launch your Mains dream through us</p>
+		<Quotes {quotes} />
 	</div>
 </section>
 
 <style lang="scss">
-	.landing-page {
+	.home-section {
 		display: flex;
-		flex-direction: column;
+		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
-		min-height: 100vh;
 		position: relative;
 		user-select: none;
 		top: 5em;
+		gap: 5em;
+		padding: 5em;
+		height: 100%;
+
+		.main-details {
+			width: 50%;
+			display: flex;
+			flex-direction: column;
+			gap: 1em;
+
+			.main-title {
+				font-size: 4em;
+				position: relative;
+				color: #000;
+				font-family: Archivo, sans-serif;
+				line-height: 1.2;
+				letter-spacing: -0.02em;
+				margin-top: 0;
+				margin-bottom: 0;
+			}
+			.sub-text {
+				margin-bottom: 0px;
+				font-size: 18px;
+				line-height: 1.9;
+				letter-spacing: -0.02em;
+				color: var(--color-zinc-500);
+				margin-bottom: 2em;
+			}
+		}
+	}
+
+	.side-details {
+		display: flex;
+		flex-direction: column;
+		width: 50%;
+		align-items: center;
+		justify-content: space-around;
 
 		.rocket-container {
-			position: absolute;
-			top: 10%;
-			right: 10%;
-			h1 {
-				position: absolute;
-				font-family: fantasy;
-				font-size: 0.9em;
-				width: 70%;
-				left: -40%;
-			}
+			position: relative;
+			margin: 3em;
+
 			.home-page-rocket {
 				width: 128px;
 				height: 128px;
@@ -78,10 +85,10 @@
 				}
 
 				.rocket-fire {
-					position: absolute;
+					position: relative;
 					z-index: 0;
-					top: 78%;
-					right: 55%;
+					top: -23%;
+					right: 68%;
 					width: 140px;
 					height: 90px;
 					background: url('/lib/rocket-fire-1.svg') no-repeat center center;
@@ -99,31 +106,13 @@
 				}
 			}
 		}
-
-		.main-details {
-			margin-top: 12em;
-			.main-title {
-				font-size: 2em;
-				font-weight: 700;
-				position: relative;
-				color: var(--custom-color-brand);
-				text-align: center;
-			}
-		}
-
-		.more-details {
-			height: 20vh;
-			background-color: var(--custom-color-brand);
-
-			.row {
-				gap: 1em;
-			}
-
-			.header {
-				font-size: 1.5em;
-				font-weight: 700;
-				color: var(--color-orange-700);
-			}
+		p {
+			position: relative;
+			left: 0%;
+			font-family: Archivo, Inter, sans-serif;
+			font-size: 1.3em;
+			font-weight: 400;
+			letter-spacing: -0.02em;
 		}
 	}
 </style>

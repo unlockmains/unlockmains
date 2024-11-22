@@ -10,12 +10,15 @@ body {
 
 	--color-zinc-300: rgb(199, 197, 197);
 	--color-zinc-400: #a1a1aa;
+	--color-zinc-500: #454545;
 	--color-zinc-700: #3f3f46;
 	--color-zinc-800: rgb(65, 64, 64);
 	--color-black-600: rgba(0, 0, 0, 0.624);
 	--color-black-800: #0F0F0F;
 	--color-black-900: #000;
+	--color-purple-300: #dacdf4;
 	--color-purple-400: rgb(147, 147, 227);
+	--color-purple-500: #9270d7;
 	--color-white-800: whitesmoke;
 	--color-white-900: #fff;
 	--color-yellow-100: rgb(253, 232, 110);
@@ -48,8 +51,8 @@ body {
 
 html,
 body {
-	height: 100vh;
-	width: 100vw;
+	height: 100%;
+	width: 100%;
 	overflow-x: hidden;
 }
 

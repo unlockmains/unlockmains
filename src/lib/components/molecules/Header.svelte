@@ -6,9 +6,10 @@
 	import Popover from '../atoms/Popover.svelte'
 	import HamburgerIcon from '../icons/HamburgerIcon.svelte'
 	export let user
+	export let banner: boolean = false
 </script>
 
-<header>
+<header style={banner ? '--top: 3em;' : '--top: 0em;'}>
 	<button on:click={toggleSideNav}>
 		<HamburgerIcon />
 	</button>
@@ -34,15 +35,11 @@
 		align-items: center;
 		justify-content: space-between;
 		padding: 2em;
-		border: 1px solid var(--color-zinc-400);
-		height: 4em;
+		height: 5em;
+		top: var(--top);
 		background-color: var(--color-white-900);
-		border-radius: 9999px;
 		position: fixed;
-		left: 50%;
-		transform: translate(-50%, 0%);
-		margin-top: 1em;
-		width: 90%;
+		width: 100%;
 		z-index: 20;
 
 		button {

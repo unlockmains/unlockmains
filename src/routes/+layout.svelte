@@ -26,30 +26,8 @@
 </svelte:head>
 
 <Banner />
-<div class="bg-container">
-	<div class="bg-image" />
-</div>
+
 <Header user={user ?? null} banner={true} />
 <slot />
 
 <Toaster richColors closeButton />
-
-<style lang="scss">
-	.bg-container {
-		height: 100%;
-		pointer-events: none;
-		position: absolute;
-		left: 0;
-		width: 100%;
-		z-index: 0;
-		opacity: 0.6;
-		.bg-image {
-			background: url('/lib/grid-bg.svg');
-			height: 100%;
-			width: 100%;
-			position: absolute;
-			top: 0;
-			left: 0;
-		}
-	}
-</style>

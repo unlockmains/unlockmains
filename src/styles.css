@@ -132,6 +132,12 @@ body {
 	border: 1px solid var(--color-zinc-400);
 	border-radius: var(--custom-border-radius);
 }
+.flex-start {
+	justify-content: flex-start;
+}
+.items-start {
+	align-items: flex-start;
+}
 
 @media only screen and (min-width: 33.75em) {
 	/* 540px */

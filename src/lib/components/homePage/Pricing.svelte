@@ -10,7 +10,7 @@
 	.pricing {
 		display: flex;
 		flex-flow: row wrap;
-		justify-content: center;
-		align-items: center;
+		justify-content: space-evenly;
+		align-items: flex-start;
 	}
 </style>

@@ -132,7 +132,7 @@
 		}
 
 		&.home-register {
-			--btn-width: 50%;
+			--btn-width: 100%;
 			--btn-height: 3em;
 			--btn-background: var(--color-purple-300);
 			--btn-background-hover: var(--color-purple-400);

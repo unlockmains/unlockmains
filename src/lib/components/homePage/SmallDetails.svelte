@@ -40,27 +40,26 @@
 			background: url('/lib/shapes.svg') center center;
 			background-size: cover;
 			position: absolute;
-			height: 50%;
-			width: 20%;
-			left: 2%;
-			z-index: 20;
+			height: 8em;
+			width: 2em;
+			left: 5%;
+			z-index: 10;
 		}
 		.right-bg {
 			background: url('/lib/shapes.svg') center center;
 			background-size: cover;
 			position: absolute;
-			height: 50%;
-			width: 20%;
-			right: 2%;
-			top: 5em;
-			z-index: 20;
+			height: 8em;
+			width: 2em;
+			right: 5%;
+			top: 40%;
+			z-index: 10;
 			transform: scale(-1);
 		}
 
 		.row {
 			position: relative;
 			width: 100%;
-			max-width: 1140px;
 			margin-right: auto;
 			margin-left: auto;
 			border-radius: var(--custom-border-radius);
@@ -75,7 +74,7 @@
 			min-height: 10em;
 
 			.column {
-				z-index: 20;
+				z-index: 10;
 				height: 100%;
 				gap: 1em;
 				padding-right: 2em;

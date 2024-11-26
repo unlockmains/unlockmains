@@ -9,7 +9,6 @@
 		position: absolute;
 		left: 0;
 		width: 100%;
-		z-index: 0;
 
 		.bg-image {
 			background: url('/lib/grid-bg.svg') center center;

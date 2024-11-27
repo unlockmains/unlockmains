@@ -23,6 +23,7 @@
   "type": "module",
   "dependencies": {
     "fabric": "^6.4.3",
+    "lottie-web": "^5.12.2",
     "pdf-annotate.js": "^1.0.0",
     "pdfjs-dist": "^4.7.76",
     "pocketbase": "^0.21.5",

@@ -2,7 +2,10 @@
 	import { goto } from '$app/navigation'
 	import Button from '../atoms/Button.svelte'
 	import Quotes from '../atoms/Quotes.svelte'
+	import LottieAnimation from '../atoms/LottieAnimation.svelte'
 	export let quotes
+
+	const animationPath = '/lib/lottie/rocket-launch.json'
 </script>
 
 <section class="home-section">
@@ -12,11 +15,8 @@
 		<Button type="home-register" label="Register" onClick={() => goto('/login')} />
 	</div>
 	<div class="side-details">
-		<div class="rocket-container">
-			<div class="home-page-rocket">
-				<div class="rocket" />
-				<div class="rocket-fire" />
-			</div>
+		<div class="rocket">
+			<LottieAnimation src={animationPath} loop={true} autoplay={true} />
 		</div>
 		<p>Launch your Mains dream through us</p>
 		<Quotes {quotes} />
@@ -31,7 +31,6 @@
 		justify-content: space-between;
 		position: relative;
 		user-select: none;
-		top: 5em;
 		gap: 5em;
 		padding: 5em;
 		height: 100%;
@@ -73,42 +72,10 @@
 		background: url('lib/grid-gradient.svg') no-repeat center center;
 		background-size: contain;
 
-		.rocket-container {
-			position: relative;
-			margin: 3em;
-
-			.home-page-rocket {
-				width: 128px;
-				height: 128px;
-
-				.rocket {
-					background: url('/lib/rocket.svg') no-repeat center center;
-					height: 100%;
-					width: 100%;
-				}
-
-				.rocket-fire {
-					position: relative;
-					z-index: 0;
-					top: -23%;
-					right: 68%;
-					width: 140px;
-					height: 90px;
-					background: url('/lib/rocket-fire-1.svg') no-repeat center center;
-					transform: rotate(-48deg);
-					animation: fire 0.25s steps(3) infinite;
-
-					@keyframes fire {
-						0% {
-							background-position: 0px;
-						}
-						100% {
-							background-position: -420px;
-						}
-					}
-				}
-			}
+		.rocket {
+			width: 80%;
 		}
+
 		p {
 			position: relative;
 			left: 0%;

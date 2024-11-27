@@ -8,9 +8,15 @@
 </script>
 
 <Background />
-<HomeSection {quotes} />
-<SmallDetails />
-<Pricing />
+<div class="home-page">
+	<HomeSection {quotes} />
+	<SmallDetails />
+	<Pricing />
+</div>
 
 <style lang="scss">
+	.home-page {
+		max-width: 1200px;
+		margin: 0 auto;
+	}
 </style>

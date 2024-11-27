@@ -35,6 +35,7 @@
 		gap: 5em;
 		padding: 5em;
 		height: 100%;
+		min-height: 100vh;
 
 		.main-details {
 			width: 50%;
@@ -69,6 +70,8 @@
 		width: 50%;
 		align-items: center;
 		justify-content: space-around;
+		background: url('lib/grid-gradient.svg') no-repeat center center;
+		background-size: contain;
 
 		.rocket-container {
 			position: relative;

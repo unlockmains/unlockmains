@@ -1,5 +1,12 @@
 <script lang="ts">
-	import Card from '../atoms/Card.svelte'
+	import PricingCards from '../atoms/PricingCards.svelte'
+	import Tabs from '../molecules/Tabs.svelte'
+	import PricingCardsData from '$lib/api/mockPlansData.json'
+	let activeTab: number = $state(0)
+
+	const handleTabClick = (index: number) => {
+		activeTab = index
+	}
 </script>
 
 <section class="pricing">
@@ -7,7 +14,8 @@
 		<h1>Our Plans</h1>
 		<h4>All affordable plans. Choose the one that suits you best.</h4>
 	</div>
-	<Card />
+	<Tabs {activeTab} {handleTabClick} />
+	<PricingCards pricingCardData={PricingCardsData[activeTab].cards} />
 </section>
 
 <style lang="scss">
@@ -18,6 +26,7 @@
 		align-items: center;
 		background: url('lib/grid-gradient.svg') no-repeat center center;
 		position: relative;
+		min-height: 80vh;
 
 		.heading {
 			z-index: 10;

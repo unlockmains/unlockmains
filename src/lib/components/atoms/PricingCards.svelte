@@ -1,124 +1,13 @@
 <script lang="ts">
 	import Button from './Button.svelte'
-	const pricingData = [
-		{
-			id: 1,
-			name: 'Free Membership',
-			color: '#c7eeb4',
-			price: '1700',
-			duration: 'month',
-			features: [
-				{
-					id: 1,
-					icon: '/lib/feature-yes.svg',
-					title: 'Unlimited'
-				},
-				{
-					id: 2,
-					icon: '/lib/feature-yes.svg',
-					title: 'No Credit Card Required'
-				},
-				{
-					id: 3,
-					icon: '/lib/feature-no.svg',
-					title: '24/7 Support',
-					strikethrough: true
-				}
-			]
-		},
-		{
-			id: 2,
-			name: '1 month Membership',
-			color: '#fbee9d',
-			price: '10000',
-			duration: 'month',
-			features: [
-				{
-					id: 1,
-					icon: '/lib/feature-yes.svg',
-					title: 'Unlimited'
-				},
-				{
-					id: 2,
-					icon: '/lib/feature-yes.svg',
-					title: 'No Credit Card Required'
-				},
-				{
-					id: 3,
-					icon: '/lib/feature-yes.svg',
-					title: '24/7 Support',
-					strikethrough: false
-				},
-				{
-					id: 4,
-					icon: '/lib/feature-yes.svg',
-					title: 'Unlimited'
-				},
-				{
-					id: 5,
-					icon: '/lib/feature-yes.svg',
-					title: 'No Credit Card Required'
-				},
-				{
-					id: 6,
-					icon: '/lib/feature-no.svg',
-					title: '24/7 Support',
-					strikethrough: true
-				}
-			]
-		},
-		{
-			id: 3,
-			name: 'Mains 2026 Pack',
-			color: '#cce2eb',
-			price: '17000',
-			duration: 'One Time',
-			features: [
-				{
-					id: 1,
-					icon: '/lib/feature-yes.svg',
-					title: 'Unlimited'
-				},
-				{
-					id: 2,
-					icon: '/lib/feature-yes.svg',
-					title: 'No Credit Card Required'
-				},
-				{
-					id: 3,
-					icon: '/lib/feature-yes.svg',
-					title: '24/7 Support',
-					strikethrough: false
-				},
-				{
-					id: 4,
-					icon: '/lib/feature-yes.svg',
-					title: 'Unlimited'
-				},
-				{
-					id: 5,
-					icon: '/lib/feature-yes.svg',
-					title: 'No Credit Card Required'
-				},
-				{
-					id: 6,
-					icon: '/lib/feature-yes.svg',
-					title: '24/7 Support',
-					strikethrough: false
-				},
-				{
-					id: 7,
-					icon: '/lib/feature-yes.svg',
-					title: '2026 Support',
-					strikethrough: false
-				}
-			]
-		}
-	]
+
+	export let pricingCardData
+
+	console.log('pricingCardData', pricingCardData)
 </script>
 
 <div class="cards">
-	{#each pricingData as { id, name, color, price, duration, features }}
+	{#each pricingCardData as { name, color, price, duration, features }}
 		<div class="card">
 			<div class="pricing-name" style={`--bg-color: ${color}`}>{name}</div>
 			<div class="pricing-price">

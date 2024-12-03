@@ -1,0 +1,269 @@
+[{
+    "id": 1,
+    "name": "GS/ESSAY",
+    "cards": [
+    {
+        "id": 1,
+        "name": "Free Membership",
+        "color": "#c7eeb4",
+        "price": "1700",
+        "duration": "month",
+        "features": [
+            {
+                "id": 1,
+                "icon": "/lib/feature-yes.svg",
+                "title": "Unlimited"
+            },
+            {
+                "id": 2,
+                "icon": "/lib/feature-yes.svg",
+                "title": "No Credit Card Required"
+            },
+            {
+                "id": 3,
+                "icon": "/lib/feature-no.svg",
+                "title": "24/7 Support",
+                "strikethrough": true
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "1 month Membership",
+        "color": "#fbee9d",
+        "price": "10000",
+        "duration": "month",
+        "features": [
+            {
+                "id": 1,
+                "icon": "/lib/feature-yes.svg",
+                "title": "Unlimited"
+            },
+            {
+                "id": 2,
+                "icon": "/lib/feature-yes.svg",
+                "title": "No Credit Card Required"
+            },
+            {
+                "id": 3,
+                "icon": "/lib/feature-yes.svg",
+                "title": "24/7 Support",
+                "strikethrough": false
+            },
+            {
+                "id": 4,
+                "icon": "/lib/feature-yes.svg",
+                "title": "Unlimited"
+            },
+            {
+                "id": 5,
+                "icon": "/lib/feature-yes.svg",
+                "title": "No Credit Card Required"
+            },
+            {
+                "id": 6,
+                "icon": "/lib/feature-no.svg",
+                "title": "24/7 Support",
+                "strikethrough": true
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Mains 2026 Pack",
+        "color": "#cce2eb",
+        "price": "17000",
+        "duration": "One Time",
+        "features": [
+            {
+                "id": 1,
+                "icon": "/lib/feature-yes.svg",
+                "title": "Unlimited"
+            },
+            {
+                "id": 2,
+                "icon": "/lib/feature-yes.svg",
+                "title": "No Credit Card Required"
+            },
+            {
+                "id": 3,
+                "icon": "/lib/feature-yes.svg",
+                "title": "24/7 Support",
+                "strikethrough": false
+            },
+            {
+                "id": 4,
+                "icon": "/lib/feature-yes.svg",
+                "title": "Unlimited"
+            },
+            {
+                "id": 5,
+                "icon": "/lib/feature-yes.svg",
+                "title": "No Credit Card Required"
+            },
+            {
+                "id": 6,
+                "icon": "/lib/feature-yes.svg",
+                "title": "24/7 Support",
+                "strikethrough": false
+            },
+            {
+                "id": 7,
+                "icon": "/lib/feature-yes.svg",
+                "title": "2026 Support",
+                "strikethrough": false
+            }
+        ]
+    }
+]
+},
+{
+    "id": 2,
+    "name": "OPTIONAL",
+    "cards": [
+    {
+        "id": 1,
+        "name": "Socio-One Month",
+        "color": "#c7eeb4",
+        "price": "1700",
+        "duration": "month",
+        "features": [
+            {
+                "id": 1,
+                "icon": "/lib/feature-yes.svg",
+                "title": "Unlimited"
+            },
+            {
+                "id": 2,
+                "icon": "/lib/feature-yes.svg",
+                "title": "No Credit Card Required"
+            },
+            {
+                "id": 3,
+                "icon": "/lib/feature-no.svg",
+                "title": "24/7 Support",
+                "strikethrough": true
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Socia 2025 Mains",
+        "color": "#fbee9d",
+        "price": "10000",
+        "duration": "month",
+        "features": [
+            {
+                "id": 1,
+                "icon": "/lib/feature-yes.svg",
+                "title": "Unlimited"
+            },
+            {
+                "id": 2,
+                "icon": "/lib/feature-yes.svg",
+                "title": "No Credit Card Required"
+            },
+            {
+                "id": 3,
+                "icon": "/lib/feature-yes.svg",
+                "title": "24/7 Support",
+                "strikethrough": false
+            },
+            {
+                "id": 4,
+                "icon": "/lib/feature-yes.svg",
+                "title": "Unlimited"
+            },
+            {
+                "id": 5,
+                "icon": "/lib/feature-yes.svg",
+                "title": "No Credit Card Required"
+            },
+            {
+                "id": 6,
+                "icon": "/lib/feature-no.svg",
+                "title": "24/7 Support",
+                "strikethrough": true
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Mains 2026 Pack",
+        "color": "#cce2eb",
+        "price": "17000",
+        "duration": "One Time",
+        "features": [
+            {
+                "id": 1,
+                "icon": "/lib/feature-yes.svg",
+                "title": "Unlimited"
+            },
+            {
+                "id": 2,
+                "icon": "/lib/feature-yes.svg",
+                "title": "No Credit Card Required"
+            },
+            {
+                "id": 3,
+                "icon": "/lib/feature-yes.svg",
+                "title": "24/7 Support",
+                "strikethrough": false
+            },
+            {
+                "id": 4,
+                "icon": "/lib/feature-yes.svg",
+                "title": "Unlimited"
+            },
+            {
+                "id": 5,
+                "icon": "/lib/feature-yes.svg",
+                "title": "No Credit Card Required"
+            },
+            {
+                "id": 6,
+                "icon": "/lib/feature-yes.svg",
+                "title": "24/7 Support",
+                "strikethrough": false
+            },
+            {
+                "id": 7,
+                "icon": "/lib/feature-yes.svg",
+                "title": "2026 Support",
+                "strikethrough": false
+            }
+        ]
+    }
+]
+},
+{
+    "id": 3,
+    "name": "Option3",
+    "cards": [
+    {
+        "id": 1,
+        "name": "Option Member",
+        "color": "#c7eeb4",
+        "price": "1700",
+        "duration": "month",
+        "features": [
+            {
+                "id": 1,
+                "icon": "/lib/feature-yes.svg",
+                "title": "Unlimited"
+            },
+            {
+                "id": 2,
+                "icon": "/lib/feature-yes.svg",
+                "title": "No Credit Card Required"
+            },
+            {
+                "id": 3,
+                "icon": "/lib/feature-no.svg",
+                "title": "24/7 Support",
+                "strikethrough": true
+            }
+        ]
+    }
+]
+}]

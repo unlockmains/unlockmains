@@ -4,6 +4,10 @@
 	import PricingCardsData from '$lib/api/mockPlansData.json'
 	let activeTab: number = $state(0)
 
+	let { pricingPbData } = $props()
+
+	console.log('pricing', pricingPbData)
+
 	const handleTabClick = (index: number) => {
 		activeTab = index
 	}
@@ -22,11 +26,11 @@
 	.pricing {
 		display: flex;
 		flex-flow: column;
-		justify-content: space-between;
 		align-items: center;
 		background: url('lib/grid-gradient.svg') no-repeat center center;
 		position: relative;
-		min-height: 80vh;
+		min-height: 100vh;
+		margin-bottom: 5em;
 
 		.heading {
 			z-index: 10;

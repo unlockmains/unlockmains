@@ -7,7 +7,13 @@ export const load: PageServerLoad = async ({ url, locals: { pocketbase } }) => {
     redirect(303, '/dashboard')
   }
 
-  const quotes = await pocketbase.collection('quotes').getFullList();
+  // const quotes = await pocketbase.collection('quotes').getFullList();
 
-  return { url: url.origin, quotes }
+  // const record = await pocketbase.collection('payment_plans_details').getFullList({
+  //   expand: "paymentCategory"
+  // });
+
+  // console.log("record", record)
+
+  return { url: url.origin, quotes: [], pricingPbData: [] }
 }

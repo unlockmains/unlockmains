@@ -1,6 +1,7 @@
 <script>
 	import Background from '../atoms/Background.svelte'
 	import HomeFaq from './HomeFAQ.svelte'
+	import HomeFooter from './HomeFooter.svelte'
 	import HomeSection from './HomeSection.svelte'
 	import Pricing from './Pricing.svelte'
 	import SmallDetails from './SmallDetails.svelte'
@@ -17,6 +18,7 @@
 	<Pricing {pricingPbData} />
 	<Toppers />
 	<HomeFaq />
+	<HomeFooter />
 </div>
 
 <style lang="scss">

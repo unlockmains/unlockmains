@@ -273,42 +273,9 @@ body {
 	border-radius: 5px;
 }
 
-.footer {
-	position: absolute;
-	max-width: 100%;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	display: flex;
-	flex-flow: row;
-	border-top: var(--custom-border);
-	background-color: var(--custom-bg-color);
-}
-.footer div {
-	padding: var(--custom-spacing);
-	display: flex;
-	align-items: center;
-	width: 100%;
-}
-.footer div > img {
-	height: 20px;
-	margin-left: 10px;
-}
-.footer > div:first-child {
-	display: none;
-}
-.footer > div:nth-child(2) {
-	justify-content: left;
-}
-
 @media only screen and (min-width: 60em) {
 	/* 960px */
-	.footer > div:first-child {
-		display: flex;
-	}
-	.footer > div:nth-child(2) {
-		justify-content: center;
-	}
+
 }
 
 @keyframes spin {

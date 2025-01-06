@@ -1,5 +1,6 @@
 import { redirect } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
+import PricingCardsData from '$lib/api/mockPlansData.json'
 
 export const load: PageServerLoad = async ({ url, locals: { pocketbase } }) => {
   const user = pocketbase.authStore.model;
@@ -15,5 +16,5 @@ export const load: PageServerLoad = async ({ url, locals: { pocketbase } }) => {
 
   // console.log("record", record)
 
-  return { url: url.origin, quotes: [], pricingPbData: [] }
+  return { url: url.origin, quotes: [], pricingPbData: PricingCardsData }
 }

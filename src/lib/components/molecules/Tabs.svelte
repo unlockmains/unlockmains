@@ -1,19 +1,7 @@
 <script lang="ts">
-	let tabs = [
-		{
-			title: 'section 1'
-		},
-		{
-			title: 'section 2'
-		},
-		{
-			title: 'section 3'
-		}
-	]
-	let { activeTab, handleTabClick } = $props()
+	let { items, activeTab, handleTabClick } = $props()
 
-	// Track hover state for each tab
-	let hoveredTab = -1
+	let hoveredTab: number = $state(-1)
 
 	function handleHover(index: number) {
 		hoveredTab = index
@@ -26,7 +14,7 @@
 
 <div class="tabs-container">
 	<div class="tabs">
-		{#each tabs as tab, index}
+		{#each items as tab, index}
 			<button
 				class:active={activeTab === index}
 				class:hovered={hoveredTab === index}
@@ -34,7 +22,7 @@
 				on:mouseenter={() => handleHover(index)}
 				on:mouseleave={handleLeave}
 			>
-				{tab.title}
+				{tab}
 				{#if activeTab === index}
 					<div class="active-indicator" />
 				{/if}
@@ -47,14 +35,13 @@
 	.tabs-container {
 		width: 50%;
 		padding: 1em;
-		margin: 1em;
 
 		.tabs {
 			display: flex;
 			flex-flow: row;
 			justify-content: space-between;
 			align-items: center;
-			height: 4em;
+			height: 3em;
 			gap: 1em;
 			position: relative;
 
@@ -72,13 +59,11 @@
 				overflow: hidden;
 				font-weight: 500;
 
-				// Hover effect
 				&:hover {
 					transform: translateY(-2px);
 					box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 				}
 
-				// Active state
 				&.active {
 					background-color: var(--color-cyan-700);
 					color: white;
@@ -91,12 +76,11 @@
 						left: 0;
 						width: 100%;
 						height: 3px;
-						background: black;
+						background: var(--color-indigo-400);
 						animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 					}
 				}
 
-				// Click effect
 				&:active {
 					transform: translateY(0);
 					box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

@@ -1,269 +1,72 @@
-[{
-    "id": 1,
-    "name": "GS/ESSAY",
-    "cards": [
+[
     {
-        "id": 1,
-        "name": "Free Membership",
-        "color": "#c7eeb4",
-        "price": "1700",
+      "sectionName":"GS/Essay", 
+      "options": [],
+      "pricings": [{
+        "name": "One Month",
+        "features": ["English/हिंदी Medium","Active for 30 days","Total 60 GS Questions + 4 Essays","2 questions/day, 1 Essay/Week","Select question from any source","Evaluation within 24 working* hours","Access to Question Bank"],
+        "originalPrice": 2499,
+        "currentPrice": 1799,
         "duration": "month",
-        "features": [
-            {
-                "id": 1,
-                "icon": "/lib/feature-yes.svg",
-                "title": "Unlimited"
-            },
-            {
-                "id": 2,
-                "icon": "/lib/feature-yes.svg",
-                "title": "No Credit Card Required"
-            },
-            {
-                "id": 3,
-                "icon": "/lib/feature-no.svg",
-                "title": "24/7 Support",
-                "strikethrough": true
-            }
-        ]
+        "color": "#c7eeb4"
+      },
+      {
+        "name": "Mains {year}",
+        "features": ["English/हिंदी Medium","Active Till *Mains {year}","Unlimited GS + Essay Evaluation","No Limit on Daily Submissions","Access to Question Bank","Select question from any source","Full length tests covered","Evaluation within 24 working* hours","Complimentary One-on-One Mentorship Calls","Free - Precision Answer Writing Video Course (PAWC)","Recorded Topic Wise GS Mentored Answer Writing (MAW) Sessions by Rank Holder along with Hand Written Model Answers","Access to Previous Year Toppers Copies"],
+        "originalPrice": 10999,
+        "currentPrice": 8499,
+        "duration": "year",
+         "color": "#fbee9d"
+      },
+      {
+        "name": "Mains {year+1}",
+        "features": ["English/हिंदी Medium","Active Till *Mains {year+1}","Unlimited GS + Essay Evaluation","No Limit on Daily Submissions","Access to Question Bank","Select question from any source","Full length tests covered","Evaluation within 24 working* hours","Complimentary One-on-One Mentorship Calls","Free - Precision Answer Writing Video Course (PAWC)","Recorded Topic Wise GS Mentored Answer Writing (MAW) Sessions by Rank Holder along with Hand Written Model Answers","Access to Previous Year Toppers Copies"],
+        "originalPrice": 16999,
+        "currentPrice": 14999,
+        "duration": "year",
+         "color": "#cce2eb"
+      }]
     },
     {
-        "id": 2,
-        "name": "1 month Membership",
-        "color": "#fbee9d",
-        "price": "10000",
+     "sectionName": "Optional",
+      "options": ["Hindi Literature", "Sociology", "History", "PSIR", "Geography", "Philosophy", "Public Administration", "Tamil Literature", "LAW", "Anthropology", "Agriculture"],
+      "disabledOptions": ["History", "PSIR", "Geography", "Philosophy"],
+      "pricings": [{
+        "name": "{option} One Month",
+        "features": ["English/हिंदी Medium","Active for 30 days","Total 60 GS Questions + 4 Essays","2 questions/day, 1 Essay/Week","Select question from any source","Evaluation within 24 working* hours"],
+        "originalPrice": 2499,
+        "currentPrice": 1799,
         "duration": "month",
-        "features": [
-            {
-                "id": 1,
-                "icon": "/lib/feature-yes.svg",
-                "title": "Unlimited"
-            },
-            {
-                "id": 2,
-                "icon": "/lib/feature-yes.svg",
-                "title": "No Credit Card Required"
-            },
-            {
-                "id": 3,
-                "icon": "/lib/feature-yes.svg",
-                "title": "24/7 Support",
-                "strikethrough": false
-            },
-            {
-                "id": 4,
-                "icon": "/lib/feature-yes.svg",
-                "title": "Unlimited"
-            },
-            {
-                "id": 5,
-                "icon": "/lib/feature-yes.svg",
-                "title": "No Credit Card Required"
-            },
-            {
-                "id": 6,
-                "icon": "/lib/feature-no.svg",
-                "title": "24/7 Support",
-                "strikethrough": true
-            }
-        ]
+        "color": "#c7eeb4"
+      },
+      {
+        "name": "{option} Mains {year}",
+        "features": ["English Medium","Active Till Mains 2025","Unlimited Optional Evaluation","No Limit on Daily Submissions","Select question from any source","Full-length tests covered","Evaluation within 24 working* hours","Complimentary Mentorship Calls"],
+        "originalPrice": 12999,
+        "currentPrice": 7999,
+        "duration": "year",
+        "color": "#fbee9d"
+      }]
     },
     {
-        "id": 3,
-        "name": "Mains 2026 Pack",
-        "color": "#cce2eb",
-        "price": "17000",
-        "duration": "One Time",
-        "features": [
-            {
-                "id": 1,
-                "icon": "/lib/feature-yes.svg",
-                "title": "Unlimited"
-            },
-            {
-                "id": 2,
-                "icon": "/lib/feature-yes.svg",
-                "title": "No Credit Card Required"
-            },
-            {
-                "id": 3,
-                "icon": "/lib/feature-yes.svg",
-                "title": "24/7 Support",
-                "strikethrough": false
-            },
-            {
-                "id": 4,
-                "icon": "/lib/feature-yes.svg",
-                "title": "Unlimited"
-            },
-            {
-                "id": 5,
-                "icon": "/lib/feature-yes.svg",
-                "title": "No Credit Card Required"
-            },
-            {
-                "id": 6,
-                "icon": "/lib/feature-yes.svg",
-                "title": "24/7 Support",
-                "strikethrough": false
-            },
-            {
-                "id": 7,
-                "icon": "/lib/feature-yes.svg",
-                "title": "2026 Support",
-                "strikethrough": false
-            }
-        ]
+    "sectionName": "Combo",
+      "options": ["Hindi Literature", "Sociology", "History", "PSIR", "Geography", "Philosophy", "Public Administration", "Tamil Literature", "Kannada Literature", "Anthropology", "Agriculture"],
+      "disabledOptions": [],
+      "pricings": [{
+        "name": "Mains {year} - GS + Essay + {option}",
+        "features": ["English Medium","Active Till *Mains 2025","Unlimited GS+ESSAY+Optional Evaluation","No Limit on Daily Submissions","Select question from any source","Full-length tests covered","Access to Question Bank","Evaluation within 24 working* hours","Complimentary One-on-One Mentorship Calls","Free - Precision Answer Writing Video Course","Recorded Topic Wise GS Mentored Answer Writing (MAW) Sessions by Rank Holder along with Hand Written Model Answers","Access to Previous Year Toppers Copies"],
+        "originalPrice": 15999,
+        "currentPrice": 13999,
+        "duration": "year",
+        "color": "#c7eeb4"
+      },
+      {
+        "name": "Mains {year+1} - GS + Essay + {option}",
+        "features": ["English Medium","Active Till *Mains 2025","Unlimited GS+ESSAY+Optional Evaluation","No Limit on Daily Submissions","Select question from any source","Full-length tests covered","Access to Question Bank","Evaluation within 24 working* hours","Complimentary One-on-One Mentorship Calls","Free - Precision Answer Writing Video Course","Recorded Topic Wise GS Mentored Answer Writing (MAW) Sessions by Rank Holder along with Hand Written Model Answers","Access to Previous Year Toppers Copies"],
+        "originalPrice": 25999,
+        "currentPrice": 22999,
+        "duration": "year",
+        "color": "#fbee9d"
+      }]
     }
-]
-},
-{
-    "id": 2,
-    "name": "OPTIONAL",
-    "cards": [
-    {
-        "id": 1,
-        "name": "Socio-One Month",
-        "color": "#c7eeb4",
-        "price": "1700",
-        "duration": "month",
-        "features": [
-            {
-                "id": 1,
-                "icon": "/lib/feature-yes.svg",
-                "title": "Unlimited"
-            },
-            {
-                "id": 2,
-                "icon": "/lib/feature-yes.svg",
-                "title": "No Credit Card Required"
-            },
-            {
-                "id": 3,
-                "icon": "/lib/feature-no.svg",
-                "title": "24/7 Support",
-                "strikethrough": true
-            }
-        ]
-    },
-    {
-        "id": 2,
-        "name": "Socia 2025 Mains",
-        "color": "#fbee9d",
-        "price": "10000",
-        "duration": "month",
-        "features": [
-            {
-                "id": 1,
-                "icon": "/lib/feature-yes.svg",
-                "title": "Unlimited"
-            },
-            {
-                "id": 2,
-                "icon": "/lib/feature-yes.svg",
-                "title": "No Credit Card Required"
-            },
-            {
-                "id": 3,
-                "icon": "/lib/feature-yes.svg",
-                "title": "24/7 Support",
-                "strikethrough": false
-            },
-            {
-                "id": 4,
-                "icon": "/lib/feature-yes.svg",
-                "title": "Unlimited"
-            },
-            {
-                "id": 5,
-                "icon": "/lib/feature-yes.svg",
-                "title": "No Credit Card Required"
-            },
-            {
-                "id": 6,
-                "icon": "/lib/feature-no.svg",
-                "title": "24/7 Support",
-                "strikethrough": true
-            }
-        ]
-    },
-    {
-        "id": 3,
-        "name": "Mains 2026 Pack",
-        "color": "#cce2eb",
-        "price": "17000",
-        "duration": "One Time",
-        "features": [
-            {
-                "id": 1,
-                "icon": "/lib/feature-yes.svg",
-                "title": "Unlimited"
-            },
-            {
-                "id": 2,
-                "icon": "/lib/feature-yes.svg",
-                "title": "No Credit Card Required"
-            },
-            {
-                "id": 3,
-                "icon": "/lib/feature-yes.svg",
-                "title": "24/7 Support",
-                "strikethrough": false
-            },
-            {
-                "id": 4,
-                "icon": "/lib/feature-yes.svg",
-                "title": "Unlimited"
-            },
-            {
-                "id": 5,
-                "icon": "/lib/feature-yes.svg",
-                "title": "No Credit Card Required"
-            },
-            {
-                "id": 6,
-                "icon": "/lib/feature-yes.svg",
-                "title": "24/7 Support",
-                "strikethrough": false
-            },
-            {
-                "id": 7,
-                "icon": "/lib/feature-yes.svg",
-                "title": "2026 Support",
-                "strikethrough": false
-            }
-        ]
-    }
-]
-},
-{
-    "id": 3,
-    "name": "Option3",
-    "cards": [
-    {
-        "id": 1,
-        "name": "Option Member",
-        "color": "#c7eeb4",
-        "price": "1700",
-        "duration": "month",
-        "features": [
-            {
-                "id": 1,
-                "icon": "/lib/feature-yes.svg",
-                "title": "Unlimited"
-            },
-            {
-                "id": 2,
-                "icon": "/lib/feature-yes.svg",
-                "title": "No Credit Card Required"
-            },
-            {
-                "id": 3,
-                "icon": "/lib/feature-no.svg",
-                "title": "24/7 Support",
-                "strikethrough": true
-            }
-        ]
-    }
-]
-}]
+  ]

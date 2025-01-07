@@ -2,22 +2,46 @@
 	import type { INewSubmissionType } from '$lib/types'
 	import { onClickOutside } from '../../context/ComboboxContext.svelte'
 
-	export let disabled: boolean = false
-	export let label: string = ''
-	export let name: string
-	export let options: INewSubmissionType[] = []
-	export let placeholder: string | undefined = undefined
-	export let readonly: boolean = false
-	export let required: boolean = false
-	export let value: string | undefined = ''
-	export let style: string = ''
+	// export let disabled: boolean = false
+	// export let label: string = ''
+	// export let name: string
+	// export let options: INewSubmissionType[] = []
+	// export let placeholder: string | undefined = undefined
+	// export let readonly: boolean = false
+	// export let required: boolean = false
+	// export let value: string | undefined = ''
+	// export let style: string = ''
+	// export let showRemainingCount: boolean = true
+	let {
+		disabled = false,
+		label = '',
+		name,
+		options = [],
+		placeholder,
+		readonly = false,
+		required = false,
+		value = $bindable(),
+		style = '',
+		showRemainingCount = true
+	}: {
+		disabled: boolean | undefined
+		label: string
+		name: string
+		options: INewSubmissionType[]
+		placeholder: string | undefined
+		readonly?: boolean
+		required?: boolean
+		value: string | undefined
+		style: string
+		showRemainingCount: boolean
+	} = $props()
 	let listElement: HTMLUListElement
 	let inputElement: HTMLInputElement
-	let list: INewSubmissionType[] = []
-	let isListOpen = false
+	let list: INewSubmissionType[] = $state([])
+	let isListOpen = $state(false)
 	let selectedOption: INewSubmissionType
 
-	export let filter = (text: string) => {
+	let filter = (text: string) => {
 		const sanitized = text.trim().toLowerCase()
 
 		return options.reduce((a, o) => {
@@ -88,7 +112,7 @@
 
 	function onInputClick(event: MouseEvent) {
 		showList((event.target as HTMLInputElement).value)
-		listElement.querySelector(`[role="option"][data-value="${value}"]`)?.scrollIntoView()
+		// listElement.querySelector(`[role="option"][data-value="${value}"]`)?.scrollIntoView()
 	}
 
 	function onOptionClick(event: MouseEvent) {
@@ -183,12 +207,13 @@
 	}
 </script>
 
-<div class="combobox">
-	<label class="combobox__label">{label}</label>
+<div class="combobox" {style}>
+	{#if label}<label class="combobox__label">{label}</label>{/if}
 	<div class="input-container" use:onClickOutside={hideList}>
 		<slot name="icon-start" />
 		<input
 			bind:this={inputElement}
+			bind:value
 			on:focus
 			on:blur
 			on:input
@@ -229,7 +254,7 @@
 					{#each option.options as childOption}
 						<li
 							class="list__option"
-							class:--disabled={childOption.disabled}
+							class:disabled={childOption.disabled}
 							role="option"
 							tabindex={childOption.disabled ? undefined : -1}
 							data-text={childOption.text}
@@ -250,7 +275,8 @@
 				{:else}
 					<li
 						class="list__option"
-						class:--disabled={option.disabled}
+						class:disabled={option.disabled}
+						class:active={option.value === value}
 						role="option"
 						tabindex={option.disabled === true ? undefined : -1}
 						data-text={option.text}
@@ -261,21 +287,25 @@
 						<slot name="option" {option}>
 							{option.text}
 						</slot>
-						{#if option.value === value}
+						{#if option.value === value && showRemainingCount}
 							<svg viewBox="0 0 24 24" class="icon">
 								<polyline points="20 6 9 17 4 12"></polyline>
 							</svg>
 						{/if}
-						<span style="font-size: 0.6em; height: 1em; width: 4em">Remaining unlimited</span>
+						{#if showRemainingCount}
+							<span style="font-size: 0.6em; height: 1em; width: 4em">Remaining unlimited</span>
+						{/if}
 					</li>
 				{/if}
 			{:else}
 				<li class="list__no-results">No results available</li>
 			{/each}
 		</ul>
-		<div class="visually-hidden" role="status" aria-live="polite">
-			{list.length} results available.
-		</div>
+		{#if showRemainingCount}
+			<div class="visually-hidden" role="status" aria-live="polite">
+				{list.length} results available.
+			</div>
+		{/if}
 	</div>
 </div>
 
@@ -288,6 +318,7 @@
 		--combobox-dropdown-width: 100%;
 		--height: 4em;
 		--font-size: 1em;
+		--list-option-padding: 0.8rem 1rem;
 		display: flex;
 		flex-direction: column;
 		gap: 0.5em;
@@ -308,7 +339,7 @@
 				width: var(--combobox-width);
 				padding: 1em;
 				border: 2px solid var(--color-zinc-700);
-				border-radius: 1em;
+				border-radius: var(--border-radius);
 				font-size: var(--font-size);
 				height: var(--height);
 
@@ -349,7 +380,7 @@
 					display: flex;
 					align-items: center;
 					justify-content: space-between;
-					padding: 0.8rem 1rem;
+					padding: var(--list-option-padding);
 					border: 0.2rem solid transparent;
 					border-radius: 0.3rem;
 
@@ -357,7 +388,7 @@
 						pointer-events: none;
 					}
 
-					&.--disabled {
+					&.disabled {
 						pointer-events: none;
 						opacity: 0.4;
 					}
@@ -369,7 +400,7 @@
 						background-color: rgba(0, 0, 0, 0.1);
 					}
 
-					&:active {
+					&.active {
 						cursor: pointer;
 						outline: none;
 						color: white;

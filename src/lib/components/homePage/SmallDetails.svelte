@@ -7,7 +7,7 @@
 	<div class="flex row flex-start items-start">
 		<div class="col-4 flex flex-start items-start column right-border">
 			<span class="header">Expert Faculty</span>
-			<div class="animation">
+			<div class="animation" style="width: 6em;">
 				<LottieAnimation src="/lib/lottie/expert.json" loop={true} autoplay={true} />
 			</div>
 			<p class="text">

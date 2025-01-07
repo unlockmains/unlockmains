@@ -23,6 +23,7 @@ body {
 	--color-white-900: #fff;
 	--color-yellow-100: rgb(253, 232, 110);
 	--color-yellow-200: rgb(251, 228, 100);
+	--color-yellow-300: rgb(251, 238, 157);
 	--color-yellow-500: rgb(243, 211, 0);
 	--color-cyan-100: rgb(110, 229, 253);
 	--color-cyan-300: rgb(100, 206, 251);
@@ -36,6 +37,7 @@ body {
 	--color-gold-400: rgb(240 170 71);
 	--color-gold-600: rgb(181, 129, 55);
 	--color-gold-800: rgb(134, 98, 48);
+	--color-green-700: rgb(125, 163, 110);
 
 	padding: 0;
 	margin: 0;
@@ -272,42 +274,9 @@ body {
 	border-radius: 5px;
 }
 
-.footer {
-	position: absolute;
-	max-width: 100%;
-	bottom: 0;
-	left: 0;
-	right: 0;
-	display: flex;
-	flex-flow: row;
-	border-top: var(--custom-border);
-	background-color: var(--custom-bg-color);
-}
-.footer div {
-	padding: var(--custom-spacing);
-	display: flex;
-	align-items: center;
-	width: 100%;
-}
-.footer div > img {
-	height: 20px;
-	margin-left: 10px;
-}
-.footer > div:first-child {
-	display: none;
-}
-.footer > div:nth-child(2) {
-	justify-content: left;
-}
-
 @media only screen and (min-width: 60em) {
 	/* 960px */
-	.footer > div:first-child {
-		display: flex;
-	}
-	.footer > div:nth-child(2) {
-		justify-content: center;
-	}
+
 }
 
 @keyframes spin {

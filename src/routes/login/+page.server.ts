@@ -4,94 +4,91 @@ import type { Actions, PageServerLoad } from './$types'
 import { env } from "$env/dynamic/private";
 import { goto } from '$app/navigation';
 
-export const load: PageServerLoad = async ({ url, locals: { pocketbase } }) => {
-	const user = pocketbase.authStore.model;
+import { SESSION_COOKIE, createAdminClient, createSessionClient } from "$lib/appwrite";
+import { ID, OAuthProvider } from "node-appwrite";
+
+export const load: PageServerLoad = async ({ url, locals: { user  } }) => {
+	// const user = pocketbase.authStore.model;
 	if (user) {
 		redirect(303, "/dashboard");
 	}
 
-	const authMethods = await pocketbase.collection("users").listAuthMethods();
-	const fail = url.searchParams.get("fail") === "true";
+	// const authMethods = await pocketbase.collection("users").listAuthMethods();
+	// const fail = url.searchParams.get("fail") === "true";
 
-	return { providers: authMethods.authProviders, fail };
+	return { url: url.origin }
 }
 
 export const actions: Actions = {
 	googleAuth: async (event) => {
-		const {
-			locals: { pocketbase },
-			cookies,
-		} = event;
-		const provider = (
-			await pocketbase.collection("users").listAuthMethods()
-		).authProviders.find((p) => p.name === "google");
+		const { account } = createAdminClient();
 
-		cookies.set("provider", JSON.stringify(provider), {
-			httpOnly: true,
-			path: `/auth/callback/google`,
-		});
-
-		throw redirect(303, provider?.authUrl + env.REDIRECT_URL + provider?.name);
+		const redirectUrl = await account.createOAuth2Token(
+			OAuthProvider.Google,
+			`${event.url.origin}/auth/callback/google`,
+			`${event.url.origin}/404`
+		  );
+		  throw redirect(302, redirectUrl)
 	},
-	signInOtp: async (event) => {
-		const {
-			request,
-			locals: { pocketbase }
-		} = event
-		const formData = await request.formData()
-		const email = formData.get('email') as string
-		const password = formData.get('password') as string
-		const validEmail = /^[\w-\.+]+@([\w-]+\.)+[\w-]{2,8}$/.test(email)
+	// signInOtp: async (event) => {
+	// 	const {
+	// 		request,
+	// 		locals: { pocketbase }
+	// 	} = event
+	// 	const formData = await request.formData()
+	// 	const email = formData.get('email') as string
+	// 	const password = formData.get('password') as string
+	// 	const validEmail = /^[\w-\.+]+@([\w-]+\.)+[\w-]{2,8}$/.test(email)
 
-		if (!validEmail) {
-			return fail(400, { signInOtp: { success: false, type: "error", email, password, message: "Please enter a valid email address" } })
-		}
-		let error = null;
-		if (email && password) {
-			const authData = await pocketbase.collection("users").authWithPassword(email, password)
-			// error = "error while login"
+	// 	if (!validEmail) {
+	// 		return fail(400, { signInOtp: { success: false, type: "error", email, password, message: "Please enter a valid email address" } })
+	// 	}
+	// 	let error = null;
+	// 	if (email && password) {
+	// 		const authData = await pocketbase.collection("users").authWithPassword(email, password)
+	// 		// error = "error while login"
 
-		} else {
-			try {
-				const authData = await fetch(`${env.PB_URL}api/otp/auth`, {
-					method: "POST",
-					body: JSON.stringify({ email: email })
-				})
-				if (!authData.ok) {
-					throw Error("There was an issue while logging in")
-				}
-			} catch (err) {
-				error = (err as Error).message;
-			}
-		}
+	// 	} else {
+	// 		try {
+	// 			const authData = await fetch(`${env.PB_URL}api/otp/auth`, {
+	// 				method: "POST",
+	// 				body: JSON.stringify({ email: email })
+	// 			})
+	// 			if (!authData.ok) {
+	// 				throw Error("There was an issue while logging in")
+	// 			}
+	// 		} catch (err) {
+	// 			error = (err as Error).message;
+	// 		}
+	// 	}
 
-		if (error) {
-			return fail(400, {
-				signInOtp: {
-					success: false,
-					type: "error",
-					email,
-					password,
-					message: `There was an issue. ${error}. If error still persists please contact support.`
-				}
-			})
-		}
+	// 	if (error) {
+	// 		return fail(400, {
+	// 			signInOtp: {
+	// 				success: false,
+	// 				type: "error",
+	// 				email,
+	// 				password,
+	// 				message: `There was an issue. ${error}. If error still persists please contact support.`
+	// 			}
+	// 		})
+	// 	}
 
-		return {
-			signInOtp: {
-				success: true,
-				type: "success",
-				email,
-				password,
-				message: 'Please check your email for a OTP to log into the website.'
-			}
-		}
-	},
-	registerWithPassword: async (event) => {
-		const {
-			request,
-			locals: { pocketbase }
-		} = event
+	// 	return {
+	// 		signInOtp: {
+	// 			success: true,
+	// 			type: "success",
+	// 			email,
+	// 			password,
+	// 			message: 'Please check your email for a OTP to log into the website.'
+	// 		}
+	// 	}
+	// },
+	// registerWithPassword: async (event) => {
+	// 	const {
+	// 		request,
+	// 		locals: { pocketbase }
+	// 	} = event
 		// const formData = await request.formData()
 		// const email = formData.get('email') as string
 		// const password = formData.get('password') as string
@@ -125,6 +122,6 @@ export const actions: Actions = {
 		// 		message: 'Please check your email. You wil receive a 6 digit code to register yourself.'
 		// 	}
 		// }
-		goto("/register")
-	}
+		// goto("/register")
+	// }
 }

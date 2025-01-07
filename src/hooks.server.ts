@@ -1,32 +1,30 @@
-import PocketBase from 'pocketbase';
-import { env } from '$env/dynamic/private'
+// import PocketBase from 'pocketbase';
+import { createSessionClient } from '$lib/appwrite';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
+export const SESSION_COOKIE = 'session';
+
 export const authentication: Handle = async ({ event, resolve }) => {
-  event.locals.pocketbase = new PocketBase(env.PB_URL);
-  event.locals.pocketbase.authStore.loadFromCookie(event.request.headers.get('cookie') || '');
-
   try {
-    event.locals.pocketbase.authStore.isValid && await event.locals.pocketbase.collection('users').authRefresh();
-  } catch (_) {
-    event.locals.pocketbase.authStore.clear();
-  }
-
-  const response = await resolve(event);
-
-  response.headers.append('set-cookie', event.locals.pocketbase.authStore.exportToCookie({ sameSite: 'Lax', httpOnly: false }));
-
-  return response;
+    // Use our helper function to create the Appwrite client.
+    const { account } = createSessionClient(event);
+    // Store the current logged in user in locals,
+    // for easy access in our other routes.
+    event.locals.user = await account.get();
+  } catch {}
+  
+  // Continue with the request.
+  return resolve(event);
 }
 
 const unprotectedPrefix = ['/login', '/register', '/auth', '/verify-email'];
 export const authorization: Handle = async ({ event, resolve }) => {
   const {
-    locals: { pocketbase }
+    locals: { user }
   } = event;
   if (!unprotectedPrefix.some((path) => event.url.pathname.startsWith(path)) && event.url.pathname !== '/') {
-    const loggedIn = pocketbase.authStore.model;
+    const loggedIn = user?.$id
     if (!loggedIn) {
       throw redirect(303, '/login');
     }

@@ -2,8 +2,8 @@ import { redirect } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import PricingCardsData from '$lib/api/mockPlansData.json'
 
-export const load: PageServerLoad = async ({ url, locals: { pocketbase } }) => {
-  const user = pocketbase.authStore.model;
+export const load: PageServerLoad = async ({ url, locals: { user } }) => {
+  // const user = pocketbase.authStore.model;
   if (user) {
     redirect(303, '/dashboard')
   }

@@ -1,53 +1,31 @@
 import { redirect, type RequestHandler } from "@sveltejs/kit";
 import { env } from "$env/dynamic/private";
+import { SESSION_COOKIE, createAdminClient } from "$lib/appwrite";
+
 
 export const GET: RequestHandler = async ({ locals, url, cookies }) => {
-    const {
-        pocketbase 
-    } = locals
-    const provider = JSON.parse(cookies.get("provider") || "{}");
+    const userId = url.searchParams.get("userId");
+    const secret = url.searchParams.get("secret");
 
-    if (provider.state !== url.searchParams.get("state")) {
-        throw new Error("State parameters don't match");
+    if (!userId || !secret) {
+        return new Response("Missing `userId` or `secret` query parameters", {
+            status: 400,
+        });
     }
 
-    try {
-        const res = await
-            pocketbase.collection("users")
-                .authWithOAuth2Code(
-                    provider.name,
-                    url.searchParams.get("code") || "",
-                    provider.codeVerifier,
-                    env.REDIRECT_URL + provider.name,
-                );
-        const recordId = res.record?.id;
-        const dataToUpdate = {
-            picture: res.meta?.rawUser.picture,
-            name: res.meta?.rawUser.name,
-            firstName: res.meta?.rawUser.given_name,
-            lastName: res.meta?.rawUser.family_name,
-        }
-        await pocketbase.collection("users").update(recordId, dataToUpdate);
-        const profileData = await pocketbase.collection("users_profile").getFirstListItem(`userId = "${recordId}"`).catch(() => null);
-        console.log("profileData", profileData);
-        if(!profileData?.id) {
-            const questionType = await pocketbase.collection("question_type").create({
-                option1: 2,
-                option2: 2,
-                option3: 2,
-            })
-            await pocketbase.collection("users_profile").create({
-                type: "student",
-                userId: recordId,
-                activePlan: false,
-                verified: true,
-                submissionLeft: questionType.id,
-            });
-        }
-    } catch (error) {
-        console.log("error", error);
-        return redirect(303, "/?fail=true");
-    }
+    // Exchange the token `userId` and `secret` for a session
+    const { account } = createAdminClient();
+    const session = await account.createSession(userId, secret);
 
-    throw redirect(303, "/");
+    const headers = new Headers({
+        location: "/account",
+        "set-cookie": cookies.serialize(SESSION_COOKIE, session.secret, {
+            sameSite: "strict",
+            expires: new Date(session.expire),
+            secure: true,
+            path: "/",
+        }),
+    });
+
+    return new Response(null, { status: 302, headers });
 };

@@ -1,9 +1,11 @@
-import PocketBase, {AuthModel} from 'pocketbase'
+import type { Account, Client, Models } from 'node-appwrite';
 declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			pocketbase: PocketBase,
+			appwrite: Client,
+			account: Account,
+			user: Models.User<Models.Preferences> | undefined
 		}
 		interface PageData {
 			user: User | null

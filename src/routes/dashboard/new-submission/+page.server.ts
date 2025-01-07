@@ -9,12 +9,12 @@ import type { AuthModel } from "pocketbase";
 export const prerender = false;
 
 export const load: PageServerLoad = async ({ locals: { pocketbase } }) => {
-    const user = pocketbase.authStore.model;
-    if (!user) {
-        redirect(303, '/')
-    }
+    // const user = pocketbase.authStore.model;
+    // if (!user) {
+    //     redirect(303, '/')
+    // }
 
-    return { user }
+    return { user: null }
 }
 
 export const actions: Actions = {
@@ -27,7 +27,7 @@ export const actions: Actions = {
 
         let success = false;
         let message = "";
-        const user: AuthModel = pocketbase.authStore.model;
+        const user: AuthModel = {};
 
         const formData = await request.formData();
         const type = formData.get('question-type') as string;

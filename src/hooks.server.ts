@@ -1,4 +1,3 @@
-// import PocketBase from 'pocketbase';
 import { createSessionClient } from '$lib/appwrite';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
@@ -7,14 +6,15 @@ export const SESSION_COOKIE = 'session';
 
 export const authentication: Handle = async ({ event, resolve }) => {
   try {
-    // Use our helper function to create the Appwrite client.
-    const { account } = createSessionClient(event);
-    // Store the current logged in user in locals,
-    // for easy access in our other routes.
+    const { account, databases, storage } = createSessionClient(event);
+    event.locals.databases = databases;
+    event.locals.storage = storage;
+    event.locals.account = account;
     event.locals.user = await account.get();
-  } catch {}
+  } catch(err) {
+    console.error("error session", err)
+  }
   
-  // Continue with the request.
   return resolve(event);
 }
 

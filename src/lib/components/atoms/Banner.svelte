@@ -4,7 +4,7 @@
 
 <div class="banner">
 	<div class="left-banner-img" />
-	{bannerText}
+	<span class="text">{bannerText}</span>
 	<div class="right-banner-img" />
 </div>
 
@@ -12,14 +12,16 @@
 	.banner {
 		background-color: #151514;
 		color: white;
-		height: 3.5em;
 		text-align: center;
 		align-content: center;
-		font-size: 0.9em;
 		padding: 1em 5%;
 		position: fixed;
 		width: 100%;
 		z-index: 20;
+
+		.text {
+			font-size: 0.8em;
+		}
 
 		.left-banner-img {
 			position: absolute;

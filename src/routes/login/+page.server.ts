@@ -1,20 +1,14 @@
 // src/routes/+page.server.ts
-import { fail, redirect } from '@sveltejs/kit'
+import { redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
-import { env } from "$env/dynamic/private";
-import { goto } from '$app/navigation';
 
-import { SESSION_COOKIE, createAdminClient, createSessionClient } from "$lib/appwrite";
-import { ID, OAuthProvider } from "node-appwrite";
+import { createAdminClient } from "$lib/appwrite";
+import { OAuthProvider } from "node-appwrite";
 
 export const load: PageServerLoad = async ({ url, locals: { user  } }) => {
-	// const user = pocketbase.authStore.model;
 	if (user) {
 		redirect(303, "/dashboard");
 	}
-
-	// const authMethods = await pocketbase.collection("users").listAuthMethods();
-	// const fail = url.searchParams.get("fail") === "true";
 
 	return { url: url.origin }
 }

@@ -1,5 +1,5 @@
 // src/lib/server/appwrite.js
-import { Client, Account, Databases, Storage } from 'node-appwrite';
+import { Client, Account, Databases, Storage, Teams } from 'node-appwrite';
 import { APPWRITE_KEY } from '$env/static/private';
 import { PUBLIC_APPWRITE_ENDPOINT, PUBLIC_APPWRITE_PROJECT } from '$env/static/public';
 import type { RequestEvent } from '@sveltejs/kit';
@@ -22,6 +22,9 @@ export function createAdminClient() {
         },
         get storage() {
             return new Storage(client);
+        },
+        get teams() {
+            return new Teams(client);
         }
     };
 }
@@ -43,6 +46,9 @@ export function createSessionClient(event: RequestEvent<Partial<Record<string, s
         },
         get storage() {
             return new Storage(client);
+        },
+        get teams() {
+            return new Teams(client);
         }
     };
 }

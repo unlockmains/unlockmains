@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
 	import { alwaysShow, sideNavOpen, toggleSideNav } from '$lib/stores/sideNavStore'
+	import { topBannerVisible } from '$lib/stores/topBannerStore'
 	import Button from '../atoms/Button.svelte'
 	import CollapsibleSection from '../atoms/CollapsibleSection.svelte'
 	import CrossIcon from '../icons/CrossIcon.svelte'
@@ -8,7 +9,7 @@
 	export let parentSlug: string = ''
 
 	let showSidebar = false
-
+	console.log('sidebar', $sideNavOpen)
 	alwaysShow.subscribe((alwaysShow) => {
 		if (alwaysShow) {
 			showSidebar = true
@@ -22,7 +23,7 @@
 	{#if $sideNavOpen && !$alwaysShow}
 		<button on:click={toggleSideNav}><CrossIcon /></button>
 	{/if}
-	<nav>
+	<nav style={$topBannerVisible ? 'margin-top: 6.5em;' : ''}>
 		<Button
 			label="New Submission"
 			type="nav"
@@ -63,7 +64,7 @@
 		overflow-y: auto;
 		width: max(15rem, 15%);
 		z-index: 100;
-		background-color: var(--custom-color-brand);
+		background-color: var(--color-zinc-800);
 		transform: translateX(-100%);
 		transition: all 1s ease;
 

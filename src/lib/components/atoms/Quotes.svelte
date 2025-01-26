@@ -22,7 +22,8 @@
 <div class="quote-container">
 	{#each quotes as quote, i}
 		<div class="quote" class:active={currentQuoteIndex === i && mounted}>
-			{quote.quote} <br />- <i style="font-size: 0.75em;">{quote.author}</i>
+			{quote}
+			<!-- <br /> - <i style="font-size: 0.75em;">{quote.author}</i> -->
 		</div>
 	{/each}
 </div>

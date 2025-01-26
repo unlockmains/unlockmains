@@ -1,20 +1,17 @@
 import { fail, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "../$types";
-import type { SupabaseClient } from "@supabase/supabase-js";
-import { v4 as uuidv4 } from "uuid";
 import type { Actions } from "./$types";
-import type { AuthModel } from "pocketbase";
+import { ID } from "node-appwrite";
+import { PUBLIC_APPWRITE_BUCKET, PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_ENDPOINT, PUBLIC_APPWRITE_PROJECT } from "$env/static/public";
 
-// Make sure this is set to false to allow for form handling
 export const prerender = false;
 
-export const load: PageServerLoad = async ({ locals: { pocketbase } }) => {
-    const user = pocketbase.authStore.model;
+export const load: PageServerLoad = async ({ locals: { user } }) => {
     if (!user) {
         redirect(303, '/')
     }
 
-    return { user }
+    return { user: user }
 }
 
 export const actions: Actions = {
@@ -22,35 +19,38 @@ export const actions: Actions = {
         const {
             url,
             request,
-            locals: { pocketbase }
+            locals: { databases, storage, user }
         } = event;
 
         let success = false;
         let message = "";
-        const user: AuthModel = pocketbase.authStore.model;
 
         const formData = await request.formData();
         const type = formData.get('question-type') as string;
         const quantity = formData.get("question-quantity")!;
         const isPyq = formData.get("question-pyq") as string;
 
-        const saveFormData = new FormData();
-
         const files = formData.getAll("question-files");
-        for (const file of files) {
-            if (file instanceof File) {
-                saveFormData.append("submittedFile", file)
-            }
-        }
-        saveFormData.append("questionType", type)
-        saveFormData.append("noOfQuestions", quantity)
-        saveFormData.append("isPyq", isPyq)
-        saveFormData.append("submittedBy", user?.id)
+        const file = files[0] as File
+
         try {
-            await pocketbase.collection('question_submissions').create(saveFormData);
-        } catch(err){
+            const uploadedFile = await storage.createFile(PUBLIC_APPWRITE_BUCKET, ID.unique(), file);
+            const fileUrl = `${PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${PUBLIC_APPWRITE_BUCKET}/files/${uploadedFile.$id}/view?project=${PUBLIC_APPWRITE_PROJECT}&project=${PUBLIC_APPWRITE_PROJECT}&mode=admin`;
+            const savingData = {
+                "question_type": type,
+                "questions_submitted": Number(quantity),
+                "is_pyq": isPyq === "yes" ? true : false,
+                "submitted_by": user?.$id,
+                "submission_type": "DRAFT",
+                "file_url": fileUrl,
+                "file_id": uploadedFile.$id,
+            }
+            const document = await databases.createDocument(PUBLIC_APPWRITE_DATABASE, '678c9d1e0029d8232760', ID.unique(), savingData);
+            console.log("document", document)
+            return redirect(200, url);
+        } catch (err) {
+            message = (err as unknown as Error).message;
             return fail(400, { success, message });
         }
-        
     }
 }

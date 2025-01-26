@@ -27,8 +27,8 @@
 	afterUpdate(() => {
 		if (form)
 			if (form.success) {
-				toast.success('Submission Successfull')
-				goto(`/dashbaord`)
+				toast.success('Submission Successful')
+				goto(`/dashboard`)
 			} else toast.error(form?.message as string)
 	})
 </script>

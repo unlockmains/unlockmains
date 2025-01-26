@@ -2,12 +2,12 @@ import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
 
 export const load: PageServerLoad = async ({ locals: { pocketbase } }) => {
-  const user = pocketbase.authStore.model;
-  if (!user) {
-    redirect(303, '/')
-  }
+  // const user = pocketbase.authStore.model;
+  // if (!user) {
+  //   redirect(303, '/')
+  // }
 
-  return { profile: user }
+  return { profile: null }
 }
 
 export const actions: Actions = {
@@ -18,7 +18,7 @@ export const actions: Actions = {
     const website = formData.get('website') as string
     const avatarUrl = formData.get('avatarUrl') as string
 
-    const user = pocketbase.authStore.model;
+    const user = {id: '1'};
 
     const { error } = await pocketbase.collection('user').update(
       user?.id,
@@ -45,7 +45,7 @@ export const actions: Actions = {
     }
   },
   signout: async ({ locals: { pocketbase } }) => {
-    pocketbase.authStore.clear();
+    // pocketbase.authStore.clear();
     redirect(303, '/')
   },
 }

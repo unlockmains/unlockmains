@@ -22,8 +22,10 @@
   },
   "type": "module",
   "dependencies": {
+    "appwrite": "^16.1.0",
     "fabric": "^6.4.3",
     "lottie-web": "^5.12.2",
+    "node-appwrite": "^14.1.0",
     "pdf-annotate.js": "^1.0.0",
     "pdfjs-dist": "^4.7.76",
     "pocketbase": "^0.21.5",

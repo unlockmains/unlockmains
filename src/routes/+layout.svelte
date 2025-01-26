@@ -7,8 +7,8 @@
 
 	export let data
 
-	let { user } = data
-	$: ({ user } = data)
+	let { user, top_banner } = data
+	$: ({ user, top_banner } = data)
 </script>
 
 <svelte:head>
@@ -25,7 +25,7 @@
 	<title>Unlock Mains</title>
 </svelte:head>
 
-<Banner />
+<Banner bannerText={top_banner} />
 
 <Header user={user ?? null} banner={true} />
 <slot />

@@ -5,11 +5,11 @@ import type { ISubmission } from "$lib/types";
 export const ssr = false
 
 export const load: PageServerLoad = async ({ locals: { pocketbase }, url }) => {
-    const user = pocketbase.authStore.model;
+    // const user = pocketbase.authStore.model;
    
-    if (!user) {
-        redirect(303, '/')
-    }
+    // if (!user) {
+    //     redirect(303, '/')
+    // }
     const query = url.searchParams.get('query');
     let submissions: ISubmission[] = [];
     if(query === 'all') {
@@ -29,5 +29,5 @@ export const load: PageServerLoad = async ({ locals: { pocketbase }, url }) => {
         pyq: submission.isPyq ? "Yes" : "No",
         submittedFileName: submission.submittedFile[0]
     }))
-    return { user, submissions }
+    return { user: null, submissions }
 }

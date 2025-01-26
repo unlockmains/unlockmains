@@ -3,10 +3,10 @@ import type { PageServerLoad } from "./$types"
 import { env } from "$env/dynamic/private"
 
 export const load: PageServerLoad = async ({ url, locals: { pocketbase } }) => {
-  const user = pocketbase.authStore.model;
-  if (user) {
-    redirect(303, '/dashboard')
-  }
+  // const user = pocketbase.authStore.model;
+  // if (user) {
+  //   redirect(303, '/dashboard')
+  // }
 
   const email = url.searchParams.get("email");
   if (!email) {
@@ -41,7 +41,7 @@ export const actions: Actions = {
       const data = await response.json();
 
       if (data.token) {
-        pocketbase.authStore.save(data.token, data.record)
+        // pocketbase.authStore.save(data.token, data.record)
         return {
           signInOtp: {
             success: true,

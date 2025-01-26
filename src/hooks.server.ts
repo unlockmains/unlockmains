@@ -9,7 +9,10 @@ export const authentication: Handle = async ({ event, resolve }) => {
     event.locals.storage = storage;
     if (event.cookies.get(SESSION_COOKIE)) {
       event.locals.account = account;
-      event.locals.user = await account.get();
+      event.locals.teams = teams;
+      event.locals.user = {
+        ...await account.get(), team: (await teams.list()).teams[0]
+      }
     }
   } catch (err) {
     console.error("error session", err)

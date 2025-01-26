@@ -1,7 +1,7 @@
 import { type RequestHandler } from "@sveltejs/kit";
 import { SESSION_COOKIE, SESSION_ID, createAdminClient } from "$lib/appwrite";
 
-export const GET: RequestHandler = async ({ locals, url, cookies }) => {
+export const GET: RequestHandler = async ({ url, cookies }) => {
     const userId = url.searchParams.get("userId");
     const secret = url.searchParams.get("secret");
 

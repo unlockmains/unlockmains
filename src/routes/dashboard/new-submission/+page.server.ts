@@ -17,7 +17,6 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
 export const actions: Actions = {
     default: async (event) => {
         const {
-            url,
             request,
             locals: { databases, storage, user }
         } = event;
@@ -46,9 +45,9 @@ export const actions: Actions = {
                 "file_id": uploadedFile.$id,
             }
             const document = await databases.createDocument(PUBLIC_APPWRITE_DATABASE, '678c9d1e0029d8232760', ID.unique(), savingData);
-            console.log("document", document)
-            return redirect(200, url);
+            return redirect(200, "/dashboard");
         } catch (err) {
+            console.log("error", err)
             message = (err as unknown as Error).message;
             return fail(400, { success, message });
         }

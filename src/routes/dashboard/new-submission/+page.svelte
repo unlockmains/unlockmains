@@ -75,11 +75,13 @@
 				name="question-type"
 				placeholder="Click or Search"
 				options={[
-					{ text: 'Option 1', value: 'option-1' },
-					{ text: 'Option 2', value: 'option-2' },
-					{ text: 'Option 3', value: 'option-3' }
+					{ text: 'Option 1', value: 'Option 1' },
+					{ text: 'Option 2', value: 'Option 2' },
+					{ text: 'Option 3', value: 'Option 3' }
 				]}
 				style="--height: 3em;--font-size: 0.8em;"
+				disabled={false}
+				showRemainingCount={true}
 			/>
 		</ComboboxContext>
 	</div>

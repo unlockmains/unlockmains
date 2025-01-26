@@ -35,7 +35,7 @@ export function createSessionClient(event: RequestEvent<Partial<Record<string, s
         .setProject(PUBLIC_APPWRITE_PROJECT);
     const session = event.cookies.get(SESSION_COOKIE);
     if(session) {
-      client.setSession(session);
+        client.setSession(session);
     }
     return {
         get account() {

@@ -4,7 +4,7 @@ import type { PageServerLoad } from "./$types"
 export const csr = true
 
 export const load: PageServerLoad = async ({ locals: { user } }) => {
-    if (!user?.$id) {
+    if (!user) {
         redirect(303, '/')
     }
 

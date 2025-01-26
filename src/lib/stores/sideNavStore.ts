@@ -6,19 +6,24 @@ export const sideNavOpen = writable<boolean>(false);
 export const toggleSideNav = () => sideNavOpen.update(wasOpen => !wasOpen)
 
 export const alwaysShow = readable(false, set => {
+    let isLargeScreen = false;
     const updateAlwaysShow = () => {
-        const isLargeScreen = window.innerWidth > 960;
+        if (typeof window !== 'undefined') {
+            isLargeScreen = window.innerWidth > 960;
+        }
         set(isLargeScreen);
     };
 
-    updateAlwaysShow();
-    
-    onMount(() => {
-        window.addEventListener('resize', updateAlwaysShow);
+    onMount(updateAlwaysShow);
 
-        return () => {
+    if (typeof window !== 'undefined') {
+        window.addEventListener('resize', updateAlwaysShow);
+    }
+
+    return () => {
+        if (typeof window !== 'undefined') {
             window.removeEventListener('resize', updateAlwaysShow);
-        };
-    })
-    
+        }
+    };
+
 });

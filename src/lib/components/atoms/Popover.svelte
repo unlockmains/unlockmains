@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation'
 	import UserAvatarIcon from '../icons/UserAvatarIcon.svelte'
 	import { onClickOutside } from '$lib/context/ClickOutsideContext.svelte'
+	import { topBannerVisible } from '$lib/stores/topBannerStore'
 	export let user
 
 	let popoverContent: HTMLDivElement
@@ -30,8 +31,9 @@
 		bind:this={popoverContent}
 		class:show={showPopoverContent}
 		transition:fade={{ duration: 1000 }}
+		style={$topBannerVisible ? 'top: 8em;' : ''}
 	>
-		<div>
+		<div class="popover-content-header">
 			{user.email}
 		</div>
 		<ul>
@@ -68,7 +70,7 @@
 			gap: 1em;
 			visibility: hidden;
 			position: fixed;
-			top: 4em;
+			top: 5em;
 			right: 0;
 			width: var(--width);
 			background-color: white;
@@ -79,6 +81,10 @@
 			opacity: 0;
 			padding: 1em;
 			transition: all 0.2s ease;
+
+			.popover-content-header {
+				font-size: 0.8em;
+			}
 
 			&.show {
 				visibility: visible;

@@ -4,11 +4,16 @@
 	import Header from '$lib/components/molecules/Header.svelte'
 	import { Toaster } from 'svelte-sonner'
 	import Banner from '$lib/components/atoms/Banner.svelte'
+	import { toggleTopBannerVisible, topBannerVisible } from '$lib/stores/topBannerStore'
 
 	export let data
 
 	let { user, top_banner } = data
 	$: ({ user, top_banner } = data)
+
+	if (top_banner) {
+		toggleTopBannerVisible()
+	}
 </script>
 
 <svelte:head>
@@ -27,7 +32,9 @@
 
 <Banner bannerText={top_banner} />
 
-<Header user={user ?? null} banner={true} />
-<slot />
+<Header user={user ?? null} />
+<div style={$topBannerVisible ? 'margin-top: 8em' : 'margin-top: 4em'}>
+	<slot />
+</div>
 
 <Toaster richColors closeButton />

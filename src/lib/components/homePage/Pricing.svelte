@@ -79,7 +79,7 @@
 		display: flex;
 		flex-flow: column;
 		align-items: center;
-		background: url('lib/grid-gradient.svg') no-repeat center center;
+		background: url('/lib/grid-home.svg') no-repeat center center;
 		position: relative;
 		min-height: 100vh;
 		margin-bottom: 5em;

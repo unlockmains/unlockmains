@@ -69,7 +69,7 @@
 		width: 50%;
 		align-items: center;
 		justify-content: space-around;
-		background: url('lib/grid-gradient.svg') no-repeat center center;
+		background: url('/lib/grid-home.svg') no-repeat center center;
 		background-size: contain;
 
 		.rocket {

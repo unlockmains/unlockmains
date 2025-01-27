@@ -90,7 +90,7 @@
 			position: absolute;
 			height: 50em;
 			width: 100%;
-			background: url('lib/grid-gradient-3.svg') no-repeat center center;
+			background: url('/lib/grid-faq.svg') no-repeat center center;
 			top: 0;
 			left: 0;
 		}

@@ -1,22 +1,20 @@
 <script>
-	const productLinks = [
+	const quickLinks = [
 		{ text: 'Home', href: '/' },
 		{ text: 'About', href: '/about' },
-		{ text: 'Courses', href: '/courses' },
-		{ text: 'Course Page', href: '/course-page' }
+		{ text: 'Terms of Service', href: '/terms-of-service' },
+		{ text: 'Refund Polciy', href: '/refund-policy' }
 	]
 
 	const companyLinks = [
 		{ text: 'Pricing', href: '/pricing' },
-		{ text: 'Contact', href: '/contact' },
-		{ text: 'Style Guide', href: '/style-guide' }
+		{ text: 'Contact', href: '/contact' }
 	]
 
 	const accountLinks = [
 		{ text: 'Login', href: '/login' },
-		{ text: 'Signup', href: '/signup' },
-		{ text: 'Reset Password', href: '/reset-password' },
-		{ text: 'Update Password', href: '/update-password' }
+		{ text: 'Register', href: '/register' },
+		{ text: 'Careers', href: '/careers' }
 	]
 
 	const socialLinks = [
@@ -28,7 +26,6 @@
 
 <footer class="footer">
 	<div class="footer-content">
-		<!-- Brand Section -->
 		<div class="footer-brand">
 			<div class="brand-header">
 				<svg class="brand-logo" viewBox="0 0 24 24" fill="currentColor">
@@ -36,8 +33,8 @@
 				</svg>
 				<span class="brand-name">Members</span>
 			</div>
-			<p class="brand-description">A membership platform powered by Webflow</p>
-			<a href="mailto:hello@members.com" class="brand-email">hello@members.com</a>
+			<p class="brand-description">Unlock Mains</p>
+			<a href="mailto:hello@members.com" class="brand-email">unlockmains@gmail.com</a>
 
 			<div class="members-count">
 				<div class="avatar-stack">
@@ -45,15 +42,14 @@
 						<div class="avatar" />
 					{/each}
 				</div>
-				<span class="members-text">+3K Members</span>
+				<span class="members-text">many people joining us</span>
 			</div>
 		</div>
 
-		<!-- Product Links -->
 		<div class="footer-nav">
-			<h3 class="nav-title">PRODUCT</h3>
+			<h3 class="nav-title">Quick Links</h3>
 			<ul class="nav-list">
-				{#each productLinks as link}
+				{#each quickLinks as link}
 					<li>
 						<a href={link.href} class="nav-link">{link.text}</a>
 					</li>
@@ -63,7 +59,7 @@
 
 		<!-- Company Links -->
 		<div class="footer-nav">
-			<h3 class="nav-title">COMPANY</h3>
+			<h3 class="nav-title">Company</h3>
 			<ul class="nav-list">
 				{#each companyLinks as link}
 					<li>
@@ -75,7 +71,7 @@
 
 		<!-- Account Links -->
 		<div class="footer-nav">
-			<h3 class="nav-title">ACCOUNT</h3>
+			<h3 class="nav-title">Account</h3>
 			<ul class="nav-list">
 				{#each accountLinks as link}
 					<li>
@@ -88,7 +84,7 @@
 
 	<!-- Footer Bottom -->
 	<div class="footer-bottom">
-		<p class="copyright">© UtarMantra</p>
+		<p class="copyright">© UTTARMANTR EDSOLUTION (OPC) PVT. LTD.</p>
 
 		<!-- Social Links -->
 		<div class="social-links">

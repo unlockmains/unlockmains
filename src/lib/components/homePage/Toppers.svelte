@@ -1,7 +1,9 @@
 <script lang="ts">
+	import Background from '../atoms/Background.svelte'
 	import Button from '../atoms/Button.svelte'
 </script>
 
+<Background />
 <section class="toppers">
 	<div class="heading">
 		<h1>Meet our Members and Toppers</h1>
@@ -56,6 +58,7 @@
 		position: relative;
 		min-height: 80vh;
 		width: 100%;
+		margin-bottom: 1em;
 		.heading {
 			z-index: 10;
 			font-family: Archivo, sans-serif;

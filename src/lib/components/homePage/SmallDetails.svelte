@@ -1,7 +1,9 @@
 <script>
+	import Background from '../atoms/Background.svelte'
 	import LottieAnimation from '../atoms/LottieAnimation.svelte'
 </script>
 
+<Background />
 <section class="more-details">
 	<div class="left-bg" />
 	<div class="flex row flex-start items-start">

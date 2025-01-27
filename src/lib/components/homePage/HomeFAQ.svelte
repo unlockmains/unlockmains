@@ -2,6 +2,7 @@
 <script lang="ts">
 	import { slide } from 'svelte/transition'
 	import { quintOut } from 'svelte/easing'
+	import Background from '../atoms/Background.svelte'
 
 	interface FAQItem {
 		question: string
@@ -14,19 +15,19 @@
 			id: 1,
 			question: 'What is Unlock Mains?',
 			answer:
-				'Unlock Mains is a platform that connects students with mentors and faculty to help them achieve their goals. It is a community-driven platform where students can access resources, advice, and support to help them succeed in their academic pursuits.'
+				'Unlock Mains is a platform that connects students with Interview appeared and faculty to help them achieve their goals. It is a platform where students can access resources, advice, and support to help them succeed in their academic pursuits.'
 		},
 		{
 			id: 2,
 			question: 'How does it work?',
 			answer:
-				'Unlock Mains is a platform that connects students with mentors and faculty to help them achieve their goals. It is a community-driven platform where students can access resources, advice, and support to help them succeed in their academic pursuits.'
+				'Unlock Mains is a platform where students write answers and upload them to the platform. The evaluator then evaluates the answers and provides feedback to the student to enrich it.'
 		},
 		{
 			id: 3,
 			question: 'Who can use Unlock Mains?',
 			answer:
-				"Anyone who wants to improve their academic performance and achieve their goals. Whether it's a student, a teacher, or a parent, Unlock Mains can help you unlock your full potential."
+				'Anyone who wants to improve their mains answer writing skills to excel in UPSC, BPSC, UPPCS, MPPCS or any government exams. Unlock Mains can help you to unlock your full potential.'
 		}
 	]
 
@@ -37,6 +38,7 @@
 	}
 </script>
 
+<Background />
 <section class="home-faq">
 	<div class="background-gradient"></div>
 	<div class="heading">

@@ -10,9 +10,9 @@
 </script>
 
 <header style={$topBannerVisible ? '--top: 3em;' : '--top: 0em;'}>
-	<button on:click={toggleSideNav}>
+	<!-- <button on:click={toggleSideNav}>
 		<HamburgerIcon />
-	</button>
+	</button> -->
 	<div>
 		<img src="/um-main.png" alt="logo 1" style="height: 4em" />
 		<!-- <img src="/um-texti.png" alt="logo 2" style="height: 1.5em" /> -->

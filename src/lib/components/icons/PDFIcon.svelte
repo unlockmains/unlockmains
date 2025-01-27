@@ -1,17 +1,23 @@
+<script>
+	export let height = 32
+	export let width = 32
+	export let color = '#000000'
+</script>
+
 <svg
-	height="32px"
-	width="32px"
+	{height}
+	{width}
 	version="1.1"
 	id="_x32_"
 	xmlns="http://www.w3.org/2000/svg"
 	xmlns:xlink="http://www.w3.org/1999/xlink"
 	viewBox="0 0 512 512"
 	xml:space="preserve"
-	fill="#000000"
+	fill={color}
 	><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g>
 		<style type="text/css">
 			.st0 {
-				fill: #000000;
+				fill: {color};
 			}
 		</style>
 		<g>

@@ -4,11 +4,13 @@
 	import HomeFooter from './HomeFooter.svelte'
 	import HomeSection from './HomeSection.svelte'
 	import Pricing from './Pricing.svelte'
+	import SampleFiles from './SampleFiles.svelte'
 	import SmallDetails from './SmallDetails.svelte'
 	import Toppers from './Toppers.svelte'
 
 	export let quotes
 	export let pricingPbData
+	export let sampleFilesToShow
 </script>
 
 <Background />
@@ -16,6 +18,7 @@
 	<HomeSection {quotes} />
 	<SmallDetails />
 	<Pricing {pricingPbData} />
+	<SampleFiles {sampleFilesToShow} />
 	<Toppers />
 	<HomeFaq />
 	<HomeFooter />

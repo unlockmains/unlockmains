@@ -1,4 +1,8 @@
 <script>
+	import { goto } from '$app/navigation'
+	import Background from '$lib/components/atoms/Background.svelte'
+	import Button from '$lib/components/atoms/Button.svelte'
+
 	const evaluatorRoles = [
 		{
 			title: 'BPSC/UPSC Mains Paper Evaluator',
@@ -21,19 +25,24 @@
 	]
 </script>
 
-<div class="container mx-auto p-6">
-	<h1 class="text-3xl font-bold mb-6 text-center">Careers in AI Evaluation</h1>
+<Background />
+<section class="careers-page">
+	<h1>Careers in Unlock Mains</h1>
+	<h4>
+		We are always on the lookout for talented individuals to join our growing team. Please see our
+		open vacancies below
+	</h4>
 
 	{#each evaluatorRoles as role}
-		<div class="bg-white shadow-md rounded-lg mb-6 overflow-hidden">
-			<div class="p-6">
-				<h2 class="text-2xl font-bold mb-4">{role.title}</h2>
-				<p class="mb-4">{role.description}</p>
+		<div class="job-title">
+			<div class="job-title-description">
+				<h2 class="title">{role.title}</h2>
+				<p class="description">{role.description}</p>
 
-				<div class="grid md:grid-cols-2 gap-6">
+				<div class="job-responsibility">
 					<div>
-						<h3 class="font-semibold mb-2">Responsibilities:</h3>
-						<ul class="list-disc pl-5">
+						<h3 class="job-re-title">Responsibilities:</h3>
+						<ul class="job-re-points">
 							{#each role.responsibilities as responsibility}
 								<li>{responsibility}</li>
 							{/each}
@@ -41,8 +50,8 @@
 					</div>
 
 					<div>
-						<h3 class="font-semibold mb-2">Requirements:</h3>
-						<ul class="list-disc pl-5">
+						<h3 class="job-re-title">Requirements:</h3>
+						<ul class="job-re-points">
 							{#each role.requirements as requirement}
 								<li>{requirement}</li>
 							{/each}
@@ -51,19 +60,73 @@
 				</div>
 			</div>
 
-			<div class="p-6 bg-gray-50">
-				<button
-					class="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition duration-300"
-				>
-					Apply Now
-				</button>
+			<div class="job-button">
+				<Button type="register" label="Apply" onClick={() => goto('/registration/evaluator')} />
 			</div>
 		</div>
 	{/each}
-</div>
+</section>
 
-<style>
-	.container {
+<style lang="scss">
+	.careers-page {
 		max-width: 1200px;
+		margin: 0 auto;
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1em;
+
+		h1 {
+			font-size: 3em;
+		}
+
+		.job-title {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 1em;
+
+			.job-title-description {
+				display: flex;
+				flex-direction: column;
+				padding: 1em;
+
+				.title {
+					font-size: 1.5em;
+					font-weight: bold;
+					margin-bottom: 1em;
+				}
+
+				.description {
+					margin-bottom: 1em;
+				}
+
+				.job-responsibility {
+					display: grid;
+					gap: 1.5rem;
+
+					.job-re-title {
+						font-weight: 600;
+						margin-bottom: 0.5rem;
+					}
+
+					.job-re-points {
+						list-style-type: disc;
+						padding-left: 1.25rem;
+					}
+				}
+
+				@media (min-width: 768px) {
+					.job-responsibility {
+						grid-template-columns: repeat(2, 1fr);
+					}
+				}
+			}
+
+			.job-button {
+				width: 15em;
+			}
+		}
 	}
 </style>

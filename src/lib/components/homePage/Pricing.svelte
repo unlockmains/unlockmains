@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Background from '../atoms/Background.svelte'
 	import Combobox from '../atoms/Combobox.svelte'
 	import PricingCards from '../atoms/PricingCards.svelte'
 	import Tabs from '../molecules/Tabs.svelte'
@@ -11,7 +12,10 @@
 	}
 
 	const pricingSections = pricingPbData.map(
-		(section: { sectionName: string }) => section.sectionName
+		(section: { sectionName: string; disabled: boolean }) => ({
+			sectionName: section.sectionName,
+			disabled: section.disabled
+		})
 	)
 
 	const getDropdownOptions = (options: string[], disabledOptions: string[]) =>
@@ -22,6 +26,7 @@
 		}))
 </script>
 
+<Background />
 <section class="pricing">
 	<div class="heading">
 		<h1>Our Plans</h1>
@@ -47,6 +52,26 @@
 	{/if}
 	<div class="pricing-divider"></div>
 	<PricingCards pricingCardData={pricingPbData[activeTab].pricings} {selectedOption} />
+	<div class="pricing-note">
+		<h3><i><b>Note:</b></i></h3>
+		<ul>
+			<li><b>Pricing</b>: All listed prices above are inclusive of GST.</li>
+			<li>
+				<b>Evaluation Timelines</b>: For up to 5 questions or 1 essay, evaluations will typically be
+				completed within 24 working hours. Full-length evaluations require 5–7 days.
+			</li>
+			<li><b>Working Hours Definition</b>: A working day consists of 9 hours.</li>
+			<li>
+				<b>Timeline Variability</b>: The 24 working hours is an estimated timeline. Since evaluation
+				is a human-driven process, strict deadlines cannot be guaranteed.
+			</li>
+			<li>
+				<b>Unlimited Plan Policy</b>: The Unlimited Evaluation Plan concludes 10 days before the
+				first Mains examination. In this period, only previously submitted copies will be evaluated;
+				new submissions will not be accepted.
+			</li>
+		</ul>
+	</div>
 </section>
 
 <style lang="scss">
@@ -76,6 +101,26 @@
 			h4 {
 				font-size: 1em;
 				margin-bottom: 1em;
+			}
+		}
+
+		.pricing-note {
+			margin-top: 2em;
+			font-size: 0.8em;
+			color: var(--color-zinc-500);
+
+			h3 {
+				color: var(--color-magenta-700);
+			}
+
+			ul {
+				padding-left: 1em;
+				margin-bottom: 1em;
+
+				li {
+					margin-bottom: 0.5em;
+					line-height: 1.5;
+				}
 			}
 		}
 	}

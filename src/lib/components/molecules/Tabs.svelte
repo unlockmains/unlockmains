@@ -18,11 +18,12 @@
 			<button
 				class:active={activeTab === index}
 				class:hovered={hoveredTab === index}
-				on:click={() => handleTabClick(index)}
+				class:disabled={tab.disabled}
+				on:click={() => !tab.disabled && handleTabClick(index)}
 				on:mouseenter={() => handleHover(index)}
 				on:mouseleave={handleLeave}
 			>
-				{tab}
+				{tab.sectionName}
 				{#if activeTab === index}
 					<div class="active-indicator" />
 				{/if}
@@ -62,6 +63,11 @@
 				&:hover {
 					transform: translateY(-2px);
 					box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+				}
+
+				&.disabled {
+					cursor: not-allowed;
+					opacity: 0.5;
 				}
 
 				&.active {

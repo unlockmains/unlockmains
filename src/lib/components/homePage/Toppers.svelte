@@ -54,7 +54,7 @@
 		flex-flow: column;
 		justify-content: space-between;
 		align-items: center;
-		background: url('lib/grid-gradient-2.svg') no-repeat center center;
+		background: url('/lib/grid-topper.svg') no-repeat center center;
 		position: relative;
 		min-height: 80vh;
 		width: 100%;

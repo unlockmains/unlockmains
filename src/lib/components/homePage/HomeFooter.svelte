@@ -124,6 +124,7 @@
 		margin-top: 5rem;
 		background-color: white;
 		border-top: 1px solid rgba(0, 0, 0, 0.1);
+		position: relative;
 	}
 
 	.footer-content {

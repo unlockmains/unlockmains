@@ -3,7 +3,6 @@
 	import Button from '../atoms/Button.svelte'
 </script>
 
-<Background />
 <section class="toppers">
 	<div class="heading">
 		<h1>Meet our Members and Toppers</h1>
@@ -52,13 +51,13 @@
 	.toppers {
 		display: flex;
 		flex-flow: column;
-		justify-content: space-between;
 		align-items: center;
 		background: url('/lib/grid-topper.svg') no-repeat center center;
 		position: relative;
 		min-height: 80vh;
 		width: 100%;
 		margin-bottom: 1em;
+		padding: 5%;
 		.heading {
 			z-index: 10;
 			font-family: Archivo, sans-serif;

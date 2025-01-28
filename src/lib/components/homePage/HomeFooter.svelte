@@ -2,8 +2,8 @@
 	const quickLinks = [
 		{ text: 'Home', href: '/' },
 		{ text: 'About', href: '/about' },
-		{ text: 'Terms of Service', href: '/terms-of-service' },
-		{ text: 'Refund Polciy', href: '/refund-policy' }
+		{ text: 'Terms of Service', href: '/quick-links/terms-of-service' },
+		{ text: 'Refund Polciy', href: '/quick-links/refund-policy' }
 	]
 
 	const companyLinks = [
@@ -120,9 +120,8 @@
 <style>
 	.footer {
 		margin: auto;
-		padding: 1rem;
+		padding: 1% 5%;
 		margin-top: 5rem;
-		position: relative;
 		background-color: white;
 		border-top: 1px solid rgba(0, 0, 0, 0.1);
 	}

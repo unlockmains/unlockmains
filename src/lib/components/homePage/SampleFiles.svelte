@@ -5,7 +5,6 @@
 	export let sampleFilesToShow
 </script>
 
-<Background />
 <section class="sample-files">
 	<div class="heading">
 		<h1>Take a peek at our Sample Evaluation</h1>
@@ -35,6 +34,9 @@
 		width: 100%;
 		background-color: rgb(135 135 135 / 33%);
 		margin-bottom: 2em;
+		border-radius: 1em;
+		box-shadow: 0 0 0.5em 0.5em rgba(64, 64, 64, 0.5);
+		padding: 5%;
 
 		.heading {
 			z-index: 10;

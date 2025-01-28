@@ -38,7 +38,6 @@
 	}
 </script>
 
-<Background />
 <section class="home-faq">
 	<div class="background-gradient"></div>
 	<div class="heading">

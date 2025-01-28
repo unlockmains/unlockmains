@@ -26,7 +26,6 @@
 		}))
 </script>
 
-<Background />
 <section class="pricing">
 	<div class="heading">
 		<h1>Our Plans</h1>
@@ -81,9 +80,9 @@
 		align-items: center;
 		background: url('/lib/grid-home.svg') no-repeat center center;
 		position: relative;
-		min-height: 100vh;
 		margin-bottom: 5em;
 		gap: 0.5em;
+		padding: 5%;
 
 		.heading {
 			z-index: 10;

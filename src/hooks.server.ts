@@ -21,7 +21,7 @@ export const authentication: Handle = async ({ event, resolve }) => {
   return resolve(event);
 }
 
-const unprotectedPrefix = ['/login', '/register', '/auth', '/verify-email', '/careers', '/registration', '/quick-links', '/about'];
+const unprotectedPrefix = ['/login', '/register', '/auth', '/verify-email', '/careers', '/registration', '/quick-links', '/about',  '/contact'];
 export const authorization: Handle = async ({ event, resolve }) => {
   const {
     locals: { user }

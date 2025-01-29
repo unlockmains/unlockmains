@@ -13,7 +13,7 @@
 
 	const accountLinks = [
 		{ text: 'Login', href: '/login' },
-		{ text: 'Register', href: '/register' },
+		{ text: 'Register', href: '/login' },
 		{ text: 'Careers', href: '/careers' }
 	]
 

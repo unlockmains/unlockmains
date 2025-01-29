@@ -10,6 +10,8 @@
 	import type { ActionData, SubmitFunction } from './$types.js'
 	import { toast } from 'svelte-sonner'
 	import { goto } from '$app/navigation'
+	import Background from '$lib/components/atoms/Background.svelte'
+	import HomeFooter from '$lib/components/homePage/HomeFooter.svelte'
 
 	export let form: ActionData
 	let loadingOtp: boolean = false
@@ -61,6 +63,7 @@
 	<title>Login</title>
 </svelte:head>
 
+<Background />
 <div class="container mt-6">
 	<h1>Auth Provider</h1>
 	<h5>Login with an auth provider. If you don't have an account yet it will be created for you.</h5>
@@ -147,3 +150,4 @@
 		</div>
 	</div>
 </div>
+<HomeFooter />

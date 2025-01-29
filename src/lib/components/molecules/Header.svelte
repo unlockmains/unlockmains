@@ -20,7 +20,7 @@
 	<nav>
 		<a href="/">Home</a>
 		<a href="/pricing">Pricing</a>
-		<a href="/About">About</a>
+		<a href="/about">About</a>
 		<a href="/contact">Contact</a>
 		<a href="/careers">Careers</a>
 	</nav>

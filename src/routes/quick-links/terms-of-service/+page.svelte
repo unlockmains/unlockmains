@@ -1,5 +1,4 @@
 <script>
-	import { goto } from '$app/navigation'
 	import Background from '$lib/components/atoms/Background.svelte'
 	import HomeFooter from '$lib/components/homePage/HomeFooter.svelte'
 </script>

@@ -47,16 +47,16 @@
 		}
 	}
 
-	afterUpdate(() => {
-		if (form?.signInOtp?.message) {
-			if (form.signInOtp.success) {
-				toast.success(form?.signInOtp?.message)
-				goto(`/verify-email?email=${form.signInOtp.email}&type=email`)
-			} else {
-				toast.error(form?.signInOtp?.message)
-			}
-		}
-	})
+	// afterUpdate(() => {
+	// 	if (form?.signInOtp?.message) {
+	// 		if (form.signInOtp.success) {
+	// 			toast.success(form?.signInOtp?.message)
+	// 			goto(`/verify-email?email=${form.signInOtp.email}&type=email`)
+	// 		} else {
+	// 			toast.error(form?.signInOtp?.message)
+	// 		}
+	// 	}
+	// })
 </script>
 
 <svelte:head>
@@ -73,6 +73,7 @@
 		action="?/googleAuth"
 		use:enhance={handleGoogleSignIn}
 	>
+		<input type="hidden" name="userType" value="student" />
 		<div class="row flex flex-center">
 			<Button
 				label="Login with Google"

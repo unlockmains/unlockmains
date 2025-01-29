@@ -15,11 +15,13 @@ export const load: PageServerLoad = async ({ url, locals: { user  } }) => {
 
 export const actions: Actions = {
 	googleAuth: async (event) => {
-		const { account } = createAdminClient();
+		const formData = await event.request.formData();
+		const userType = formData.get('userType') as string;
 
+		const { account } = createAdminClient();
 		const redirectUrl = await account.createOAuth2Token(
 			OAuthProvider.Google,
-			`${event.url.origin}/auth/callback/google`,
+			`${event.url.origin}/auth/callback/google?userType=${userType}`,
 			`${event.url.origin}/404`
 		  );
 		  throw redirect(302, redirectUrl)
@@ -27,7 +29,7 @@ export const actions: Actions = {
 	// signInOtp: async (event) => {
 	// 	const {
 	// 		request,
-	// 		locals: { pocketbase }
+	// 		locals: {  }
 	// 	} = event
 	// 	const formData = await request.formData()
 	// 	const email = formData.get('email') as string
@@ -39,7 +41,7 @@ export const actions: Actions = {
 	// 	}
 	// 	let error = null;
 	// 	if (email && password) {
-	// 		const authData = await pocketbase.collection("users").authWithPassword(email, password)
+	// 		const authData = await .collection("users").authWithPassword(email, password)
 	// 		// error = "error while login"
 
 	// 	} else {
@@ -81,7 +83,7 @@ export const actions: Actions = {
 	// registerWithPassword: async (event) => {
 	// 	const {
 	// 		request,
-	// 		locals: { pocketbase }
+	// 		locals: {  }
 	// 	} = event
 		// const formData = await request.formData()
 		// const email = formData.get('email') as string

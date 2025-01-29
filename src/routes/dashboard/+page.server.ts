@@ -8,5 +8,5 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
         redirect(303, '/')
     }
 
-    return { user: null }
+    return { user }
 }

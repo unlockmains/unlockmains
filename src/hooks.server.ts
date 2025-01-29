@@ -1,4 +1,4 @@
-import { createSessionClient, SESSION_COOKIE, SESSION_ID } from '$lib/appwrite';
+import { createSessionClient, SESSION_COOKIE } from '$lib/appwrite';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 

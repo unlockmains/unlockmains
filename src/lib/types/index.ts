@@ -10,7 +10,8 @@ export type INewSubmissionType = {
     text: string;
     value: string;
     disabled?: boolean;
-    options?: INewSubmissionType[]
+    options?: INewSubmissionType[],
+    count?: number;
 }
 
 export enum INewSubmittedStatus {

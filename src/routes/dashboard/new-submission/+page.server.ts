@@ -1,17 +1,26 @@
 import { fail, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "../$types";
 import type { Actions } from "./$types";
-import { ID } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 import { PUBLIC_APPWRITE_BUCKET, PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_ENDPOINT, PUBLIC_APPWRITE_PROJECT } from "$env/static/public";
+import { PUBLCI_APPWRITE_STUDENT_PROFILE_DB } from "$env/static/private";
 
 export const prerender = false;
 
-export const load: PageServerLoad = async ({ locals: { user } }) => {
+export const load: PageServerLoad = async ({ locals: { user, databases } }) => {
     if (!user) {
         redirect(303, '/')
     }
 
-    return { user: user }
+    const studentDocument = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLCI_APPWRITE_STUDENT_PROFILE_DB, [Query.equal("user_id", user?.$id)]);
+    const studetProfile = studentDocument.documents[0];
+    const questionTypes = [
+        { text: "GS Question", value: "GS Question", count: studetProfile.gs_submissions_left, disabled: !studetProfile.gs_submissions_left },
+        { text: 'Optional', value: 'Optional', count: studetProfile.optional_submissions_left, disabled: !studetProfile.optional_submissions_left },
+        { text: 'Essay', value: 'Essay', count: studetProfile.eassy_submissions_left, disabled: !studetProfile.eassy_submissions_left },
+    ]
+
+    return { user, questionTypes }
 }
 
 export const actions: Actions = {
@@ -45,7 +54,7 @@ export const actions: Actions = {
                 "file_id": uploadedFile.$id,
             }
             const document = await databases.createDocument(PUBLIC_APPWRITE_DATABASE, '678c9d1e0029d8232760', ID.unique(), savingData);
-            return redirect(200, "/dashboard");
+            return redirect(303, "/dashboard");
         } catch (err) {
             console.log("error", err)
             message = (err as unknown as Error).message;

@@ -2,11 +2,10 @@ import { fail, redirect, type Actions } from "@sveltejs/kit"
 import type { PageServerLoad } from "./$types"
 import { env } from "$env/dynamic/private"
 
-export const load: PageServerLoad = async ({ url, locals: { pocketbase } }) => {
-  // const user = pocketbase.authStore.model;
-  // if (user) {
-  //   redirect(303, '/dashboard')
-  // }
+export const load: PageServerLoad = async ({ url, locals: { user } }) => {
+  if (user) {
+    redirect(303, '/dashboard')
+  }
 
   const email = url.searchParams.get("email");
   if (!email) {
@@ -20,7 +19,7 @@ export const actions: Actions = {
     const {
       url,
       request,
-      locals: { pocketbase }
+      locals: { account }
     } = event;
     const formData = await request.formData()
     const token = formData.get('token') as string
@@ -41,7 +40,7 @@ export const actions: Actions = {
       const data = await response.json();
 
       if (data.token) {
-        // pocketbase.authStore.save(data.token, data.record)
+
         return {
           signInOtp: {
             success: true,

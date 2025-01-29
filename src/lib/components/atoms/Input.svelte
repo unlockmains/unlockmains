@@ -5,7 +5,9 @@
 	export let type: string
 	export let placeholder: string
 	export let value: string
-	export let style: string = '';
+	export let style: string = ''
+	export let min: number | undefined = undefined
+	export let max: number | undefined = undefined
 
 	const onChangeNumberInput = (event: Event) => {
 		if (type === 'number') {
@@ -19,7 +21,17 @@
 {#if label}
 	<label for={name}>{label}</label>
 {/if}
-<input {id} {name} {...{ type }} {placeholder} bind:value on:change={onChangeNumberInput} {style}/>
+<input
+	{id}
+	{name}
+	{...{ type }}
+	{placeholder}
+	{min}
+	{max}
+	bind:value
+	on:change={onChangeNumberInput}
+	{style}
+/>
 
 <style lang="scss">
 	label {

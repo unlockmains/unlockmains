@@ -7,14 +7,24 @@
 	import RadioGroup from '$lib/components/atoms/RadioGroup.svelte'
 	import ComboboxContext from '$lib/context/ComboboxContext.svelte'
 	import { alwaysShow } from '$lib/stores/sideNavStore'
-	import { afterUpdate } from 'svelte'
-	import type { ActionData, SubmitFunction } from './$types'
 	import { toast } from 'svelte-sonner'
 	import { goto } from '$app/navigation'
+	import type { ActionData, SubmitFunction } from './$types'
+	import type { INewSubmissionType } from '$lib/types'
 
-	export let form: ActionData
-	let radioValue: 'yes' | 'no' | undefined = undefined
-	let loadingSubmission: boolean = false
+	let { form, data } = $props<{
+		form: ActionData
+		data: { questionTypes: INewSubmissionType[] }
+	}>()
+
+	let radioValue = $state<'yes' | 'no' | undefined>(undefined)
+	let loadingSubmission = $state(false)
+	let selectedValue = $state<string | undefined>(undefined)
+	const maxQuestions = $derived(
+		data.questionTypes.find(
+			(questionType: INewSubmissionType) => questionType.value === selectedValue
+		)?.count ?? 0
+	)
 
 	const handleQuestionSubmission: SubmitFunction = () => {
 		loadingSubmission = true
@@ -24,12 +34,15 @@
 		}
 	}
 
-	afterUpdate(() => {
-		if (form)
+	$effect.root(() => {
+		if (form) {
 			if (form.success) {
 				toast.success('Submission Successful')
 				goto(`/dashboard`)
-			} else toast.error(form?.message as string)
+			} else {
+				toast.error(form?.message as string)
+			}
+		}
 	})
 </script>
 
@@ -74,14 +87,11 @@
 				label="Question Type"
 				name="question-type"
 				placeholder="Click or Search"
-				options={[
-					{ text: 'Option 1', value: 'Option 1' },
-					{ text: 'Option 2', value: 'Option 2' },
-					{ text: 'Option 3', value: 'Option 3' }
-				]}
+				options={data.questionTypes}
 				style="--height: 3em;--font-size: 0.8em;"
 				disabled={false}
 				showRemainingCount={true}
+				bind:value={selectedValue}
 			/>
 		</ComboboxContext>
 	</div>
@@ -94,6 +104,8 @@
 			label="Number of Questions"
 			value=""
 			style="--height: 3em;--font-size: 0.8em;--border-size-focus: 2px; --border-color-focus: var(--custom-color-brand);"
+			min={1}
+			max={maxQuestions}
 		/>
 	</div>
 	<div class="question-file">

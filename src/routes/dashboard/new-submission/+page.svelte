@@ -34,7 +34,7 @@
 		}
 	}
 
-	$effect.root(() => {
+	$effect(() => {
 		if (form) {
 			if (form.success) {
 				toast.success('Submission Successful')

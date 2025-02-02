@@ -37,8 +37,7 @@
 		line-height: 1.2;
 		font-weight: 500;
 		letter-spacing: -0.02em;
-		margin-bottom: 5em;
-		padding: 5%;
+		padding: 2% 5%;
 		position: relative;
 
 		h1 {

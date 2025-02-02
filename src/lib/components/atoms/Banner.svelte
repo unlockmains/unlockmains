@@ -62,8 +62,8 @@
 			position: absolute;
 			top: 0.75em;
 			right: 0;
-			width: 32px;
-			height: 32px;
+			width: 3em;
+			height: 3em;
 			display: flex;
 			cursor: pointer;
 			justify-content: center;

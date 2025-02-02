@@ -7,7 +7,7 @@ export const authentication: Handle = async ({ event, resolve }) => {
     const { account, databases, storage, teams } = createSessionClient(event);
     event.locals.databases = databases;
     event.locals.storage = storage;
-    if (event.cookies.get(SESSION_COOKIE)) {
+    if (event.cookies.get(SESSION_COOKIE) && !event.locals.user) {
       event.locals.account = account;
       event.locals.teams = teams;
       event.locals.user = {
@@ -17,7 +17,11 @@ export const authentication: Handle = async ({ event, resolve }) => {
   } catch (err) {
     console.error("error session", err)
   }
-
+  const toasthMessage = event.cookies.get('toastMessage');
+  if (toasthMessage) {
+    event.cookies.delete('toastMessage', { path: '/' });
+    event.locals.toastMessage = toasthMessage;
+}
   return resolve(event);
 }
 

@@ -83,6 +83,10 @@
 			>
 		</div>
 	</form>
+	<!-- <h6 style="margin: 1%; padding: 0;">
+		By logging in you agree to our <a href="/quick-links/terms-of-service">Terms of Service</a> and
+		<a href="/quick-links/privacy-policy">Privacy Policy</a>.
+	</h6> -->
 	<Separator><BooksIcon height="56" width="56" /></Separator>
 	<div class="flex row justify-between">
 		<div class="flex column col-6-sm">
@@ -131,23 +135,18 @@
 			</div>
 		</div>
 		<div class="flex column col-6-sm">
-			<h1>Want to build your career?</h1>
-			<h5>Join us today.</h5>
-			<form
+			<h1>Want to be an evaluator?</h1>
+			<h5>Click the button below to find out more.</h5>
+			<!-- <form
 				class="row flex"
 				method="POST"
 				action="?/registerWithPassword"
 				use:enhance={handleWithPassword}
-			>
-				<div style="width: 100%;">
-					<Button
-						label="Join Now"
-						type="register"
-						withLoader={loadingWithPassword}
-						disabled={loadingWithPassword}
-					/>
-				</div>
-			</form>
+			> -->
+			<div style="width: 100%;">
+				<Button label="Join Now" type="register" onClick={() => goto('/careers')} />
+			</div>
+			<!-- </form> -->
 		</div>
 	</div>
 </div>

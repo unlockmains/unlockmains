@@ -7,7 +7,7 @@
 
 	export let data
 	$: ({ submissions } = data)
-	console.log(submissions)
+
 	let columns = [
 		{
 			key: 'name',

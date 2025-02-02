@@ -9,7 +9,6 @@
 	export let parentSlug: string = ''
 
 	let showSidebar = false
-	console.log('sidebar', $sideNavOpen)
 	alwaysShow.subscribe((alwaysShow) => {
 		if (alwaysShow) {
 			showSidebar = true

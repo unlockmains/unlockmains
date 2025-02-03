@@ -2,7 +2,12 @@
 	import Sidebar from '$lib/components/molecules/Sidebar.svelte'
 	import { alwaysShow, sideNavOpen, toggleSideNav } from '$lib/stores/sideNavStore'
 	import { Toaster } from 'svelte-sonner'
-	export let data
+	let { data } = $props<{
+		slug: string
+		parentSlug: string
+		userType: string
+		adminApproved: boolean
+	}>()
 </script>
 
 <svelte:head>
@@ -10,7 +15,9 @@
 </svelte:head>
 
 <div>
-	<Sidebar slug={data.slug} parentSlug={data.parentSlug} />
+	{#if data.adminApproved}
+		<Sidebar slug={data.slug} parentSlug={data.parentSlug} />
+	{/if}
 	{#if $sideNavOpen && !$alwaysShow}
 		<div class="backdrop" on:click={toggleSideNav} />
 	{/if}

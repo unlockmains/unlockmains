@@ -12,6 +12,7 @@
 	import { goto } from '$app/navigation'
 	import Background from '$lib/components/atoms/Background.svelte'
 	import HomeFooter from '$lib/components/homePage/HomeFooter.svelte'
+	import { browser } from '$app/environment'
 
 	export let form: ActionData
 	let loadingOtp: boolean = false
@@ -73,7 +74,11 @@
 		action="?/googleAuth"
 		use:enhance={handleGoogleSignIn}
 	>
-		<input type="hidden" name="userType" value="student" />
+		<input
+			type="hidden"
+			name="userType"
+			value={browser && localStorage?.getItem('userType') === 'evaluator' ? 'evaluator' : 'student'}
+		/>
 		<div class="row flex flex-center">
 			<Button
 				label="Login with Google"

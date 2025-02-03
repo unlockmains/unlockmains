@@ -293,7 +293,8 @@
 							</svg>
 						{/if}
 						{#if showRemainingCount}
-							<span style="font-size: 0.6em; height: 1em; width: 4em">Remaining unlimited</span>
+							<span style="font-size: 0.6em; height: 1em; width: 4em">Remaining {option.count}</span
+							>
 						{/if}
 					</li>
 				{/if}
@@ -319,9 +320,11 @@
 		--height: 4em;
 		--font-size: 1em;
 		--list-option-padding: 0.8rem 1rem;
+		--list-gap: 0.5em;
 		display: flex;
 		flex-direction: column;
-		gap: 0.5em;
+		gap: var(--list-gap);
+		width: var(--combobox-width);
 
 		.combobox__label {
 			text-transform: capitalize;

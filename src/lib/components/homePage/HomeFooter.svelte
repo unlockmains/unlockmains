@@ -3,7 +3,8 @@
 		{ text: 'Home', href: '/' },
 		{ text: 'About', href: '/about' },
 		{ text: 'Terms of Service', href: '/quick-links/terms-of-service' },
-		{ text: 'Refund Polciy', href: '/quick-links/refund-policy' }
+		{ text: 'Refund Policy', href: '/quick-links/refund-policy' },
+		{ text: 'Privacy Policy', href: '/quick-links/privacy-policy' }
 	]
 
 	const companyLinks = [

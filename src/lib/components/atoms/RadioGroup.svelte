@@ -2,14 +2,15 @@
 	export let options
 	export let label
 	export let userSelected = options[0].value
-	export let name: string = '';
+	export let name: string = ''
+	export let style: string = ''
 
 	const uniqueID = Math.floor(Math.random() * 100)
 
 	const slugify = (str = '') => str.toLowerCase().replace(/ /g, '-').replace(/\./g, '')
 </script>
 
-<label class="radio-label" id={`label-${uniqueID}`}>{label}</label>
+<label class="radio-label" id={`label-${uniqueID}`} {style}>{label}</label>
 <div
 	role="radiogroup"
 	class="group-container"
@@ -17,18 +18,26 @@
 	id={`group-${uniqueID}`}
 >
 	{#each options as { value, label }}
-		<input class="sr-only" type="radio" id={slugify(label)} {name} bind:group={userSelected} {value} />
+		<input
+			class="sr-only"
+			type="radio"
+			id={slugify(label)}
+			{name}
+			bind:group={userSelected}
+			{value}
+		/>
 		<label for={slugify(label)}> {label} </label>
 	{/each}
 </div>
 
 <style lang="scss">
 	.radio-label {
+		--label-size: 0.8em;
 		text-transform: capitalize;
 		display: block;
 		margin: 5px 0;
 		color: var(--custom-color-secondary);
-		font-size: 0.8rem;
+		font-size: var(--label-size);
 	}
 	.group-container {
 		--accent-color: var(--custom-color-brand);

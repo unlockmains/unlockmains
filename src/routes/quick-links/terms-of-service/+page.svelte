@@ -146,7 +146,9 @@
 	</p>
 	<h4>ANNEXURE 10 - PERSONAL INFORMATION</h4>
 	<p>
-		Your submission of personal information through the store is governed by our Privacy Policy.
+		Your submission of personal information through the store is governed by our <a
+			href="/quick-links/privacy-policy">Privacy Policy</a
+		>.
 	</p>
 	<h4>ANNEXURE 11 - ERRORS, INACCURACIES AND OMISSIONS</h4>
 	<p>
@@ -276,8 +278,7 @@
 		line-height: 1.2;
 		font-weight: 500;
 		letter-spacing: -0.02em;
-		margin-bottom: 5em;
-		padding: 5%;
+		padding: 2% 5%;
 		position: relative;
 
 		h1 {

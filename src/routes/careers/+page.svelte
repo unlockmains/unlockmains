@@ -1,4 +1,5 @@
 <script>
+	import { browser } from '$app/environment'
 	import { goto } from '$app/navigation'
 	import Background from '$lib/components/atoms/Background.svelte'
 	import Button from '$lib/components/atoms/Button.svelte'
@@ -61,7 +62,14 @@
 			</div>
 
 			<div class="job-button">
-				<Button type="register" label="Apply" onClick={() => goto('/registration/evaluator')} />
+				<Button
+					type="register"
+					label="Apply"
+					onClick={() => {
+						browser && localStorage.setItem('userType', 'evaluator')
+						goto('/login')
+					}}
+				/>
 			</div>
 		</div>
 	{/each}

@@ -4,54 +4,48 @@
 	import PdfIcon from '../icons/PDFIcon.svelte'
 	import UploadIcon from '../icons/UploadIcon.svelte'
 
-	let uploadArea: HTMLDivElement
-	let fileInput: HTMLInputElement
-	export let name: string = '';
+	let { name = '' } = $props()
 
-	let files: File[] = []
+	let uploadArea: HTMLDivElement | null = $state(null)
+	let fileInput: HTMLInputElement | null = $state(null)
+	let files = $state<File[]>([])
 
 	const uploadAreaDragOver = (event: DragEvent) => {
 		event.preventDefault()
-		uploadArea.classList.add('hover')
+		uploadArea && uploadArea.classList.add('hover')
 	}
 
 	const uploadAreaDragLeave = (event: DragEvent) => {
 		event.preventDefault()
-		uploadArea.classList.remove('hover')
+		uploadArea && uploadArea.classList.remove('hover')
 	}
 
 	const uploadAreaDrop = (event: DragEvent) => {
 		event.preventDefault()
-		uploadArea.classList.remove('hover')
-		if (event?.dataTransfer?.files) files = [...files, ...Object.values(event?.dataTransfer?.files)]
+		uploadArea && uploadArea.classList.remove('hover')
+		if (event?.dataTransfer?.files) {
+			const newFiles = Array.from(event.dataTransfer.files)
+			files = [...files, ...newFiles]
+		}
 	}
 
 	const fileInputChange = (event: Event) => {
 		const input = event.target as HTMLInputElement
 		if (input.files) {
-			files = [...files, ...Object.values(input.files)]
+			const newFiles = Array.from(input.files)
+			files = [...files, ...newFiles]
 		}
 	}
 
 	const removeFile = (fileToRemove: File) => {
 		files = files.filter((file) => file.name !== fileToRemove.name)
 	}
-
-	// const testFileData = async () => {
-	// 	console.log('files', files)
-	// 	const reader = new FileReader()
-	// 	reader.readAsDataURL(files[0])
-	// 	reader.onload = function () {
-	// 		console.log(reader.result)
-	// 	}
-	// 	reader.onerror = function (error) {
-	// 		console.log('Error: ', error)
-	// 	}
-	// }
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore event_directive_deprecated -->
 <div
 	id="upload-area"
 	class="upload-area"
@@ -59,11 +53,37 @@
 	on:dragover={uploadAreaDragOver}
 	on:dragleave={uploadAreaDragLeave}
 	on:drop={uploadAreaDrop}
-	on:click={() => fileInput.click()}
+	on:click={() => fileInput?.click()}
 >
-	<div class="upload-icon"><UploadIcon /></div>
-	<p>Drag & drop your file here or click to upload!</p>
-	<!-- multiple and image/png, image/jpeg, application/pdf -->
+	{#if !files.length}
+		<div class="upload-icon"><UploadIcon /></div>
+		<p>Drag & drop your file here or click to upload!</p>
+	{:else}
+		<div class="file-list">
+			{#if files}
+				{#each files as file}
+					<div class="file-item">
+						{#if file.type.startsWith('image/')}
+							<ImageIcon />
+						{:else if file.type === 'application/pdf'}
+							<PdfIcon />
+						{:else}
+							<span>No icon available</span>
+						{/if}
+						<span>{file.name}</span>
+						<button
+							on:click={(event) => {
+								event.stopPropagation()
+								removeFile(file)
+							}}
+						>
+							<BinIcon />
+						</button>
+					</div>
+				{/each}
+			{/if}
+		</div>
+	{/if}
 	<input
 		type="file"
 		id="file-input"
@@ -71,31 +91,8 @@
 		bind:this={fileInput}
 		on:change={fileInputChange}
 		accept="application/pdf"
+		multiple
 	/>
-	<div class="file-list">
-		{#if files}
-			{#each files as file}
-				<div class="file-item">
-					{#if file.type.startsWith('image/')}
-						<ImageIcon />
-					{:else if file.type === 'application/pdf'}
-						<PdfIcon />
-					{:else}
-						<span>No icon available</span>
-					{/if}
-					<span>{file.name}</span>
-					<button
-						on:click={(event) => {
-							event.stopPropagation()
-							removeFile(file)
-						}}
-					>
-						<BinIcon />
-					</button>
-				</div>
-			{/each}
-		{/if}
-	</div>
 </div>
 
 <style lang="scss">
@@ -128,7 +125,7 @@
 			display: flex;
 			flex-flow: row wrap;
 			align-items: center;
-			justify-content: flex-start;
+			justify-content: center;
 
 			.file-item {
 				display: flex;

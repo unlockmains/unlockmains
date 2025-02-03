@@ -1,8 +1,7 @@
 <script lang="ts">
-	import type { RecordModel } from 'pocketbase'
 	import { onMount } from 'svelte'
 
-	export let quotes: RecordModel[]
+	export let quotes: string[]
 
 	export let rotationInterval = 6000
 

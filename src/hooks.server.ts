@@ -1,4 +1,4 @@
-import { createSessionClient, SESSION_COOKIE, SESSION_ID } from '$lib/appwrite';
+import { createSessionClient, SESSION_COOKIE } from '$lib/appwrite';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
@@ -7,7 +7,7 @@ export const authentication: Handle = async ({ event, resolve }) => {
     const { account, databases, storage, teams } = createSessionClient(event);
     event.locals.databases = databases;
     event.locals.storage = storage;
-    if (event.cookies.get(SESSION_COOKIE)) {
+    if (event.cookies.get(SESSION_COOKIE) && !event.locals.user) {
       event.locals.account = account;
       event.locals.teams = teams;
       event.locals.user = {
@@ -17,18 +17,22 @@ export const authentication: Handle = async ({ event, resolve }) => {
   } catch (err) {
     console.error("error session", err)
   }
-
+  const toasthMessage = event.cookies.get('toastMessage');
+  if (toasthMessage) {
+    event.cookies.delete('toastMessage', { path: '/' });
+    event.locals.toastMessage = toasthMessage;
+  }
   return resolve(event);
 }
 
-const unprotectedPrefix = ['/login', '/auth', '/verify-email', '/careers', '/registration', '/quick-links', '/about',  '/contact'];
+const unprotectedPrefix = ['/login', '/auth', '/verify-email', '/careers', '/quick-links', '/about', '/contact'];
 export const authorization: Handle = async ({ event, resolve }) => {
   const {
     locals: { user }
   } = event;
-  if (!unprotectedPrefix.some((path) => event.url.pathname.startsWith(path)) && event.url.pathname !== '/' ) {
+  if (!unprotectedPrefix.some((path) => event.url.pathname.startsWith(path)) && event.url.pathname !== '/') {
     const loggedInUser = user?.$id
-    if(!loggedInUser) {
+    if (!loggedInUser) {
       throw redirect(303, '/login');
     }
   }

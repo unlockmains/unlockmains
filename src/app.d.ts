@@ -8,7 +8,8 @@ declare global {
 			user: (Models.User<Models.Preferences> & {team: Models.Team<Models.Preferences>}) |  undefined,
 			databases: Databases,
 			storage: Storage,
-			teams: Teams
+			teams: Teams,
+			toastMessage: string | undefined
 		}
 		interface PageData {
 			user: User | null

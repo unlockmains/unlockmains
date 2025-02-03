@@ -3,6 +3,8 @@ import type { PageServerLoad } from './$types'
 import PricingCardsData from '$lib/api/mockPlansData.json'
 import { PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_ENDPOINT, PUBLIC_APPWRITE_PROJECT, PUBLIC_APPWRITE_SAMPLE_FILE_BUCKET } from '$env/static/public'
 
+export const prerender = true;
+
 export const load: PageServerLoad = async ({ url, locals: { user, databases, storage } }) => {
   if (user) {
     redirect(303, '/dashboard')

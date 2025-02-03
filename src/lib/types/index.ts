@@ -10,7 +10,8 @@ export type INewSubmissionType = {
     text: string;
     value: string;
     disabled?: boolean;
-    options?: INewSubmissionType[]
+    options?: INewSubmissionType[],
+    count?: number;
 }
 
 export enum INewSubmittedStatus {
@@ -80,17 +81,17 @@ type AnnotateObject = {
     backgroundColor: string;
     fillRule: "nonzero" | "evenodd";
     paintFirst: "fill" | "stroke";
-    globalCompositeOperation: string; 
+    globalCompositeOperation: string;
     skewX: number;
     skewY: number;
     path: [string | number][];
     objects: AnnotateObject[];
     x1: number;
     y1: number;
-    x2: number; 
+    x2: number;
     y2: number;
-  };
-  
+};
+
 
 export type IAnnotation = {
     type: string
@@ -99,4 +100,19 @@ export type IAnnotation = {
 
 export interface IPageAnnotations {
     [pageNumber: number]: IAnnotation[]
+}
+
+export type IEvaluatorOnBoardData = {
+    name: string
+    phoneNumber: string
+    prelimsAttempts: number | undefined
+    mainsAttempts: number | undefined
+    interviewsAppeared: number | undefined
+    optionalSubject: string
+    hasRank: boolean
+    evaluationLanguage: string
+    experience: string
+    existingUser: "Yes" | "No"
+    existingUserEmail: string
+    assignment: string
 }

@@ -19,7 +19,7 @@
 	<SmallDetails />
 	<Pricing {pricingPbData} />
 	<SampleFiles {sampleFilesToShow} />
-	<Toppers />
+	<!-- <Toppers /> -->
 	<HomeFaq />
 	<HomeFooter />
 </div>

@@ -11,13 +11,19 @@
 	<h4>Choose your inquiry type:</h4>
 	<ul>
 		<li>
-			General Question - <a href="https://t.me/SamanShamim" target="_blank">UnlockMains</a> /
+			General Question - <a href="https://unlockmains.com" target="_blank">UnlockMains</a> /
 			<a href="https://wa.me/+919470067051" target="_blank">+919470067051</a>
 		</li>
-		<li>Technical Support - <a href="mailto:unlockmains@gmail.com">unlockmains@gmail.com</a></li>
-		<li>Feedback/Suggestions - <a href="mailto:unlockmains@gmail.com">Feedback UnlockMains</a></li>
 		<li>
-			Simply Drop us an email at - <a href="mailto:unlockmains@gmail.com">unlockmains@gmail.com</a>
+			Technical Support - <a href="mailto:support@unlockmains.com">support@unlockmains.com</a>
+		</li>
+		<li>
+			Feedback/Suggestions - <a href="mailto:feedback@unlockmains.com">feedback@unlockmains.com</a>
+		</li>
+		<li>
+			Simply Drop us an email at - <a href="mailto:contact@unlockmains.com"
+				>contact@unlockmains.com</a
+			>
 		</li>
 		<li>Meet us at - RZP 51B, Raj Nagar Part - 2, Palam, Dwarka Sector -8, New Delhi - 110077</li>
 	</ul>

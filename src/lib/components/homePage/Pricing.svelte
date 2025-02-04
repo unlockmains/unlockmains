@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Background from '../atoms/Background.svelte'
 	import Combobox from '../atoms/Combobox.svelte'
 	import PricingCards from '../atoms/PricingCards.svelte'
 	import Tabs from '../molecules/Tabs.svelte'

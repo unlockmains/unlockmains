@@ -1,13 +1,22 @@
 <script lang="ts">
-	export let options
-	export let label
-	export let userSelected = options[0].value
-	export let name: string = ''
-	export let style: string = ''
+	let {
+		options,
+		label,
+		userSelected = $bindable(),
+		name,
+		style
+	} = $props<{
+		options: { value: string | boolean; label: string }[]
+		label: string
+		userSelected: string | boolean
+		name: string
+		style?: string
+	}>()
 
-	const uniqueID = Math.floor(Math.random() * 100)
+	const uniqueID = `radio-${name}-${Math.random().toString(36).substring(2)}`
 
-	const slugify = (str = '') => str.toLowerCase().replace(/ /g, '-').replace(/\./g, '')
+	const slugify = (str = '', index: number) =>
+		`${name}-${str.toLowerCase().replace(/ /g, '-').replace(/\./g, '')}-${index}`
 </script>
 
 <label class="radio-label" id={`label-${uniqueID}`} {style}>{label}</label>
@@ -17,16 +26,18 @@
 	aria-labelledby={`label-${uniqueID}`}
 	id={`group-${uniqueID}`}
 >
-	{#each options as { value, label }}
+	{#each options as { value, label }, index}
+		{@const id = slugify(label, index)}
 		<input
 			class="sr-only"
 			type="radio"
-			id={slugify(label)}
+			{id}
 			{name}
 			bind:group={userSelected}
 			{value}
+			aria-checked={userSelected === value}
 		/>
-		<label for={slugify(label)}> {label} </label>
+		<label for={id}> {label} </label>
 	{/each}
 </div>
 

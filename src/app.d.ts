@@ -5,7 +5,7 @@ declare global {
 		interface Locals {
 			appwrite: Client,
 			account: Account,
-			user: (Models.User<Models.Preferences> & {team: Models.Team<Models.Preferences>}) |  undefined,
+			user: (Models.User<Models.Preferences> & { team: Models.Team<Models.Preferences> } & { profile: Models.Document<Models.UserProfile> }) | undefined,
 			databases: Databases,
 			storage: Storage,
 			teams: Teams,
@@ -19,4 +19,4 @@ declare global {
 	}
 }
 
-export {};
+export { };

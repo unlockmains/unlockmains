@@ -11,15 +11,17 @@
 	import { goto } from '$app/navigation'
 	import type { ActionData, SubmitFunction } from './$types'
 	import type { INewSubmissionType } from '$lib/types'
+	import questionTypesMapping from '$lib/api/questionTypesMapping.json'
 
 	let { form, data } = $props<{
 		form: ActionData
 		data: { questionTypes: INewSubmissionType[] }
 	}>()
 
-	let radioValue = $state<'yes' | 'no' | undefined>(undefined)
+	let radioValue = $state<'yes' | 'no'>('no')
 	let loadingSubmission = $state(false)
 	let selectedValue = $state<string | undefined>(undefined)
+	let specificGsQuestion = $state<string | undefined>(undefined)
 	const maxQuestions = $derived(
 		data.questionTypes.find(
 			(questionType: INewSubmissionType) => questionType.value === selectedValue
@@ -95,6 +97,22 @@
 			/>
 		</ComboboxContext>
 	</div>
+	{#if selectedValue === 'GS Question'}
+		<div class="specific-gs-question-type">
+			<ComboboxContext>
+				<Combobox
+					label="Question Type"
+					name="question-type"
+					placeholder="Click or Search"
+					options={questionTypesMapping[selectedValue]}
+					style="--height: 3em;--font-size: 0.8em;"
+					disabled={false}
+					showRemainingCount={false}
+					bind:value={specificGsQuestion}
+				/>
+			</ComboboxContext>
+		</div>
+	{/if}
 	<div class="question-quantity">
 		<Input
 			id="question-quantity"
@@ -170,7 +188,8 @@
 		gap: 1em;
 
 		.question-type,
-		.question-quantity {
+		.question-quantity,
+		.specific-gs-question-type {
 			width: 15em;
 		}
 		.question-file {

@@ -1,6 +1,8 @@
+import { PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB } from '$env/static/public';
 import { createSessionClient, SESSION_COOKIE } from '$lib/appwrite';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
+import { Query } from 'node-appwrite';
 
 export const authentication: Handle = async ({ event, resolve }) => {
   try {
@@ -8,10 +10,14 @@ export const authentication: Handle = async ({ event, resolve }) => {
     event.locals.databases = databases;
     event.locals.storage = storage;
     if (event.cookies.get(SESSION_COOKIE) && !event.locals.user) {
+      const user = await account.get();
+      const userProfile = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB, [
+        Query.equal("user_id", user?.$id)
+      ]);
       event.locals.account = account;
       event.locals.teams = teams;
       event.locals.user = {
-        ...await account.get(), team: (await teams.list()).teams[0]
+        ...user, team: (await teams.list()).teams[0], profile: userProfile.documents[0]
       }
     }
   } catch (err) {

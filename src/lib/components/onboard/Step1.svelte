@@ -1,13 +1,13 @@
 <script lang="ts">
-	import type { IEvaluatorOnBoardData } from '$lib/types'
+	import type { IEvaluatorOnBoardStep1Data } from '$lib/types'
 	import Button from '../atoms/Button.svelte'
 	import Combobox from '../atoms/Combobox.svelte'
 	import Input from '../atoms/Input.svelte'
 	import RadioGroup from '../atoms/RadioGroup.svelte'
 
-	let { formData = $bindable(), nextStep } = $props<{
-		formData: IEvaluatorOnBoardData
-		nextStep: () => void
+	let { formData = $bindable(), loadingSubmission } = $props<{
+		formData: IEvaluatorOnBoardStep1Data
+		loadingSubmission: boolean
 	}>()
 
 	let error = $state(false)
@@ -19,7 +19,9 @@
 			!formData.prelimsAttempts ||
 			!formData.mainsAttempts ||
 			!formData.interviewsAppeared ||
-			!formData.optionalSubject
+			!formData.optionalSubject ||
+			(formData.existingUser === 'Yes' && !formData.existingUserEmail) ||
+			!formData.marksheet
 		) {
 			error = true
 			return false
@@ -32,7 +34,7 @@
 <div class="form-container">
 	<div class="form-group">
 		<Input
-			label="Name"
+			label="Name (*)"
 			bind:value={formData.name}
 			name="name"
 			id="name"
@@ -41,47 +43,43 @@
 		/>
 
 		<Input
-			label="Phone Number"
+			label="Phone Number (*)"
 			bind:value={formData.phoneNumber}
 			name="phoneNumber"
 			id="phoneNumber"
 			placeholder="Enter your phone number"
 			type="number"
-			max={10}
 		/>
 	</div>
 
 	<div class="form-group">
 		<Input
-			label="Number of Prelims Attempted"
+			label="Number of Prelims Attempted (*)"
 			bind:value={formData.prelimsAttempts}
 			name="prelimsAttempts"
 			id="prelimsAttempts"
-			placeholder="Enter the count of prelims attempted"
+			placeholder="Enter 0 if not attempted"
 			type="number"
-			max={10}
 		/>
 
 		<Input
-			label="Number of Mains Attempted"
+			label="Number of Mains Attempted (*)"
 			bind:value={formData.mainsAttempts}
 			name="mainsAttempts"
 			id="mainsAttempts"
-			placeholder="Enter the count of mains attempted"
+			placeholder="Enter 0 if not attempted"
 			type="number"
-			max={10}
 		/>
 	</div>
 
 	<div class="form-group">
 		<Input
-			label="Number of Interviews Appeared"
+			label="Number of Interviews Appeared (*)"
 			bind:value={formData.interviewsAppeared}
 			name="interviewsAppeared"
 			id="interviewsAppeared"
-			placeholder="Enter the count of interviews appeared"
+			placeholder="Enter 0 if not appeared"
 			type="number"
-			max={10}
 		/>
 
 		<Combobox
@@ -135,8 +133,33 @@
 			showRemainingCount={false}
 			style="--list-gap: 0"
 			disabled={false}
-			label="Optional Subject"
+			label="Optional Subject (*)"
 			placeholder="Select your optional subject"
+		/>
+	</div>
+	<div class="form-group">
+		<Combobox
+			options={[
+				{ text: 'Yes', value: 'Yes' },
+				{ text: 'No', value: 'No' }
+			]}
+			name="existingUser"
+			bind:value={formData.existingUser}
+			showRemainingCount={false}
+			style="--list-gap: 0"
+			disabled={false}
+			label="Are you an Existing Student on UnlockMains?"
+			placeholder="Yes/No"
+		/>
+
+		<Input
+			label="Enter Your Existing Student Email"
+			bind:value={formData.existingUserEmail}
+			name="existingUserEmail"
+			id="existingUserEmail"
+			placeholder="Enter your existing student email"
+			type="email"
+			disabled={formData.existingUser !== 'Yes'}
 		/>
 	</div>
 	<div class="form-group">
@@ -151,16 +174,26 @@
 					label: 'No'
 				}
 			]}
-			label="Have you secured a rank in UPSC CSE or State PCS?"
+			label="Have you secured a rank in UPSC CSE or State PCS? (*)"
 			name="hasRank"
 			bind:userSelected={formData.hasRank}
 			style="--label-size: 1em;"
 		/>
 	</div>
+	<div class="form-group">
+		<Input
+			type="file"
+			name="marksheet"
+			bind:value={formData.marksheet}
+			label="Upload your latest Marksheet"
+			id="marksheet"
+			placeholder="Upload your latest marksheet"
+		/>
+	</div>
 </div>
 
 <div class="form-navigation">
-	<Button label="Next" type="next" onClick={() => nextStep()} />
+	<Button label="Next" type="next" onClick={() => validate()} withLoader={loadingSubmission} />
 </div>
 
 {#if error}

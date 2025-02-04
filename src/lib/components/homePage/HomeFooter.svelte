@@ -1,27 +1,32 @@
 <script>
+	import SocialsIcon from '../icons/SocialsIcon.svelte'
+
 	const quickLinks = [
 		{ text: 'Home', href: '/' },
-		{ text: 'About', href: '/about' },
 		{ text: 'Terms of Service', href: '/quick-links/terms-of-service' },
 		{ text: 'Refund Policy', href: '/quick-links/refund-policy' },
 		{ text: 'Privacy Policy', href: '/quick-links/privacy-policy' }
 	]
 
 	const companyLinks = [
+		{ text: 'About', href: '/about' },
 		{ text: 'Pricing', href: '/pricing' },
 		{ text: 'Contact', href: '/contact' }
 	]
 
 	const accountLinks = [
 		{ text: 'Login', href: '/login' },
-		{ text: 'Register', href: '/login' },
 		{ text: 'Careers', href: '/careers' }
 	]
 
 	const socialLinks = [
-		{ platform: 'Facebook', href: '#', icon: 'facebook' },
-		{ platform: 'Twitter', href: '#', icon: 'twitter' },
-		{ platform: 'Instagram', href: '#', icon: 'instagram' }
+		{ platform: 'Youtube', href: 'https://www.youtube.com/@unlockMains', icon: 'youtube' },
+		{
+			platform: 'Linkedin',
+			href: 'https://www.linkedin.com/in/unlock-mains-56839b329/',
+			icon: 'linkedin'
+		},
+		{ platform: 'Instagram', href: 'https://www.instagram.com/unlockmains/', icon: 'instagram' }
 	]
 </script>
 
@@ -29,12 +34,10 @@
 	<div class="footer-content">
 		<div class="footer-brand">
 			<div class="brand-header">
-				<svg class="brand-logo" viewBox="0 0 24 24" fill="currentColor">
-					<rect width="20" height="20" x="2" y="2" rx="2" />
-				</svg>
-				<span class="brand-name">Members</span>
+				<img src="/um-main.png" alt="logo 1" style="height: 5em" />
+				<img src="/um-text.png" alt="logo 1" style="height: 2em" />
 			</div>
-			<p class="brand-description">Unlock Mains</p>
+
 			<a href="mailto:hello@members.com" class="brand-email">unlockmains@gmail.com</a>
 
 			<div class="members-count">
@@ -90,28 +93,9 @@
 		<!-- Social Links -->
 		<div class="social-links">
 			{#each socialLinks as social}
-				<a href={social.href} class="social-link" aria-label={social.platform}>
+				<a href={social.href} class="social-link" aria-label={social.platform} target="_blank">
 					<span class="sr-only">{social.platform}</span>
-					{#if social.icon === 'facebook'}
-						<svg class="social-icon" fill="currentColor" viewBox="0 0 24 24">
-							<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-						</svg>
-					{:else if social.icon === 'twitter'}
-						<svg class="social-icon" fill="currentColor" viewBox="0 0 24 24">
-							<path
-								d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5 0-.28-.03-.56-.08-.83A7.72 7.72 0 0 0 23 3z"
-							/>
-						</svg>
-					{:else if social.icon === 'instagram'}
-						<svg class="social-icon" fill="currentColor" viewBox="0 0 24 24">
-							<path
-								d="M16 4H8C5.79086 4 4 5.79086 4 8V16C4 18.2091 5.79086 20 8 20H16C18.2091 20 20 18.2091 20 16V8C20 5.79086 18.2091 4 16 4Z"
-							/>
-							<path
-								d="M12 15C13.6569 15 15 13.6569 15 12C15 10.3431 13.6569 9 12 9C10.3431 9 9 10.3431 9 12C9 13.6569 10.3431 15 12 15Z"
-							/>
-						</svg>
-					{/if}
+					<SocialsIcon type={social.icon} />
 				</a>
 			{/each}
 		</div>
@@ -144,6 +128,12 @@
 		display: flex;
 		align-items: center;
 		gap: 0.5rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.2em;
+		background-color: var(--custom-color-brand);
+		border-radius: 1em;
 	}
 
 	.brand-logo {

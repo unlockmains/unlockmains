@@ -1,17 +1,19 @@
 <script lang="ts">
-	import type { IEvaluatorOnBoardData } from '$lib/types'
+	import type { IEvaluatorOnBoardStep2Data } from '$lib/types'
 	import Button from '../atoms/Button.svelte'
+	import CheckboxGroup from '../atoms/CheckboxGroup.svelte'
 	import Combobox from '../atoms/Combobox.svelte'
 	import Input from '../atoms/Input.svelte'
+	import RadioGroup from '../atoms/RadioGroup.svelte'
 
 	let {
 		formData = $bindable(),
-		nextStep,
-		prevStep
+		prevStep,
+		loadingSubmission
 	} = $props<{
-		formData: IEvaluatorOnBoardData
-		nextStep: () => void
+		formData: IEvaluatorOnBoardStep2Data
 		prevStep: () => void
+		loadingSubmission: boolean
 	}>()
 
 	let error = $state(false)
@@ -20,7 +22,7 @@
 		if (
 			!formData.evaluationLanguage ||
 			!formData.experience ||
-			(formData.existingUser === 'Yes' && !formData.existingUserEmail)
+			formData.evaluateGeneralStudies.length < 2
 		) {
 			error = true
 			return false
@@ -43,7 +45,7 @@
 			style="--list-gap: 0"
 			disabled={false}
 			label="Evaluation Language"
-			placeholder="Select your prefered language for evaluation"
+			placeholder="Select your preferred language for evaluation"
 		/>
 	</div>
 
@@ -61,35 +63,65 @@
 	</div>
 
 	<div class="form-group">
-		<Combobox
+		<CheckboxGroup
 			options={[
-				{ text: 'Yes', value: 'Yes' },
-				{ text: 'No', value: 'No' }
+				{ value: 'General Studies 1', label: 'General Studies 1' },
+				{ value: 'General Studies 2', label: 'General Studies 2' },
+				{ value: 'General Studies 3', label: 'General Studies 3' },
+				{ value: 'General Studies 4', label: 'General Studies 4' }
 			]}
-			name="existingUser"
-			bind:value={formData.existingUser}
-			showRemainingCount={false}
-			style="--list-gap: 0"
-			disabled={false}
-			label="Are you an Existing Student on UnlockMains?"
-			placeholder="Yes/No"
+			label="General Studies Preference (Select at least 2)"
+			name="evaluateGeneralStudies"
+			bind:userSelected={formData.evaluateGeneralStudies}
+			style="--label-size: 1rem"
 		/>
-
-		<Input
-			label="Existing Your Existing Student Email"
-			bind:value={formData.existingUserEmail}
-			name="existingUserEmail"
-			id="existingUserEmail"
-			placeholder="Enter your existing student email"
-			type="email"
-			disabled={formData.existingUser !== 'Yes'}
+	</div>
+	<div class="form-group">
+		<RadioGroup
+			options={[
+				{
+					value: true,
+					label: 'Yes'
+				},
+				{
+					value: false,
+					label: 'No'
+				}
+			]}
+			label="Want to evaluate Essays? (minimum limit of 2 essays will be set if you select yes)"
+			name="evaluateEssay"
+			bind:userSelected={formData.evaluateEssay}
+			style="--label-size: 1em;"
+		/>
+	</div>
+	<div class="form-group">
+		<RadioGroup
+			options={[
+				{
+					value: true,
+					label: 'Yes'
+				},
+				{
+					value: false,
+					label: 'No'
+				}
+			]}
+			label="Want to evaluate Optional subject? (minimum limit of 2 optionals will be set if you select yes)"
+			name="evaluateOptional"
+			bind:userSelected={formData.evaluateOptional}
+			style="--label-size: 1em;"
 		/>
 	</div>
 </div>
 
 <div class="form-navigation">
-	<Button label="Back" type="back" onClick={() => validate() && prevStep()} />
-	<Button label="Next" type="next" onClick={() => validate() && nextStep()} />
+	<Button
+		label="Back"
+		type="back"
+		onClick={() => validate() && prevStep()}
+		withLoader={loadingSubmission}
+	/>
+	<Button label="Next" type="next" onClick={() => validate()} withLoader={loadingSubmission} />
 </div>
 
 {#if error}

@@ -1,0 +1,34 @@
+{
+    "GS Question": [
+        {
+            "text": "General Studies 1",
+            "value": "General Studies 1",
+            "tags": [
+                "Geography",
+                "History",
+                "Indian Culture and Heritage",
+                "Society"
+            ]
+        },
+        {
+            "text": "General Studies 2",
+            "value": "General Studies 2",
+            "tags": [
+                "Governance and Civil Service",
+                "Indian Constitution and Polity",
+                "International Relations",
+                "Social Justice"
+            ]
+        },
+        {
+            "text": "General Studies 3",
+            "value": "General Studies 3",
+            "tags": ["Agriculture", "Disaster Management", "Economy", "Environment", "Internal Security", "Science and Technology"]
+        },
+        {
+            "text": "General Studies 4",
+            "value": "General Studies 4",
+            "tags": ["Attitude and Aptitude", "Case Studies", "Ethics and Philosophers", "Public Service values and Probity"]
+        }
+    ]
+}

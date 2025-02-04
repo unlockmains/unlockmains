@@ -61,7 +61,7 @@
 			background: var(--color-white-800);
 			position: absolute;
 			top: 0.75em;
-			right: 0;
+			right: 1em;
 			width: 3em;
 			height: 3em;
 			display: flex;

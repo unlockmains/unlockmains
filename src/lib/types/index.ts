@@ -102,7 +102,7 @@ export interface IPageAnnotations {
     [pageNumber: number]: IAnnotation[]
 }
 
-export type IEvaluatorOnBoardData = {
+export type IEvaluatorOnBoardStep1Data = {
     name: string
     phoneNumber: string
     prelimsAttempts: number | undefined
@@ -110,9 +110,15 @@ export type IEvaluatorOnBoardData = {
     interviewsAppeared: number | undefined
     optionalSubject: string
     hasRank: boolean
-    evaluationLanguage: string
-    experience: string
     existingUser: "Yes" | "No"
     existingUserEmail: string
-    assignment: string
+    marksheet: File | null,
+}
+
+export type IEvaluatorOnBoardStep2Data = {
+    evaluationLanguage: string
+    experience: string,
+    evaluateGeneralStudies: string[],
+    evaluateEssay: boolean,
+    evaluateOptional: boolean,
 }

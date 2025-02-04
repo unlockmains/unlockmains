@@ -15,10 +15,12 @@
 		collects, uses, and protects the personal information of our website visitors and users of our educational
 		services. This policy applies to all information collected through our website, mobile applications,
 		and any other channels where we interact with you. For any further questions regarding this Privacy
-		Policy, please contact us at: Unlockmains
+		Policy, please contact us at:
 	</p>
 	<ul>
-		<li>UnlockMains</li>
+		<li><a href="https://wa.me/+919470067051" target="_blank">+919470067051</a></li>
+		<li><a href="mailto:contact@unlockmains.com">contact@unlockmains.com</a></li>
+		<li><a href="mailto:help@unlockmains.com">help@unlockmains.com</a></li>
 		<li><a href="mailto:unlockmains@gmail.com">unlockmains@gmail.com</a></li>
 	</ul>
 	<!-- ANN 2-->
@@ -281,8 +283,8 @@
 	<ul>
 		<li>
 			If you are a parent or guardian and believe that your child has provided us with their
-			personal information, please contact us at <a href="mailto:unlockmains@gmail.com"
-				>unlockmains@gmail.com</a
+			personal information, please contact us at <a href="mailto:contact@unlockmains.com"
+				>contact@unlockmains.com</a
 			> and we will take steps to delete such information from our records
 		</li>
 	</ul>

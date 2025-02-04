@@ -22,34 +22,34 @@
 	{#if $sideNavOpen && !$alwaysShow}
 		<button on:click={toggleSideNav}><CrossIcon /></button>
 	{/if}
-	<nav style={$topBannerVisible ? 'margin-top: 6.5em;' : ''}>
+	<nav style={$topBannerVisible ? 'margin-top: 8.5em;' : ''}>
+		<div class="section">
+			<a class="section-link" href="/dashboard">Home</a>
+		</div>
 		<Button
 			label="New Submission"
 			type="nav"
 			onClick={() => goto(`${parentSlug}/new-submission`)}
 		/>
-		<div class="section">
-			<a class="section-link" href="/dashboard">Home</a>
-		</div>
-		<CollapsibleSection headerText="Submissions" noOfLinks={3}>
+		<!-- <CollapsibleSection headerText="Submissions" noOfLinks={3}>
 			<div class="section">
 				<a class="section-link" href="/dashboard/submissions?query=all">All</a>
 				<a class="section-link" href="/dashboard/submissions?query=evaluated">Evaluated</a>
 				<a class="section-link" href="/dashboard/submissions?query=pending">Pending</a>
 			</div>
-		</CollapsibleSection>
+		</CollapsibleSection> -->
 		<CollapsibleSection headerText="Evaluation Plan" noOfLinks={2}>
 			<div class="section">
 				<a class="section-link" href="/dashboard/evaluation-plan?query=my">My Plan</a>
 				<a class="section-link" href="/dashboard/evaluation-plan?query=all">All Plans</a>
 			</div>
 		</CollapsibleSection>
-		<CollapsibleSection headerText="Question Bank" noOfLinks={2}>
+		<!-- <CollapsibleSection headerText="Question Bank" noOfLinks={2}>
 			<div class="section">
 				<a class="section-link" href="/dashboard/question-bank?query=essay">Essay</a>
 				<a class="section-link" href="/dashboard/question-bank?query=mains">Mains</a>
 			</div>
-		</CollapsibleSection>
+		</CollapsibleSection> -->
 	</nav>
 </aside>
 
@@ -82,7 +82,7 @@
 		}
 
 		nav {
-			margin-top: 3.5em;
+			margin-top: 6.5em;
 			display: flex;
 			align-items: flex-start;
 			justify-content: center;

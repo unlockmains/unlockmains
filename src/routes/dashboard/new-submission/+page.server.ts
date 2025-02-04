@@ -3,6 +3,7 @@ import type { PageServerLoad } from "../$types";
 import type { Actions } from "./$types";
 import { ID, Query } from "node-appwrite";
 import { PUBLIC_APPWRITE_BUCKET, PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_ENDPOINT, PUBLIC_APPWRITE_PROJECT, PUBLIC_APPWRITE_SUBMITTED_FILES_DB, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, PUBLIC_APPWRITE_QUESTION_SUBMISSION_DB } from "$env/static/public";
+import { getFileWithUpdatedFileName } from "$lib/api/utils";
 
 export const ssr = true;
 
@@ -41,7 +42,7 @@ export const actions: Actions = {
         const isPyq = formData.get("question-pyq") as string;
 
         const files = formData.getAll("question-files");
-        
+
         try {
             const savingData = {
                 "question_type": type,
@@ -55,13 +56,7 @@ export const actions: Actions = {
             for (const file of files) {
                 if (file instanceof File) {
                     const fileId = ID.unique();
-                    const extension = file.name.split('.').pop();
-                    const fileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.');
-                    const newFileName = `${fileNameWithoutExtension}_${fileId}.${extension}`;
-                    const fileToUpload = new File([file], newFileName, {
-                        type: file.type,
-                        lastModified: file.lastModified
-                    });
+                    const fileToUpload = getFileWithUpdatedFileName({ file, fileId })
                     const uploadedFile = await storage.createFile(PUBLIC_APPWRITE_BUCKET, fileId, fileToUpload);
                     const fileUrl = `${PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${PUBLIC_APPWRITE_BUCKET}/files/${uploadedFile.$id}/view?project=${PUBLIC_APPWRITE_PROJECT}&project=${PUBLIC_APPWRITE_PROJECT}`;
                     await databases.createDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_SUBMITTED_FILES_DB, ID.unique(), {

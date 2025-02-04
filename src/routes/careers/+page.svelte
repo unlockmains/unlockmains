@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation'
 	import Background from '$lib/components/atoms/Background.svelte'
 	import Button from '$lib/components/atoms/Button.svelte'
+	import HomeFooter from '$lib/components/homePage/HomeFooter.svelte'
 
 	const evaluatorRoles = [
 		{
@@ -74,6 +75,7 @@
 		</div>
 	{/each}
 </section>
+<HomeFooter />
 
 <style lang="scss">
 	.careers-page {

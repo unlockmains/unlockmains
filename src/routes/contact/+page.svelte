@@ -32,13 +32,16 @@
 
 <style lang="scss">
 	.contact {
-		font-family: Archivo, sans-serif;
+		max-width: 1200px;
 		line-height: 1.2;
 		font-weight: 500;
 		letter-spacing: -0.02em;
-		margin-bottom: 5em;
+		margin: 0 auto;
 		padding: 5%;
-		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.5em;
 
 		h1 {
 			font-size: 3em;

@@ -6,9 +6,7 @@
 </script>
 
 <Background />
-<section class="careers-page">
-	<Pricing pricingPbData={PricingCardsData} />
-</section>
+<Pricing pricingPbData={PricingCardsData} />
 <HomeFooter />
 
 <style lang="scss">

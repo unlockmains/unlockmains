@@ -160,5 +160,12 @@
 				}
 			}
 		}
+
+		@media only screen and (max-width: 768px) {
+			overflow-x: scroll;
+			.card {
+				min-width: 80%;
+			}
+		}
 	}
 </style>

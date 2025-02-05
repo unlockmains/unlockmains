@@ -1,20 +1,39 @@
 <script lang="ts">
+	import { enhance } from '$app/forms'
+	import type { SubmitFunction } from '@sveltejs/kit'
 	import Button from '../atoms/Button.svelte'
-	import { PUBLIC_APPWRITE_EVALUATOR_LEAD_ASSIGNMENT } from '$env/static/public'
+	import Input from '../atoms/Input.svelte'
 
-	let { prevStep, loadingSubmission } = $props<{
-		prevStep: () => void
+	let { loadingSubmission = $bindable() } = $props<{
 		loadingSubmission: boolean
 	}>()
 
 	let error = $state(false)
+	let downloading = $state(false)
+	let evaluatedAssignment1 = $state<File | undefined>(undefined)
+	let success = $state(false)
+
+	const handleAssignment1Submission: SubmitFunction = () => {
+		loadingSubmission = true
+		return async ({ update, result }) => {
+			if (result.status === 400) {
+				loadingSubmission = false
+				error = true
+				return
+			}
+			await update()
+			loadingSubmission = false
+			if (result.status === 200) {
+				success = true
+			}
+		}
+	}
 
 	const downloadAssignment1 = async () => {
-		const response = await fetch('?/getAssignment1File', {
-			method: 'POST',
-			body: new FormData()
+		downloading = true
+		const response = await fetch('/api/evaluator/assignment1', {
+			method: 'POST'
 		})
-		console.log('response', response)
 		if (response.ok) {
 			const blob = await response.blob()
 			const url = window.URL.createObjectURL(blob)
@@ -25,23 +44,83 @@
 			a.click()
 			window.URL.revokeObjectURL(url)
 			a.remove()
+			downloading = false
 		}
 	}
 </script>
 
-<div class="form-container">
-	<div class="form-group">
-		<p>Assignment 1</p>
-		<Button type="link" label="Download Assignment 1" onClick={() => downloadAssignment1()} />
+<form
+	enctype="multipart/form-data"
+	method="post"
+	action="?/assignment1"
+	use:enhance={handleAssignment1Submission}
+>
+	<div class="form-container">
+		<h4>Steps:</h4>
+		<ul>
+			<li>You are assigned an assignment to evaluate.</li>
+			<li>You can download the assignment from below.</li>
+			<li>
+				Based on the verification of the submitted evaluated copy of the assignment, you will be
+				allowed to proceed to next step.
+			</li>
+			<li>Please submit the evaluated copy of the assignment with 24 hours.</li>
+			<li>
+				If you face any issues, please reach out to us on the details mentioned in Contact Page.
+			</li>
+		</ul>
+		<div class="form-group">
+			<h1>Assignment 1</h1>
+			<Button
+				type="submit"
+				label="Download Assignment 1"
+				onClick={() => downloadAssignment1()}
+				style="--btn-width: 16em;"
+				withLoader={downloading}
+				disabled={downloading}
+			/>
+			{#if downloading}
+				<div class="loader-container">
+					<p>Please wait while we download the assignment</p>
+				</div>
+			{/if}
+		</div>
+
+		<div class="form-group">
+			<Input
+				type="file"
+				name="evaluatedFile1"
+				bind:value={evaluatedAssignment1}
+				label="Upload your Evaluated Copy of Assignment 1"
+				id="marksheet"
+				placeholder="Upload your Evaluated Copy of Assignment 1"
+				disabled={success || loadingSubmission}
+			/>
+		</div>
 	</div>
-</div>
 
-<div class="form-navigation">
-	<Button label="Back" type="back" onClick={() => {}} withLoader={loadingSubmission} />
-	<Button label="Next" type="next" onClick={() => {}} withLoader={loadingSubmission} />
-</div>
+	<div class="form-navigation">
+		<Button
+			label="Submit"
+			type="next"
+			onClick={() => {}}
+			withLoader={loadingSubmission}
+			disabled={loadingSubmission}
+		/>
+	</div>
+</form>
 
-{#if error}
+{#if success}
+	<div class="success-message">
+		<h4>
+			🎉 Congratulations! You have successfully submitted assignment 1. <br />Sit back and Relax
+			until we evaluate your submission.<br /> You will receive a confirmation email once your submission
+			is evaluated.
+		</h4>
+	</div>
+{/if}
+
+{#if error && !success}
 	<div class="errors">
 		<p>Please fill out all required fields before you proceed.</p>
 	</div>
@@ -53,8 +132,14 @@
 		flex-direction: column;
 		gap: 1em;
 
+		h4 {
+			margin: 0.3em 1em;
+		}
+
 		.form-group {
 			display: flex;
+			flex-direction: column;
+			align-items: center;
 			gap: 1em;
 			margin-bottom: 15px;
 		}
@@ -70,5 +155,11 @@
 		color: var(--color-red-700);
 		font-size: 1.5em;
 		margin-top: 1em;
+	}
+
+	.success-message {
+		text-align: center;
+		font-size: 1.5em;
+		color: var(--color-green-700);
 	}
 </style>

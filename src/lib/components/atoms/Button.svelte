@@ -14,11 +14,12 @@
 	export let onClick: (event: MouseEvent) => void = () => {}
 	export let withLoader: boolean = false
 	export let disabled: boolean = false
+	export let style: string = ''
 </script>
 
-<button on:click={onClick} class={type} {disabled}>
+<button on:click={onClick} class={type} {disabled} {style}>
 	{#if withLoader}
-		<span class="loader" />
+		<span class="loader"></span>
 	{/if}
 	<slot />
 	{label}

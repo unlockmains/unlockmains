@@ -1,0 +1,55 @@
+<script lang="ts">
+	import { enhance } from '$app/forms'
+	import type { SubmitFunction } from '@sveltejs/kit'
+	import Button from '../atoms/Button.svelte'
+	import Input from '../atoms/Input.svelte'
+
+	let { loadingSubmission = $bindable() } = $props<{
+		loadingSubmission: boolean
+	}>()
+
+	let error = $state(false)
+	let success = $state(false)
+</script>
+
+<form enctype="multipart/form-data" method="post" action="?/assignment2" use:enhance={() => {}}>
+	<h1>Cheers 🎉 on completing the Onboarding Process</h1>
+	<p>
+		You have been selected as one of our esteemed evaluators. We are thrilled to have you on board
+		and we are confident that you will excel in your role as an evaluator. We are excited to have
+		you join us and look forward to your contributions.
+	</p>
+
+	<h4>What's next?</h4>
+	<p>Click on the below button to create your account and start your journey with UnlockMains.</p>
+	<p>Note: this step might take a few minutes to complete.</p>
+
+	<div class="form-navigation">
+		<Button
+			label="Proceed to UnlockMains"
+			type="next"
+			onClick={() => {}}
+			withLoader={loadingSubmission}
+			disabled={loadingSubmission}
+			style="--btn-width: 20em"
+		/>
+	</div>
+</form>
+
+<style lang="scss">
+	.form-container {
+		display: flex;
+		flex-direction: column;
+		gap: 1em;
+
+		h4 {
+			margin: 0.3em 1em;
+		}
+	}
+	.form-navigation {
+		display: flex;
+		gap: 1em;
+		margin-top: 1em;
+		justify-content: flex-end;
+	}
+</style>

@@ -6,25 +6,64 @@
 	import Button from '../atoms/Button.svelte'
 	import Popover from '../atoms/Popover.svelte'
 	import HamburgerIcon from '../icons/HamburgerIcon.svelte'
+	import { onMount } from 'svelte'
 	export let user
+
+	let isMenuOpen = false
+	let headerElement: HTMLElement
+
+	const toggleMenu = () => (isMenuOpen = !isMenuOpen)
+
+	const handleClickOutside = (event: MouseEvent) => {
+		if (isMenuOpen && headerElement && !headerElement.contains(event.target as Node)) {
+			isMenuOpen = false
+		}
+	}
+
+	const handleLinkClick = () => {
+		if (isMenuOpen) {
+			isMenuOpen = false
+		}
+	}
+
+	onMount(() => {
+		document.addEventListener('click', handleClickOutside)
+		return () => {
+			document.removeEventListener('click', handleClickOutside)
+		}
+	})
 </script>
 
-<header style={$topBannerVisible ? '--top: 3em;' : '--top: 0em;'}>
-	<!-- <button on:click={toggleSideNav}>
+<header bind:this={headerElement} style={$topBannerVisible ? '--top: 3em;' : '--top: 0em;'}>
+	<button class="mobile-menu-btn" on:click={toggleMenu}>
 		<HamburgerIcon />
-	</button> -->
-	<div>
-		<img src="/um-main.png" alt="logo 1" style="height: 4em" />
-		<!-- <img src="/um-texti.png" alt="logo 2" style="height: 1.5em" /> -->
+	</button>
+
+	<div class="logo-container">
+		<img src="/um-main.png" alt="logo 1" />
 	</div>
-	<nav>
-		<a href="/">Home</a>
-		<a href="/pricing">Pricing</a>
-		<a href="/about">About</a>
-		<a href="/contact">Contact</a>
-		<a href="/careers">Careers</a>
+
+	<nav class:active={isMenuOpen}>
+		<div class="nav-links">
+			<a on:click={handleLinkClick} href="/">Home</a>
+			<a on:click={handleLinkClick} href="/pricing">Pricing</a>
+			<a on:click={handleLinkClick} href="/about">About</a>
+			<a on:click={handleLinkClick} href="/contact">Contact</a>
+			<a on:click={handleLinkClick} href="/careers">Careers</a>
+		</div>
+
+		<div class="mobile-auth">
+			{#if user}
+				<ClickOutsideContext>
+					<Popover {user} />
+				</ClickOutsideContext>
+			{:else}
+				<Button label="Login" onClick={() => goto('/login')} />
+			{/if}
+		</div>
 	</nav>
-	<div>
+
+	<div class="desktop-auth">
 		{#if user}
 			<ClickOutsideContext>
 				<Popover {user} />
@@ -38,34 +77,81 @@
 <style lang="scss">
 	header {
 		display: flex;
-		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
-		padding: 2em;
+		padding: 1rem;
 		height: 5em;
 		top: var(--top);
 		background-color: var(--color-zinc-800);
 		position: fixed;
 		width: 100%;
 		z-index: 999;
-		box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
 
-		button {
-			outline: none;
-			border: none;
-			background: none;
+		@media (max-width: 768px) {
+			padding: 0.5rem;
+		}
+	}
+
+	.logo-container {
+		img {
+			height: 4em;
+
+			@media (max-width: 768px) {
+				height: 3em;
+			}
+		}
+	}
+
+	.mobile-menu-btn {
+		display: none;
+		outline: none;
+		border: none;
+		background: none;
+		cursor: pointer;
+		padding: 0.5rem;
+
+		@media (max-width: 768px) {
+			display: block;
+		}
+	}
+
+	nav {
+		display: flex;
+		align-items: center;
+		gap: 1em;
+
+		@media (max-width: 768px) {
+			display: none;
+			position: absolute;
+			top: 100%;
+			left: 0;
+			width: 100%;
+			background-color: var(--color-zinc-800);
+			padding: 1rem;
+			flex-direction: column;
+			align-items: flex-start;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+			&.active {
+				display: flex;
+			}
 		}
 
-		nav {
+		.nav-links {
 			display: flex;
 			gap: 1em;
 			align-items: center;
-			justify-content: flex-start;
+
+			@media (max-width: 768px) {
+				flex-direction: column;
+				align-items: flex-start;
+				width: 100%;
+			}
 
 			a {
 				padding: 8px 16px;
 				border: 1px solid transparent;
-				-webkit-transition: all 500ms cubic-bezier(0.6, 0.6, 0, 1);
 				transition: all 500ms cubic-bezier(0.6, 0.6, 0, 1);
 				color: white;
 				font-size: 14px;
@@ -73,7 +159,33 @@
 				font-weight: 400;
 				letter-spacing: -0.18px;
 				text-decoration: none;
+
+				&:hover {
+					border-color: rgba(255, 255, 255, 0.1);
+					box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+				}
+
+				@media (max-width: 768px) {
+					width: 100%;
+					padding: 12px 16px;
+				}
 			}
+		}
+	}
+
+	.mobile-auth {
+		display: none;
+
+		@media (max-width: 768px) {
+			display: block;
+			width: 100%;
+			margin-top: 1rem;
+		}
+	}
+
+	.desktop-auth {
+		@media (max-width: 768px) {
+			display: none;
 		}
 	}
 </style>

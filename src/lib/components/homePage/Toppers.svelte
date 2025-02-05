@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Background from '../atoms/Background.svelte'
 	import Button from '../atoms/Button.svelte'
 </script>
 
@@ -119,6 +118,30 @@
 						letter-spacing: -0.02em;
 						padding: 0;
 						margin: 0;
+					}
+				}
+			}
+		}
+		@media only screen and (max-width: 768px) {
+			.heading {
+				h1 {
+					font-size: 2em;
+				}
+
+				h4 {
+					font-size: 0.8em;
+				}
+			}
+			.toppers-container {
+				margin-bottom: 2em;
+				.toppers-card {
+					width: calc(50% - 1em);
+					padding: 1em;
+					gap: 1em;
+					.toppers-card-content {
+						h3 {
+							font-size: 1em;
+						}
 					}
 				}
 			}

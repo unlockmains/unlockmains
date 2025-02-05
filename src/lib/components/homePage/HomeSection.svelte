@@ -61,6 +61,25 @@
 				margin-bottom: 2em;
 			}
 		}
+		@media only screen and (max-width: 768px) {
+			padding: 3em 20px;
+			flex-direction: column;
+			gap: 1em;
+			.main-details {
+				flex-flow: row wrap;
+				&:first-child {
+					width: 100%;
+				}
+				.main-title {
+					width: 100%;
+					font-size: 2em;
+				}
+
+				.sub-text {
+					font-size: 1em;
+				}
+			}
+		}
 	}
 
 	.side-details {
@@ -83,6 +102,15 @@
 			font-size: 1.3em;
 			font-weight: 400;
 			letter-spacing: -0.02em;
+		}
+		@media only screen and (max-width: 768px) {
+			width: 100%;
+			.rocket {
+				width: 50%;
+			}
+			p {
+				font-size: 1em;
+			}
 		}
 	}
 </style>

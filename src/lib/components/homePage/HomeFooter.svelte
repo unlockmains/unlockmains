@@ -43,7 +43,7 @@
 			<div class="members-count">
 				<div class="avatar-stack">
 					{#each Array(3) as _, i}
-						<div class="avatar" />
+						<div class="avatar"></div>
 					{/each}
 				</div>
 				<span class="members-text">many people joining us</span>

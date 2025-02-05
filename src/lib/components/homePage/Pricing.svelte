@@ -121,5 +121,19 @@
 				}
 			}
 		}
+
+		@media only screen and (max-width: 768px) {
+			.heading {
+				h1 {
+					font-size: 2em;
+				}
+				h4 {
+					font-size: 0.8em;
+				}
+			}
+			.pricing-note {
+				font-size: 0.7em;
+			}
+		}
 	}
 </style>

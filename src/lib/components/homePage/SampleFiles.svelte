@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Background from '../atoms/Background.svelte'
 	import Button from '../atoms/Button.svelte'
 	import PdfIcon from '../icons/PDFIcon.svelte'
 	export let sampleFilesToShow
@@ -32,10 +31,9 @@
 		position: relative;
 		min-height: 40vh;
 		width: 100%;
-		background-color: rgb(135 135 135 / 33%);
+		background: url('/lib/grid-file.svg') no-repeat center center;
 		margin-bottom: 2em;
 		border-radius: 1em;
-		box-shadow: 0 0 0.5em 0.5em rgba(64, 64, 64, 0.5);
 		padding: 5%;
 
 		.heading {
@@ -74,6 +72,29 @@
 
 				a {
 					text-decoration: none;
+				}
+			}
+		}
+
+		@media only screen and (max-width: 768px) {
+			.heading {
+				margin-bottom: 2.5em;
+				h1 {
+					font-size: 2em;
+				}
+
+				h4 {
+					font-size: 0.8em;
+				}
+			}
+			.sample-files-container {
+				.sample-files-card {
+					flex-direction: row;
+					gap: 1em;
+
+					h3 {
+						font-size: 0.9em;
+					}
 				}
 			}
 		}

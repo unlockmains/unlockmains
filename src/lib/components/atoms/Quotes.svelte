@@ -98,5 +98,13 @@
 				transform: translateY(-20px);
 			}
 		}
+
+		@media only screen and (max-width: 768px) {
+			width: 100%;
+			margin: 0.2em;
+			.quote {
+				font-size: 1em;
+			}
+		}
 	}
 </style>

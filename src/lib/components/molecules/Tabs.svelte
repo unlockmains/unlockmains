@@ -47,7 +47,7 @@
 			position: relative;
 
 			button {
-				width: 33%;
+				width: 100%;
 				height: 100%;
 				outline: 0;
 				border: 0;
@@ -59,6 +59,7 @@
 				position: relative;
 				overflow: hidden;
 				font-weight: 500;
+				white-space: nowrap;
 
 				&:hover {
 					transform: translateY(-2px);
@@ -91,6 +92,16 @@
 					transform: translateY(0);
 					box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 				}
+			}
+		}
+
+		@media only screen and (max-width: 768px) {
+			width: 100%;
+			font-size: 0.75em;
+			padding: 0;
+
+			.tabs {
+				height: 4em;
 			}
 		}
 	}

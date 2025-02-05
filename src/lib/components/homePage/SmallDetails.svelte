@@ -5,9 +5,9 @@
 
 <Background />
 <section class="more-details">
-	<div class="left-bg" />
-	<div class="flex row flex-start items-start">
-		<div class="col-4 flex flex-start items-start column right-border">
+	<div class="left-bg"></div>
+	<div class="flex row flex-start items-start container">
+		<div class="col-4 flex flex-start items-center column right-border">
 			<span class="header">Expert Faculty</span>
 			<div class="animation" style="width: 6em;">
 				<LottieAnimation src="/lib/lottie/expert.json" loop={true} autoplay={true} />
@@ -16,8 +16,8 @@
 				Our skilled evaluators guarantee that the quality of the assessments remains flawless.
 			</p>
 		</div>
-		<div class="divider" />
-		<div class="col-4 flex flex-start items-start column right-border">
+		<div class="divider"></div>
+		<div class="col-4 flex flex-start items-center column right-border">
 			<span class="header">Quick Evaluation</span>
 			<div class="animation">
 				<LottieAnimation src="/lib/lottie/evaluation.json" loop={true} autoplay={true} />
@@ -26,7 +26,7 @@
 				Receive your answers evaluated within 48 hours (up to 5 questions / 1 essay).
 			</p>
 		</div>
-		<div class="col-4 flex flex-start items-start column right-border">
+		<div class="col-4 flex flex-start items-center column right-border">
 			<span class="header">Budget Friendly</span>
 			<div class="animation">
 				<LottieAnimation src="/lib/lottie/budget.json" loop={true} autoplay={true} />
@@ -35,7 +35,7 @@
 				All our subscriptions are carefully priced, keeping the needs of students in mind.
 			</p>
 		</div>
-		<div class="col-4 flex flex-start items-start column">
+		<div class="col-4 flex flex-start items-center column">
 			<span class="header">Tailored dashboard</span>
 			<div class="animation">
 				<LottieAnimation src="/lib/lottie/dashboard.json" loop={true} autoplay={true} />
@@ -46,7 +46,7 @@
 			</p>
 		</div>
 	</div>
-	<div class="right-bg" />
+	<div class="right-bg"></div>
 </section>
 
 <style lang="scss">
@@ -123,6 +123,29 @@
 			font-weight: 300;
 			line-height: 1.2;
 			letter-spacing: -0.02em;
+		}
+
+		@media only screen and (max-width: 768px) {
+			.right-bg {
+				top: calc(100% - 10em);
+			}
+			.row {
+				flex-direction: column;
+				gap: 0.5em;
+				.column {
+					&:first-child {
+						padding-left: 0;
+					}
+					&:last-child {
+						padding-right: 0;
+					}
+				}
+				.right-border {
+					border-right: 0;
+					border-bottom: 1px solid #8f8f8f;
+					padding-right: 0em;
+				}
+			}
 		}
 	}
 </style>

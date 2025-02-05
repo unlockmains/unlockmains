@@ -4,8 +4,8 @@
 </script>
 
 <Background />
-<div class="priivacy-policy">
-	<p style="float: right; font-size: 0.8em"><i>Effective Date - 01 Febrauary 2025</i></p>
+<div class="privacy-policy">
+	<p class="effect-date"><i>Effective Date - 01 Febrauary 2025</i></p>
 	<h1>Privacy Policy</h1>
 
 	<!-- ANN 1-->
@@ -314,13 +314,18 @@
 <HomeFooter />
 
 <style lang="scss">
-	.priivacy-policy {
+	.privacy-policy {
 		font-family: Archivo, sans-serif;
 		line-height: 1.2;
 		font-weight: 500;
 		letter-spacing: -0.02em;
 		padding: 2% 5%;
 		position: relative;
+
+		.effect-date {
+			float: right;
+			font-size: 0.8em;
+		}
 
 		h1 {
 			font-size: 3em;
@@ -341,6 +346,20 @@
 		li {
 			line-height: 1.5;
 			letter-spacing: 0.02em;
+		}
+		@media only screen and (max-width: 768px) {
+			.effect-date {
+				float: right;
+				font-size: 0.7em;
+				margin-top: 1em;
+			}
+			h1 {
+				font-size: 2em;
+				white-space: nowrap;
+			}
+			h4 {
+				font-size: 1em;
+			}
 		}
 	}
 </style>

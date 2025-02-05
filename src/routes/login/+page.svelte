@@ -65,7 +65,7 @@
 </svelte:head>
 
 <Background />
-<div class="container mt-6">
+<div class="container mt-6 auth-box">
 	<h1>Auth Provider</h1>
 	<h5>Login with an auth provider. If you don't have an account yet it will be created for you.</h5>
 	<form
@@ -93,7 +93,7 @@
 		<a href="/quick-links/privacy-policy">Privacy Policy</a>.
 	</h6> -->
 	<Separator><BooksIcon height="56" width="56" /></Separator>
-	<div class="flex row justify-between">
+	<div class="flex row justify-between login-box">
 		<div class="flex column col-6-sm">
 			<h1>Login with Email</h1>
 			<h5>Welcome back!</h5>
@@ -156,3 +156,17 @@
 	</div>
 </div>
 <HomeFooter />
+
+<style lang="scss">
+	@media only screen and (max-width: 768px) {
+		.auth-box {
+			padding: 1em 0.5em;
+		}
+		.login-box {
+			flex-direction: column !important;
+			div {
+				width: 100% !important;
+			}
+		}
+	}
+</style>

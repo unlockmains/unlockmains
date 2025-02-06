@@ -5,6 +5,7 @@
 	import Step2 from '$lib/components/onboard/Step2.svelte'
 	import Step3 from '$lib/components/onboard/Step3.svelte'
 	import Step4 from '$lib/components/onboard/Step4.svelte'
+	import Step5 from '$lib/components/onboard/Step5.svelte'
 	import Timeline from '$lib/components/onboard/Timeline.svelte'
 	import type { IEvaluatorOnBoardStep1Data, IEvaluatorOnBoardStep2Data } from '$lib/types'
 	import type { SubmitFunction } from '@sveltejs/kit'
@@ -67,17 +68,25 @@
 		}
 	}
 
+	const handleEvaluatorConversion: SubmitFunction = () => {
+		loadingSubmission = true
+		return async ({ update, result }) => {
+			if (result.status === 400) {
+				loadingSubmission = false
+				return
+			}
+			await update()
+			loadingSubmission = false
+		}
+	}
+
 	function nextStep() {
-		if (currentStep < 4) currentStep++
+		if (currentStep < 5) currentStep++
 	}
 
-	function prevStep() {
+	function prevStep(e: Event) {
+		e.preventDefault()
 		if (currentStep > 1) currentStep--
-	}
-
-	function submitForm() {
-		console.log('Form submitted:', formDataStep1)
-		currentStep = 4
 	}
 </script>
 
@@ -110,9 +119,13 @@
 			<Step2 bind:formData={formDataStep2} {prevStep} {loadingSubmission} />
 		</form>
 	{:else if currentStep === 3}
-		<Step3 {loadingSubmission} {prevStep} />
+		<Step3 {loadingSubmission} />
 	{:else if currentStep === 4}
-		<Step4 />
+		<Step4 {loadingSubmission} />
+	{:else if currentStep === 5}
+		<form method="post" action="?/convertEvaluator" use:enhance={handleEvaluatorConversion}>
+			<Step5 {loadingSubmission} />
+		</form>
 	{/if}
 </div>
 

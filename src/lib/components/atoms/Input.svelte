@@ -4,7 +4,7 @@
 	export let name: string
 	export let type: string
 	export let placeholder: string
-	export let value: string
+	export let value: string | File | undefined
 	export let style: string = ''
 	export let min: number | undefined = undefined
 	export let max: number | undefined = undefined

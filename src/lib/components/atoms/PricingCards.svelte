@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation'
 	import Button from './Button.svelte'
 
 	let { pricingCardData, selectedOption } = $props()
@@ -8,7 +9,7 @@
 </script>
 
 <div class="cards">
-	{#each pricingCardData as { name, color, currentPrice, originalPrice, duration, features }}
+	{#each pricingCardData as { name, color, currentPrice, originalPrice, duration, features, planCode }}
 		<div class="card">
 			<div class="pricing-name" style={`--bg-color: ${color}`}>
 				{name
@@ -39,7 +40,11 @@
 					</div>
 				{/each}
 			</div>
-			<Button type="home-register" label="Register" />
+			<Button
+				type="home-register"
+				label="Select Plan"
+				onClick={() => goto(`/login?plan=${planCode}`)}
+			/>
 		</div>
 	{/each}
 </div>

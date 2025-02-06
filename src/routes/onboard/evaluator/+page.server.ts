@@ -1,7 +1,7 @@
-import { fail, type Actions } from '@sveltejs/kit'
+import { fail, redirect, type Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import { ID, Query, type Models } from "node-appwrite";
-import { PUBLIC_APPWRITE_EVALUATION_REGISTER_BUCKET, PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_LEAD_DB, PUBLIC_APPWRITE_EVALUATOR_LEAD_ASSIGNMENT } from '$env/static/public'
+import { PUBLIC_APPWRITE_EVALUATION_REGISTER_BUCKET, PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_LEAD_DB, PUBLIC_APPWRITE_EVALUATOR_LEAD_ASSIGNMENT, PUBLIC_APPWRITE_EVALUATOR_PROFILE_DB, PUBLIC_APPWRITE_USER_PROFILE_DB } from '$env/static/public'
 import { getFileWithUpdatedFileName } from '$lib/api/utils';
 
 export const load: PageServerLoad = async ({ url, locals: { user, databases } }) => {
@@ -142,30 +142,111 @@ export const actions: Actions = {
     })
     return true;
   },
-  getAssignment1File: async ({ locals }) => {
-    try {
-      const { storage } = locals;
-      let assignment1 = await storage.listFiles(
-        PUBLIC_APPWRITE_EVALUATOR_LEAD_ASSIGNMENT,
-        [Query.equal('name', 'Assignment_1.pdf')]
-      );
+  assignment1: async (event) => {
+    const {
+      locals: { databases, user, storage }
+    } = event;
 
-      if (assignment1.total === 0) {
-        throw fail(400, { message: 'No File Found' });
-      }
+    const formData = await event.request.formData()
+    const error: { fieldName: string, message: string }[] = []
 
-      const fileId = assignment1.files[0].$id;
-      const fileDownload = await storage.getFileDownload(PUBLIC_APPWRITE_EVALUATOR_LEAD_ASSIGNMENT, fileId);
+    const evaluatedFile1 = formData.get('evaluatedFile1') as File;
 
-      return new Response(fileDownload, {
-        headers: {
-          'Content-Disposition': `attachment; filename="Assignment_1.pdf"`,
-          'Content-Type': 'application/pdf'
-        }
-      });
-    } catch (err) {
-      console.error('Error downloading file:', err);
-      throw fail(500, { message: 'Error downloading file' });
+    if (!evaluatedFile1.size) {
+      error.push({ fieldName: 'evaluatedFile1', message: 'Please upload the evaluated copy of assignment 1' })
     }
+
+    if (error.length) {
+      return fail(400, { assignment1: error })
+    }
+
+    let evaluatorLead: Models.DocumentList<Models.Document> | Models.Document = await databases.listDocuments(
+      PUBLIC_APPWRITE_DATABASE,
+      PUBLIC_APPWRITE_EVALUATOR_LEAD_DB,
+      [
+        Query.equal("users_profile", user?.profile.$id)
+      ]);
+
+    const fileId = ID.unique();
+    const updatedEvaluatedFile1 = getFileWithUpdatedFileName({ file: evaluatedFile1, fileId, additionalName: evaluatorLead.documents[0].$id })
+
+    const uploadedAssignment1 = await storage.createFile(PUBLIC_APPWRITE_EVALUATOR_LEAD_ASSIGNMENT, fileId, updatedEvaluatedFile1);
+
+    const documentToCreateUpdate = {
+      "submitted1_file_id": uploadedAssignment1.$id,
+    }
+    evaluatorLead = await databases.updateDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_LEAD_DB, evaluatorLead.documents[0].$id, {
+      ...documentToCreateUpdate,
+    })
+    return { success: true, assignment1: { message: "Assignment 1 submitted successfully" } }
+  },
+  assignment2: async (event) => {
+    const {
+      locals: { databases, user, storage }
+    } = event;
+
+    const formData = await event.request.formData()
+    const error: { fieldName: string, message: string }[] = []
+
+    const evaluatedFile2 = formData.get('evaluatedFile2') as File;
+
+    if (!evaluatedFile2.size) {
+      error.push({ fieldName: 'evaluatedFile2', message: 'Please upload the evaluated copy of assignment 2' })
+    }
+
+    if (error.length) {
+      return fail(400, { assignment2: error })
+    }
+
+    let evaluatorLead: Models.DocumentList<Models.Document> | Models.Document = await databases.listDocuments(
+      PUBLIC_APPWRITE_DATABASE,
+      PUBLIC_APPWRITE_EVALUATOR_LEAD_DB,
+      [
+        Query.equal("users_profile", user?.profile.$id)
+      ]);
+
+    const fileId = ID.unique();
+    const updatedEvaluatedFile2 = getFileWithUpdatedFileName({ file: evaluatedFile2, fileId, additionalName: evaluatorLead.documents[0].$id })
+
+    const uploadedAssignment2 = await storage.createFile(PUBLIC_APPWRITE_EVALUATOR_LEAD_ASSIGNMENT, fileId, updatedEvaluatedFile2);
+
+    const documentToCreateUpdate = {
+      "submitted2_file_id": uploadedAssignment2.$id,
+    }
+    evaluatorLead = await databases.updateDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_LEAD_DB, evaluatorLead.documents[0].$id, {
+      ...documentToCreateUpdate,
+    })
+    return { success: true, assignment1: { message: "Assignment 2 submitted successfully" } }
+  },
+  convertEvaluator: async (event) => {
+    const {
+      locals: { databases, user }
+    } = event;
+
+    const evaluatorLead: Models.DocumentList<Models.Document> | Models.Document = await databases.listDocuments(
+      PUBLIC_APPWRITE_DATABASE,
+      PUBLIC_APPWRITE_EVALUATOR_LEAD_DB,
+      [
+        Query.equal("users_profile", user?.profile.$id)
+      ]);
+
+    const evaluatorProfileToCreate = {
+      "users_profile": user?.profile.$id,
+      "general_studies": evaluatorLead.documents[0].evaluate_general_studies,
+      "essay": evaluatorLead.documents[0].evaluate_essay,
+      "optional": evaluatorLead.documents[0].evaluate_optional,
+      "optional_subject": evaluatorLead.documents[0].optional_subject,
+      "evaluation_language": evaluatorLead.documents[0].evaluation_language,
+      "available": true,
+      "gs_total_bw": 10,
+      "gs_available_bw": 10,
+      "optional_total_bw": evaluatorLead.documents[0].evaluate_optional ? 2 : 0,
+      "optional_available_bw": evaluatorLead.documents[0].evaluate_optional ? 2 : 0,
+      "essay_total_bw": evaluatorLead.documents[0].evaluate_essay ? 2 : 0,
+      "essay_available_bw": evaluatorLead.documents[0].evaluate_essay ? 2 : 0,
+    }
+    await databases.createDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_PROFILE_DB, ID.unique(), evaluatorProfileToCreate);
+    await databases.updateDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB, user?.profile.$id, { "admin_approved": true });
+    throw redirect(303, "/dashboard");
   }
 }

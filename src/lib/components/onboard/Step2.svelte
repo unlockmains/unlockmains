@@ -12,7 +12,7 @@
 		loadingSubmission
 	} = $props<{
 		formData: IEvaluatorOnBoardStep2Data
-		prevStep: () => void
+		prevStep: (event: Event) => void
 		loadingSubmission: boolean
 	}>()
 
@@ -115,12 +115,7 @@
 </div>
 
 <div class="form-navigation">
-	<Button
-		label="Back"
-		type="back"
-		onClick={() => validate() && prevStep()}
-		withLoader={loadingSubmission}
-	/>
+	<Button label="Back" type="back" onClick={prevStep} withLoader={loadingSubmission} />
 	<Button label="Next" type="next" onClick={() => validate()} withLoader={loadingSubmission} />
 </div>
 

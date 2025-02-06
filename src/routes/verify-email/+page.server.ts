@@ -1,14 +1,14 @@
 import { fail, redirect, type Actions } from "@sveltejs/kit"
 import type { PageServerLoad } from "./$types"
-import { env } from "$env/dynamic/private"
+import { createAdminClient, createSessionClient, SESSION_COOKIE } from "$lib/appwrite"
 
 export const load: PageServerLoad = async ({ url, locals: { user } }) => {
   if (user) {
     redirect(303, '/dashboard')
   }
 
-  const email = url.searchParams.get("email");
-  if (!email) {
+  const userId = url.searchParams.get("id");
+  if (!userId) {
     redirect(303, '/login')
   }
   return { url: url.origin }
@@ -19,41 +19,20 @@ export const actions: Actions = {
     const {
       url,
       request,
-      locals: { account }
     } = event;
     const formData = await request.formData()
     const token = formData.get('token') as string
-    const email = url.searchParams.get("email")!
+    const userId = url.searchParams.get("id")!
+    const { account } = createAdminClient()
     try {
-      const response = await fetch(`${env.PB_URL}api/otp/verify`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, code: token })
-      });
+      const response = await account.createSession(userId, token)
 
-      if (!response.ok) {
+      if (!response.$id) {
         throw new Error('Failed to verify OTP');
       }
-
-      const data = await response.json();
-
-      if (data.token) {
-
-        return {
-          signInOtp: {
-            success: true,
-            type: "success",
-            message: 'Ahoy! Verified.'
-          }
-        };
-      } else {
-        return fail(400, {
-          success: false,
-          message: 'Invalid OTP. Please try again.'
-        });
-      }
+      console.log("response", response)
+      event.cookies.set('toastMessage', "Ahoy! Verified.", { path: '/' });
+      throw redirect(303, '/dashboard');
     } catch (error) {
       console.error('Error verifying OTP:', error);
       return fail(500, {

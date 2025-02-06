@@ -3,20 +3,24 @@
 </script>
 
 <div class="timeline">
-	<div class="step {currentStep === 1 ? 'active' : ''}">
+	<div class="step {currentStep === 1 ? 'active' : currentStep > 1 ? 'completed' : ''}">
 		<div class="step-number">1</div>
 		<div>Basic Info</div>
 	</div>
-	<div class="step {currentStep === 2 ? 'active' : ''}">
+	<div class="step {currentStep === 2 ? 'active' : currentStep > 2 ? 'completed' : ''}">
 		<div class="step-number">2</div>
 		<div>Preference</div>
 	</div>
-	<div class="step {currentStep === 3 ? 'active' : ''}">
+	<div class="step {currentStep === 3 ? 'active' : currentStep > 3 ? 'completed' : ''}">
 		<div class="step-number">3</div>
-		<div>Assignment</div>
+		<div>Assignment 1</div>
 	</div>
-	<div class="step {currentStep === 4 ? 'active' : ''}">
+	<div class="step {currentStep === 4 ? 'active' : currentStep > 4 ? 'completed' : ''}">
 		<div class="step-number">4</div>
+		<div>Assignment 2</div>
+	</div>
+	<div class="step {currentStep === 5 ? 'active' : currentStep > 5 ? 'completed' : ''}">
+		<div class="step-number">5</div>
 		<div>Complete</div>
 	</div>
 </div>
@@ -57,6 +61,10 @@
 		background: #007bff;
 	}
 
+	.step.completed::before {
+		background: var(--color-green-700);
+	}
+
 	.step-number {
 		width: 40px;
 		height: 40px;
@@ -71,5 +79,8 @@
 
 	.step.active .step-number {
 		background: #007bff;
+	}
+	.step.completed .step-number {
+		background: var(--color-green-700);
 	}
 </style>

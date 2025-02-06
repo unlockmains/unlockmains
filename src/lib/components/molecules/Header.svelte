@@ -58,7 +58,13 @@
 					<Popover {user} />
 				</ClickOutsideContext>
 			{:else}
-				<Button label="Login" onClick={() => goto('/login')} />
+				<Button
+					label="Login"
+					onClick={() => {
+						handleLinkClick()
+						goto('/login')
+					}}
+				/>
 			{/if}
 		</div>
 	</nav>

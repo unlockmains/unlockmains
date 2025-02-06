@@ -6,27 +6,44 @@
 	import Separator from '$lib/components/atoms/Separator.svelte'
 	import BooksIcon from '$lib/components/icons/BooksIcon.svelte'
 	import GoogleIcon from '$lib/components/icons/GoogleIcon.svelte'
-	import { afterUpdate } from 'svelte'
-	import type { ActionData, SubmitFunction } from './$types.js'
 	import { toast } from 'svelte-sonner'
 	import { goto } from '$app/navigation'
 	import Background from '$lib/components/atoms/Background.svelte'
 	import HomeFooter from '$lib/components/homePage/HomeFooter.svelte'
 	import { browser } from '$app/environment'
+	import type { ActionData, SubmitFunction } from './$types.js'
 
-	export let form: ActionData
-	let loadingOtp: boolean = false
-	let loadingGoogle: boolean = false
-	let loadingWithPassword: boolean = false
-	let password: string = ''
-	$: loginType = password?.length ? 'Login' : 'Login without Password'
+	let { formData } = $state<{ formData: ActionData | null }>({
+		formData: null
+	})
+	let { loadingOtp, loadingGoogle, loadingWithPassword } = $state({
+		loadingOtp: false,
+		loadingGoogle: false,
+		loadingWithPassword: false
+	})
+	let { password } = $state<{ password: string }>({ password: '' })
+
+	const loginType = $derived(password?.length ? 'Login' : 'Login without Password')
 
 	const handleSubmitOtp: SubmitFunction = () => {
 		loadingOtp = true
 		password = ''
-		form = null
-		return async ({ update }) => {
-			update()
+		formData = null
+
+		return async ({ result, update }) => {
+			await update()
+			console.log('result', result)
+			if (result.type === 'success') {
+				const updatedFormData = result.data as ActionData
+
+				if (updatedFormData?.signInOtp?.success) {
+					toast.success(updatedFormData.signInOtp.message)
+					await goto(`/verify-email?id=${updatedFormData.signInOtp.userId}&type=email`)
+				} else if (updatedFormData?.signInOtp?.message) {
+					toast.error(updatedFormData.signInOtp.message)
+				}
+			}
+
 			loadingOtp = false
 		}
 	}
@@ -34,30 +51,19 @@
 	const handleGoogleSignIn: SubmitFunction = () => {
 		loadingGoogle = true
 		return async ({ update }) => {
-			update()
+			await update()
 			loadingGoogle = false
 		}
 	}
 
 	const handleWithPassword: SubmitFunction = () => {
 		loadingWithPassword = true
-		form = null
+		formData = null
 		return async ({ update }) => {
-			update()
+			await update()
 			loadingWithPassword = false
 		}
 	}
-
-	// afterUpdate(() => {
-	// 	if (form?.signInOtp?.message) {
-	// 		if (form.signInOtp.success) {
-	// 			toast.success(form?.signInOtp?.message)
-	// 			goto(`/verify-email?email=${form.signInOtp.email}&type=email`)
-	// 		} else {
-	// 			toast.error(form?.signInOtp?.message)
-	// 		}
-	// 	}
-	// })
 </script>
 
 <svelte:head>
@@ -88,10 +94,7 @@
 			>
 		</div>
 	</form>
-	<!-- <h6 style="margin: 1%; padding: 0;">
-		By logging in you agree to our <a href="/quick-links/terms-of-service">Terms of Service</a> and
-		<a href="/quick-links/privacy-policy">Privacy Policy</a>.
-	</h6> -->
+
 	<Separator><BooksIcon height="56" width="56" /></Separator>
 	<div class="flex row justify-between login-box">
 		<div class="flex column col-6-sm">
@@ -106,7 +109,7 @@
 							name="email"
 							type="email"
 							placeholder="Email Address"
-							value={form?.signInOtp?.email ?? ''}
+							value={formData?.signInOtp?.email ?? ''}
 						/>
 					</div>
 					<div>
@@ -142,16 +145,9 @@
 		<div class="flex column col-6-sm">
 			<h1>Want to be an evaluator?</h1>
 			<h5>Click the button below to find out more.</h5>
-			<!-- <form
-				class="row flex"
-				method="POST"
-				action="?/registerWithPassword"
-				use:enhance={handleWithPassword}
-			> -->
 			<div style="width: 100%;">
 				<Button label="Join Now" type="register" onClick={() => goto('/careers')} />
 			</div>
-			<!-- </form> -->
 		</div>
 	</div>
 </div>

@@ -1,7 +1,7 @@
-import { fail, type Actions } from '@sveltejs/kit'
+import { fail, redirect, type Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import { ID, Query, type Models } from "node-appwrite";
-import { PUBLIC_APPWRITE_EVALUATION_REGISTER_BUCKET, PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_LEAD_DB, PUBLIC_APPWRITE_EVALUATOR_LEAD_ASSIGNMENT } from '$env/static/public'
+import { PUBLIC_APPWRITE_EVALUATION_REGISTER_BUCKET, PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_LEAD_DB, PUBLIC_APPWRITE_EVALUATOR_LEAD_ASSIGNMENT, PUBLIC_APPWRITE_EVALUATOR_PROFILE_DB, PUBLIC_APPWRITE_USER_PROFILE_DB } from '$env/static/public'
 import { getFileWithUpdatedFileName } from '$lib/api/utils';
 
 export const load: PageServerLoad = async ({ url, locals: { user, databases } }) => {
@@ -217,5 +217,36 @@ export const actions: Actions = {
       ...documentToCreateUpdate,
     })
     return { success: true, assignment1: { message: "Assignment 2 submitted successfully" } }
+  },
+  convertEvaluator: async (event) => {
+    const {
+      locals: { databases, user }
+    } = event;
+
+    const evaluatorLead: Models.DocumentList<Models.Document> | Models.Document = await databases.listDocuments(
+      PUBLIC_APPWRITE_DATABASE,
+      PUBLIC_APPWRITE_EVALUATOR_LEAD_DB,
+      [
+        Query.equal("users_profile", user?.profile.$id)
+      ]);
+
+    const evaluatorProfileToCreate = {
+      "users_profile": user?.profile.$id,
+      "general_studies": evaluatorLead.documents[0].evaluate_general_studies,
+      "essay": evaluatorLead.documents[0].evaluate_essay,
+      "optional": evaluatorLead.documents[0].evaluate_optional,
+      "optional_subject": evaluatorLead.documents[0].optional_subject,
+      "evaluation_language": evaluatorLead.documents[0].evaluation_language,
+      "available": true,
+      "gs_total_bw": 10,
+      "gs_available_bw": 10,
+      "optional_total_bw": evaluatorLead.documents[0].evaluate_optional ? 2 : 0,
+      "optional_available_bw": evaluatorLead.documents[0].evaluate_optional ? 2 : 0,
+      "essay_total_bw": evaluatorLead.documents[0].evaluate_essay ? 2 : 0,
+      "essay_available_bw": evaluatorLead.documents[0].evaluate_essay ? 2 : 0,
+    }
+    await databases.createDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_PROFILE_DB, ID.unique(), evaluatorProfileToCreate);
+    await databases.updateDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB, user?.profile.$id, { "admin_approved": true });
+    throw redirect(303, "/dashboard");
   }
 }

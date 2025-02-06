@@ -4,7 +4,6 @@ import type { PageServerLoad } from "../$types.js";
 import { redirect } from "@sveltejs/kit";
 /** @type {import('./$types').PageLoad} */
 
-// export const prerender = false; // TODO: prerendering check once
 export const ssr = true;
 
 export const load: PageServerLoad = async ({ route, locals: { user, databases } }) => {

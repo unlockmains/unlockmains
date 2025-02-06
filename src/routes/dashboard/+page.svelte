@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { alwaysShow } from '$lib/stores/sideNavStore'
-	import { onMount } from 'svelte'
 	import { toast } from 'svelte-sonner'
 
 	let { data } = $props<{

@@ -38,7 +38,7 @@
 		evaluateEssay: data.evaluatorLead.evaluate_essay ?? false,
 		evaluateOptional: data.evaluatorLead.evaluate_optional ?? false
 	})
-	console.log('evaluatorLead', data.evaluatorLead.current_step)
+
 	let currentStep = $state(data.evaluatorLead.current_step ?? 1)
 	let loadingSubmission = $state(false)
 
@@ -64,6 +64,18 @@
 			}
 			await update()
 			nextStep()
+			loadingSubmission = false
+		}
+	}
+
+	const handleEvaluatorConversion: SubmitFunction = () => {
+		loadingSubmission = true
+		return async ({ update, result }) => {
+			if (result.status === 400) {
+				loadingSubmission = false
+				return
+			}
+			await update()
 			loadingSubmission = false
 		}
 	}
@@ -111,7 +123,9 @@
 	{:else if currentStep === 4}
 		<Step4 {loadingSubmission} />
 	{:else if currentStep === 5}
-		<Step5 {loadingSubmission} />
+		<form method="post" action="?/convertEvaluator" use:enhance={handleEvaluatorConversion}>
+			<Step5 {loadingSubmission} />
+		</form>
 	{/if}
 </div>
 

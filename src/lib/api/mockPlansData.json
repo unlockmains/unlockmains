@@ -15,7 +15,8 @@
         "originalPrice": 599,
         "currentPrice": 399,
         "duration": "day",
-        "color": "#eec8b4"
+        "color": "#eec8b4",
+        "planCode": "Mains-Apex"
       },
       {
         "name": "One Month",
@@ -29,7 +30,8 @@
         "originalPrice": 2399,
         "currentPrice": 1499,
         "duration": "month",
-        "color": "#c7eeb4"
+        "color": "#c7eeb4",
+        "planCode": "Mains-Zenith"
       },
       {
         "name": "Mains {year}",
@@ -44,13 +46,14 @@
         "originalPrice": 9999,
         "currentPrice": 6999,
         "duration": "year",
-        "color": "#fbee9d"
+        "color": "#fbee9d",
+        "planCode": "Mains-Summit"
       },
       {
         "name": "Mains {year+1}",
         "features": [
           "English Medium",
-          "Active Till *Mains {year}",
+          "Active Till *Mains {year+1}",
           "Unlimited GS + Essay",
           "Select question from any source",
           "Full length tests covered",
@@ -59,7 +62,8 @@
         "originalPrice": 15999,
         "currentPrice": 12999,
         "duration": "year",
-        "color": "#cce2eb"
+        "color": "#cce2eb",
+        "planCode": "Mains-Pinnacle"
       }
     ]
   },
@@ -79,13 +83,14 @@
         "originalPrice": 5999,
         "currentPrice": 3999,
         "duration": "year",
-        "color": "#fbee9d"
+        "color": "#fbee9d",
+        "planCode": "BPSC-Summit"
       }
     ]
   },
   {
     "sectionName": "Optional",
-    "disabled": true,
+    "disabled": false,
     "options": [
       "Hindi Literature",
       "Sociology",
@@ -109,7 +114,7 @@
       {
         "name": "{option} One Month",
         "features": [
-          "English/हिंदी Medium",
+          "English Medium",
           "Active for 30 days",
           "Total 60 GS Questions + 4 Essays",
           "2 questions/day, 1 Essay/Week",
@@ -119,13 +124,14 @@
         "originalPrice": 2499,
         "currentPrice": 1799,
         "duration": "month",
-        "color": "#c7eeb4"
+        "color": "#c7eeb4",
+        "planCode": "Optional-Zenith"
       },
       {
         "name": "{option} Mains {year}",
         "features": [
           "English Medium",
-          "Active Till Mains 2025",
+          "Active Till Mains {year}",
           "Unlimited Optional Evaluation",
           "No Limit on Daily Submissions",
           "Select question from any source",
@@ -136,13 +142,14 @@
         "originalPrice": 12999,
         "currentPrice": 7999,
         "duration": "year",
-        "color": "#fbee9d"
+        "color": "#fbee9d",
+        "planCode": "Optional-Summit"
       }
     ]
   },
   {
     "sectionName": "Combo",
-    "disabled": true,
+    "disabled": false,
     "options": [
       "Hindi Literature",
       "Sociology",
@@ -162,7 +169,7 @@
         "name": "Mains {year} - GS + Essay + {option}",
         "features": [
           "English Medium",
-          "Active Till *Mains 2025",
+          "Active Till *Mains {year}",
           "Unlimited GS+ESSAY+Optional Evaluation",
           "No Limit on Daily Submissions",
           "Select question from any source",
@@ -177,13 +184,14 @@
         "originalPrice": 15999,
         "currentPrice": 13999,
         "duration": "year",
-        "color": "#c7eeb4"
+        "color": "#c7eeb4",
+        "planCode": "Combo-Summit"
       },
       {
         "name": "Mains {year+1} - GS + Essay + {option}",
         "features": [
           "English Medium",
-          "Active Till *Mains 2025",
+          "Active Till *Mains {year+1}",
           "Unlimited GS+ESSAY+Optional Evaluation",
           "No Limit on Daily Submissions",
           "Select question from any source",
@@ -198,7 +206,8 @@
         "originalPrice": 25999,
         "currentPrice": 22999,
         "duration": "year",
-        "color": "#fbee9d"
+        "color": "#fbee9d",
+        "planCode": "Combo-Pinnacle"
       }
     ]
   }

@@ -6,52 +6,55 @@
 		userPermission: 'STUDENT' | 'EVALUATOR' | 'ADMIN'
 		user: { name: string; email: string; photo: string }
 	}>()
-
-	$effect(() => {
-		console.log(userPermission, user)
-	})
 </script>
 
-<div class="dashboard-left">
-	<div class="greeting">
-		<h2>Hello, {user.name}</h2>
-		<h6>Nice to have you back, exciting day ahead!</h6>
+<div class="dashboard-container">
+	<div class="dashboard-left">
+		<div class="greeting">
+			<h2>Hello, {user.name}</h2>
+			<h6>Nice to have you back, exciting day ahead!</h6>
+		</div>
+		{#if userPermission === 'STUDENT'}
+			<DashboardRecentEvaluations />
+		{:else if userPermission === 'EVALUATOR'}
+			<DashboardRecentAssignments />
+		{/if}
 	</div>
-	{#if userPermission === 'STUDENT'}
-		<DashboardRecentEvaluations />
-	{:else if userPermission === 'EVALUATOR'}
-		<DashboardRecentAssignments />
-	{/if}
+	<div class="dashboard-right"></div>
 </div>
-<div class="dashboard-right"></div>
 
 <style lang="scss">
-	.dashboard-left {
-		border: 1px solid red;
+	.dashboard-container {
+		display: flex;
+		flex-flow: row;
 		width: 100%;
-		height: 100vh;
-		padding: 1em;
+		height: 100%;
 
-		.greeting {
-			display: flex;
-			flex-flow: column;
-			h2 {
-				font-size: 2em;
-				font-weight: bold;
-				margin: 0.3em 0;
-			}
-			h6 {
-				font-size: 1em;
-				font-weight: normal;
-				margin: 0.3em 0;
+		.dashboard-left {
+			width: 100%;
+			height: 100vh;
+			padding: 1em;
+
+			.greeting {
+				display: flex;
+				flex-flow: column;
+				h2 {
+					font-size: 2em;
+					font-weight: bold;
+					margin: 0.3em 0;
+				}
+				h6 {
+					font-size: 1em;
+					font-weight: normal;
+					margin: 0.3em 0;
+				}
 			}
 		}
-	}
 
-	.dashboard-right {
-		border: 1px solid blue;
-		width: 100%;
-		height: 100vh;
-		background-color: var(--color-zinc-300);
+		.dashboard-right {
+			width: 100%;
+			height: 100vh;
+			background-color: var(--color-zinc-300);
+		}
 	}
 </style>

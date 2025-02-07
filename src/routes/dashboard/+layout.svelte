@@ -44,7 +44,8 @@
 
 	main {
 		display: flex;
-		flex-flow: row;
+		flex-flow: column;
+		gap: 2em;
 		align-items: center;
 		justify-content: center;
 		background-color: var(--color-white-800);
@@ -54,6 +55,10 @@
 
 		&.sideBarSpace {
 			margin-left: max(15rem, 15%);
+		}
+
+		@media only screen and (max-width: 768px) {
+			width: 100%;
 		}
 	}
 </style>

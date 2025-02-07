@@ -90,7 +90,7 @@
   },
   {
     "sectionName": "Optional",
-    "disabled": false,
+    "disabled": true,
     "options": [
       "Hindi Literature",
       "Sociology",
@@ -149,7 +149,7 @@
   },
   {
     "sectionName": "Combo",
-    "disabled": false,
+    "disabled": true,
     "options": [
       "Hindi Literature",
       "Sociology",

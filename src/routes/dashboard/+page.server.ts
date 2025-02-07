@@ -8,5 +8,5 @@ export const load: PageServerLoad = async ({ locals: { user, toastMessage } }) =
         redirect(303, '/')
     }
 
-    return { user, toastMessage, userPermission: "STUDENT" }
+    return { user, toastMessage, userPermission: user.profile.user_type }
 }

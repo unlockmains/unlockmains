@@ -30,7 +30,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
     const teamId = isEvaluator ? PUBLIC_APPWRITE_EVALUATOR_TEAM : PUBLIC_APPWRITE_STUDENT_TEAM;
     await teams.createMembership(teamId, [], undefined, userId)
 
-    await databases.createDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB, ID.unique(), {
+    const newUserProfile = await databases.createDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB, ID.unique(), {
       "user_id": userId,
       "registration_date": new Date().toISOString(),
       "user_type": isEvaluator ? "EVALUATOR" : "STUDENT",
@@ -39,7 +39,7 @@ export const GET: RequestHandler = async ({ url, cookies }) => {
 
     if (!isEvaluator) {
       await databases.createDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, ID.unique(), {
-        "user_id": userId,
+        "users_profile": newUserProfile.$id,
         "gs_submissions_left": 2,
         "optional_submissions_left": 0,
         "eassy_submissions_left": 0,

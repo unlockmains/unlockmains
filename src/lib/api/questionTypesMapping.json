@@ -1,34 +1,100 @@
 {
-    "GS Question": [
+    "General Studies": [
         {
             "text": "General Studies 1",
             "value": "General Studies 1",
             "tags": [
-                "Geography",
-                "History",
-                "Indian Culture and Heritage",
-                "Society"
+                {
+                    "text": "Geography",
+                    "value": "Geography"
+                },
+                {
+                    "text": "History",
+                    "value": "History"
+                },
+                {
+                    "text": "Indian Culture and Heritage",
+                    "value": "Indian Culture and Heritage"
+                },
+                {
+                    "text": "Society",
+                    "value": "Society"
+                }
             ]
         },
         {
             "text": "General Studies 2",
             "value": "General Studies 2",
             "tags": [
-                "Governance and Civil Service",
-                "Indian Constitution and Polity",
-                "International Relations",
-                "Social Justice"
+                {
+                    "text": "Governance and Civil Service",
+                    "value": "Governance and Civil Service"
+                },
+                {
+                    "text": "Indian Constitution and Polity",
+                    "value": "Indian Constitution and Polity"
+                },
+                {
+                    "text": "International Relations",
+                    "value": "International Relations"
+                },
+                {
+                    "text": "Social Justice",
+                    "value": "Social Justice"
+                }
             ]
         },
         {
             "text": "General Studies 3",
             "value": "General Studies 3",
-            "tags": ["Agriculture", "Disaster Management", "Economy", "Environment", "Internal Security", "Science and Technology"]
+            "tags": [
+                {
+                    "text": "Agriculture",
+                    "value": "Agriculture"
+                },
+                {
+                    "text": "Disaster Management",
+                    "value": "Disaster Management"
+                },
+                {
+                    "text": "Economy",
+                    "value": "Economy"
+                },
+                {
+                    "text": "Environment",
+                    "value": "Environment"
+                },
+                {
+                    "text": "Internal Security",
+                    "value": "Internal Security"
+                },
+                {
+                    "text": "Science and Technology",
+                    "value": "Science and Technology"
+                }
+            ]
         },
         {
             "text": "General Studies 4",
             "value": "General Studies 4",
-            "tags": ["Attitude and Aptitude", "Case Studies", "Ethics and Philosophers", "Public Service values and Probity"]
+            "tags": [
+                {
+                    "text": "Attitude and Aptitude",
+                    "value": "Attitude and Aptitude"
+                },
+                {
+                    "text": "Case Studies",
+                    "value": "Case Studies"
+                },
+                {
+                    "text": "Ethics and Philosophers",
+                    "value": "Ethics and Philosophers"
+                },
+                {
+                    "text": "Public Service values and Probity",
+                    "value": "Public Service values and Probity"
+                }
+            ]
         }
     ]
 }

@@ -1,12 +1,15 @@
 <script lang="ts">
-	import { alwaysShow } from '$lib/stores/sideNavStore'
+	import DashboardHome from '$lib/components/dashboard/DashboardHome.svelte'
 	import { toast } from 'svelte-sonner'
 
 	let { data } = $props<{
 		data: {
 			toastMessage: string | undefined
+			userPermission: 'STUDENT' | 'EVALUATOR' | 'ADMIN'
+			user: { name: string; email: string; photo: string }
 		}
 	}>()
+	const { userPermission, user } = data
 
 	$effect(() => {
 		if (data.toastMessage) {
@@ -15,16 +18,4 @@
 	})
 </script>
 
-<main class:sideBarSpace={$alwaysShow}>
-	<h1>Dashboard</h1>
-</main>
-
-<style lang="scss">
-	main {
-		margin: 0 2rem;
-
-		&.sideBarSpace {
-			margin-left: max(15rem + 1rem, 15% + 1rem);
-		}
-	}
-</style>
+<DashboardHome {userPermission} {user} />

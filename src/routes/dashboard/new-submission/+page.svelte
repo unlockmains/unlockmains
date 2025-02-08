@@ -12,16 +12,18 @@
 	import type { ActionData, SubmitFunction } from './$types'
 	import type { INewSubmissionType } from '$lib/types'
 	import questionTypesMapping from '$lib/api/questionTypesMapping.json'
+	import { EQuestionTypes } from '$lib/types/enums'
 
 	let { form, data } = $props<{
 		form: ActionData
 		data: { questionTypes: INewSubmissionType[] }
 	}>()
 
-	let radioValue = $state<'yes' | 'no'>('no')
+	let radioValue = $state<'yes' | 'no' | ''>('')
 	let loadingSubmission = $state(false)
-	let selectedValue = $state<string | undefined>(undefined)
+	let selectedValue = $state<EQuestionTypes | undefined>(undefined)
 	let specificGsQuestion = $state<string | undefined>(undefined)
+	let specificGsQuestionSubTag = $state<string | undefined>(undefined)
 	const maxQuestions = $derived(
 		data.questionTypes.find(
 			(questionType: INewSubmissionType) => questionType.value === selectedValue
@@ -35,6 +37,19 @@
 			loadingSubmission = false
 		}
 	}
+
+	$effect(() => {
+		if (specificGsQuestion) {
+			specificGsQuestionSubTag = ''
+		}
+	})
+
+	$effect(() => {
+		if (selectedValue !== EQuestionTypes.GENERAL_STUDIES) {
+			specificGsQuestion = ''
+			specificGsQuestionSubTag = ''
+		}
+	})
 
 	$effect(() => {
 		if (form) {
@@ -83,36 +98,54 @@
 	method="post"
 	use:enhance={handleQuestionSubmission}
 >
-	<div class="question-type">
-		<ComboboxContext>
-			<Combobox
-				label="Question Type"
-				name="question-type"
-				placeholder="Click or Search"
-				options={data.questionTypes}
-				style="--height: 3em;--font-size: 0.8em;"
-				disabled={false}
-				showRemainingCount={true}
-				bind:value={selectedValue}
-			/>
-		</ComboboxContext>
-	</div>
-	{#if selectedValue === 'GS Question'}
-		<div class="specific-gs-question-type">
+	<div class="question-type-container">
+		<div class="question-type">
 			<ComboboxContext>
 				<Combobox
 					label="Question Type"
 					name="question-type"
 					placeholder="Click or Search"
-					options={questionTypesMapping[selectedValue]}
+					options={data.questionTypes}
 					style="--height: 3em;--font-size: 0.8em;"
 					disabled={false}
-					showRemainingCount={false}
-					bind:value={specificGsQuestion}
+					showRemainingCount={true}
+					bind:value={selectedValue}
 				/>
 			</ComboboxContext>
 		</div>
-	{/if}
+		{#if selectedValue === EQuestionTypes.GENERAL_STUDIES}
+			<div class="specific-gs-question-type">
+				<ComboboxContext>
+					<Combobox
+						label="Category Of GS"
+						name="specific-gs-question-type"
+						placeholder="Click or Search"
+						options={questionTypesMapping[EQuestionTypes.GENERAL_STUDIES]}
+						style="--height: 3em;--font-size: 0.8em;"
+						disabled={false}
+						showRemainingCount={false}
+						bind:value={specificGsQuestion}
+					/>
+				</ComboboxContext>
+			</div>
+			<div class="specific-gs-subject-tag">
+				<ComboboxContext>
+					<Combobox
+						label="Specific Subject (Optional)"
+						name="specific-gs-subject-tag"
+						placeholder="Click or Search"
+						options={questionTypesMapping[EQuestionTypes.GENERAL_STUDIES]?.find(
+							(gs) => gs.text === specificGsQuestion
+						)?.tags ?? []}
+						style="--height: 3em;--font-size: 0.8em;"
+						disabled={false}
+						showRemainingCount={false}
+						bind:value={specificGsQuestionSubTag}
+					/>
+				</ComboboxContext>
+			</div>
+		{/if}
+	</div>
 	<div class="question-quantity">
 		<Input
 			id="question-quantity"
@@ -187,13 +220,28 @@
 		align-items: flex-start;
 		gap: 1em;
 
-		.question-type,
-		.question-quantity,
-		.specific-gs-question-type {
+		.question-quantity {
 			width: 15em;
 		}
 		.question-file {
 			width: 100%;
+		}
+
+		.question-type-container {
+			width: 100%;
+			display: flex;
+			flex-flow: row wrap;
+			gap: 2em;
+			.question-type,
+			.specific-gs-question-type,
+			.specific-gs-subject-tag {
+				width: 15em;
+			}
+
+			@media only screen and (max-width: 768px) {
+				flex-flow: column wrap;
+				gap: 0.5em;
+			}
 		}
 	}
 </style>

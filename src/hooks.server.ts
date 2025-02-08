@@ -23,10 +23,10 @@ export const authentication: Handle = async ({ event, resolve }) => {
   } catch (err) {
     console.error("error session", err)
   }
-  const toasthMessage = event.cookies.get('toastMessage');
-  if (toasthMessage) {
+  const toastMessage = event.cookies.get('toastMessage');
+  if (toastMessage) {
     event.cookies.delete('toastMessage', { path: '/' });
-    event.locals.toastMessage = toasthMessage;
+    event.locals.toastMessage = toastMessage;
   }
   return resolve(event);
 }

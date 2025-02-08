@@ -1,12 +1,15 @@
 <script lang="ts">
 	import Sidebar from '$lib/components/molecules/Sidebar.svelte'
 	import { alwaysShow, sideNavOpen, toggleSideNav } from '$lib/stores/sideNavStore'
+	import type { Snippet } from 'svelte'
 	import { Toaster } from 'svelte-sonner'
-	let { data } = $props<{
+	let { data, children } = $props<{
 		slug: string
 		parentSlug: string
 		userType: string
 		adminApproved: boolean
+		user: { name: string; email: string; photo: string }
+		children: Snippet
 	}>()
 </script>
 
@@ -19,10 +22,10 @@
 		<Sidebar slug={data.slug} parentSlug={data.parentSlug} />
 	{/if}
 	{#if $sideNavOpen && !$alwaysShow}
-		<div class="backdrop" on:click={toggleSideNav} />
+		<div class="backdrop" on:click={toggleSideNav}></div>
 	{/if}
 	<main class:sideBarSpace={$alwaysShow}>
-		<slot />
+		{@render children()}
 	</main>
 </div>
 
@@ -41,16 +44,21 @@
 
 	main {
 		display: flex;
-		flex-flow: column wrap;
+		flex-flow: column;
+		gap: 2em;
 		align-items: center;
 		justify-content: center;
 		background-color: var(--color-white-800);
 		width: calc(100% - max(15rem, 15%));
 		min-height: max(100%, 100vh);
-		gap: 2em;
+		margin-top: 5em;
 
 		&.sideBarSpace {
 			margin-left: max(15rem, 15%);
+		}
+
+		@media only screen and (max-width: 768px) {
+			width: 100%;
 		}
 	}
 </style>

@@ -2,16 +2,6 @@
 	import type { INewSubmissionType } from '$lib/types'
 	import { onClickOutside } from '../../context/ComboboxContext.svelte'
 
-	// export let disabled: boolean = false
-	// export let label: string = ''
-	// export let name: string
-	// export let options: INewSubmissionType[] = []
-	// export let placeholder: string | undefined = undefined
-	// export let readonly: boolean = false
-	// export let required: boolean = false
-	// export let value: string | undefined = ''
-	// export let style: string = ''
-	// export let showRemainingCount: boolean = true
 	let {
 		disabled = false,
 		label = '',

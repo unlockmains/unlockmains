@@ -18,7 +18,7 @@
 		Policy, please contact us at:
 	</p>
 	<ul>
-		<li><a href="https://wa.me/+919470067051" target="_blank">+919470067051</a></li>
+		<li><a href="tel:+919220252724">+919220252724</a></li>
 		<li><a href="mailto:contact@unlockmains.com">contact@unlockmains.com</a></li>
 		<li><a href="mailto:help@unlockmains.com">help@unlockmains.com</a></li>
 		<li><a href="mailto:unlockmains@gmail.com">unlockmains@gmail.com</a></li>

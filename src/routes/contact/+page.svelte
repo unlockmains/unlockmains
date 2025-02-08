@@ -10,9 +10,16 @@
 	<h4>We're eager to hear from you!</h4>
 	<h4>Choose your inquiry type:</h4>
 	<ul>
+		<li>For Quick Resolution Call on - <a href="tel:+919220252724">+919220252724</a></li>
 		<li>
 			General Question - <a href="https://unlockmains.com" target="_blank">UnlockMains</a> /
 			<a href="https://wa.me/+919470067051" target="_blank">+919470067051</a>
+		</li>
+		<li>
+			Telegram Channel - <a href="https://t.me/UnlockMains" target="_blank">Telegram Channel</a>
+		</li>
+		<li>
+			Telegram Message - <a href="https://t.me/Unlock_Mains" target="_blank">Message on Telegram</a>
 		</li>
 		<li>
 			Technical Support - <a href="mailto:support@unlockmains.com">support@unlockmains.com</a>

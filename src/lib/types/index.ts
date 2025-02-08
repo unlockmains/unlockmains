@@ -1,3 +1,6 @@
+import type { Models } from "node-appwrite";
+import type { ESubmissionStatus } from "./enums";
+
 export type IToast = {
     id: string;
     type: 'success' | 'error' | 'info';
@@ -14,14 +17,6 @@ export type INewSubmissionType = {
     count?: number;
 }
 
-export enum INewSubmittedStatus {
-    DRAFT = "Draft",
-    SUBMITTED = "Submitted",
-    UNDER_REVIEW = "Under Review",
-    EVALUATED = "Evaluated",
-    COMPLETED = "Completed"
-}
-
 export type ISubmission = {
     collectionId: string,
     collectionName: string,
@@ -30,7 +25,7 @@ export type ISubmission = {
     name: string,
     noOfQuestions: number,
     questionType: string,
-    status: INewSubmittedStatus,
+    status: ESubmissionStatus,
     submissionDate: string,
     submittedFile: string[]
 }
@@ -122,3 +117,5 @@ export type IEvaluatorOnBoardStep2Data = {
     evaluateEssay: boolean,
     evaluateOptional: boolean,
 }
+
+export type IUser = (Models.User<Models.Preferences> & { team: Models.Team<Models.Preferences> } & { profile: Models.Document }) | undefined

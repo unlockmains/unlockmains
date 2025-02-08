@@ -11,8 +11,8 @@ export function createAdminClient() {
     const client = new Client()
         .setEndpoint(PUBLIC_APPWRITE_ENDPOINT)
         .setProject(PUBLIC_APPWRITE_PROJECT)
-        .setKey(APPWRITE_KEY); 
-        
+        .setKey(APPWRITE_KEY);
+
     return {
         get account() {
             return new Account(client);
@@ -34,7 +34,7 @@ export function createSessionClient(event: RequestEvent<Partial<Record<string, s
         .setEndpoint(PUBLIC_APPWRITE_ENDPOINT)
         .setProject(PUBLIC_APPWRITE_PROJECT);
     const session = event.cookies.get(SESSION_COOKIE);
-    if(session) {
+    if (session) {
         client.setSession(session);
     }
     return {

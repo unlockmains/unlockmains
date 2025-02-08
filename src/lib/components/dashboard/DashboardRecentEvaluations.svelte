@@ -18,6 +18,18 @@
 			evaluatedAt: '2023-01-03 12:00:00'
 		}
 	]
+
+	const getRecentEvaluations = async () => {
+		const response = await fetch('/api/recent-evaluation')
+		if (response.ok) {
+			const data = await response.json()
+			console.log(data)
+		}
+	}
+
+	$effect(() => {
+		getRecentEvaluations()
+	})
 </script>
 
 <div class="dashboard-recent-evaluations">

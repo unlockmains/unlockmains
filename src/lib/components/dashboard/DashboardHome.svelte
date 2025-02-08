@@ -1,10 +1,11 @@
 <script lang="ts">
+	import type { IUser } from '$lib/types'
 	import DashboardRecentAssignments from './DashboardRecentAssignments.svelte'
 	import DashboardRecentEvaluations from './DashboardRecentEvaluations.svelte'
 
 	let { userPermission, user } = $props<{
 		userPermission: 'STUDENT' | 'EVALUATOR' | 'ADMIN'
-		user: { name: string; email: string; photo: string }
+		user: IUser
 	}>()
 </script>
 

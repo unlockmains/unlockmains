@@ -32,7 +32,6 @@
 
 		return async ({ result, update }) => {
 			await update()
-			console.log('result', result)
 			if (result.type === 'success') {
 				const updatedFormData = result.data as ActionData
 

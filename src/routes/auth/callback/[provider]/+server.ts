@@ -8,6 +8,7 @@ import {
 } from "$env/static/public";
 import { AuthError } from "$lib/types/errors";
 import { AuthErrorCode } from "$lib/types/enums";
+import { authStore } from "$lib/stores/userStore";
 
 export const GET: RequestHandler = async ({ url, cookies, params }) => {
   const userId = url.searchParams.get("userId");

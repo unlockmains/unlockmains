@@ -5,11 +5,12 @@
 	import { Toaster } from 'svelte-sonner'
 	import Banner from '$lib/components/atoms/Banner.svelte'
 	import { toggleTopBannerVisible, topBannerVisible } from '$lib/stores/topBannerStore'
+	import type { LayoutData } from './$types'
+	import { page } from '$app/stores'
 
-	export let data
+	let { data } = $props<{ data: LayoutData }>()
 
-	let { user, top_banner } = data
-	$: ({ user, top_banner } = data)
+	let { top_banner } = data
 
 	if (top_banner) {
 		toggleTopBannerVisible()
@@ -32,7 +33,7 @@
 
 <Banner bannerText={top_banner} />
 
-<Header user={user ?? null} />
+<Header user={$page.data.user} />
 <div style={$topBannerVisible ? 'margin-top: 8em' : 'margin-top: 4em'}>
 	<slot />
 </div>

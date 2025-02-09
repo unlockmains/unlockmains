@@ -1,24 +1,32 @@
 import { PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB } from '$env/static/public';
 import { createSessionClient, SESSION_COOKIE } from '$lib/appwrite';
+import { authStore } from '$lib/stores/userStore';
+import type { IUser } from '$lib/types';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import { Query } from 'node-appwrite';
+import { get } from 'svelte/store';
 
 export const authentication: Handle = async ({ event, resolve }) => {
   try {
     const { account, databases, storage, teams } = createSessionClient(event);
     event.locals.databases = databases;
     event.locals.storage = storage;
-    if (event.cookies.get(SESSION_COOKIE) && !event.locals.user) {
+    event.locals.account = account;
+    event.locals.teams = teams;
+    const userInfoInStore = get(authStore).user
+    if (event.cookies.get(SESSION_COOKIE) && !userInfoInStore) {
       const user = await account.get();
       const userProfile = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB, [
         Query.equal("user_id", user?.$id)
       ]);
-      event.locals.account = account;
-      event.locals.teams = teams;
-      event.locals.user = {
+      const completeUser = {
         ...user, team: (await teams.list()).teams[0], profile: userProfile.documents[0]
-      }
+      };
+      event.locals.user = completeUser;
+      authStore.setAuth(completeUser)
+    } else {
+      event.locals.user = userInfoInStore as IUser
     }
   } catch (err) {
     console.error("error session", err)

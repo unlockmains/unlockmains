@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
 	import ClickOutsideContext from '$lib/context/ClickOutsideContext.svelte'
-	import { toggleSideNav } from '$lib/stores/sideNavStore'
 	import { topBannerVisible } from '$lib/stores/topBannerStore'
+	import type { IUser } from '$lib/types'
 	import Button from '../atoms/Button.svelte'
 	import Popover from '../atoms/Popover.svelte'
 	import HamburgerIcon from '../icons/HamburgerIcon.svelte'
 	import { onMount } from 'svelte'
-	export let user
+	let { user } = $props<{ user: IUser }>()
 
-	let isMenuOpen = false
+	let isMenuOpen = $state(false)
 	let headerElement: HTMLElement
 
 	const toggleMenu = () => (isMenuOpen = !isMenuOpen)
@@ -35,7 +35,7 @@
 </script>
 
 <header bind:this={headerElement} style={$topBannerVisible ? '--top: 3em;' : '--top: 0em;'}>
-	<button class="mobile-menu-btn" on:click={toggleMenu}>
+	<button class="mobile-menu-btn" onclick={toggleMenu}>
 		<HamburgerIcon />
 	</button>
 
@@ -45,11 +45,11 @@
 
 	<nav class:active={isMenuOpen}>
 		<div class="nav-links">
-			<a on:click={handleLinkClick} href="/">Home</a>
-			<a on:click={handleLinkClick} href="/pricing">Pricing</a>
-			<a on:click={handleLinkClick} href="/about">About</a>
-			<a on:click={handleLinkClick} href="/contact">Contact</a>
-			<a on:click={handleLinkClick} href="/careers">Careers</a>
+			<a onclick={handleLinkClick} href="/">Home</a>
+			<a onclick={handleLinkClick} href="/pricing">Pricing</a>
+			<a onclick={handleLinkClick} href="/about">About</a>
+			<a onclick={handleLinkClick} href="/contact">Contact</a>
+			<a onclick={handleLinkClick} href="/careers">Careers</a>
 		</div>
 
 		<div class="mobile-auth">

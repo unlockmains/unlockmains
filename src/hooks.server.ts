@@ -14,8 +14,7 @@ export const authentication: Handle = async ({ event, resolve }) => {
     event.locals.storage = storage;
     event.locals.account = account;
     event.locals.teams = teams;
-    const userInfoInStore = get(authStore).user
-    if (event.cookies.get(SESSION_COOKIE) && !userInfoInStore) {
+    if (event.cookies.get(SESSION_COOKIE)) {
       const user = await account.get();
       const userProfile = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB, [
         Query.equal("user_id", user?.$id)
@@ -25,8 +24,6 @@ export const authentication: Handle = async ({ event, resolve }) => {
       };
       event.locals.user = completeUser;
       authStore.setAuth(completeUser)
-    } else {
-      event.locals.user = userInfoInStore as IUser
     }
   } catch (err) {
     console.error("error session", err)

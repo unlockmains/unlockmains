@@ -1,26 +1,31 @@
 html,
 body {
 	--custom-font-family: "Inter", sans-serif;
-	--custom-bg-color: #fff;
-	--custom-color-brand: #a81c2f;
-	--custom-color-secondary: #666;
-	--custom-border: 1px solid #333;
+	--custom-bg-color: rgb(255, 255, 255);
+	--custom-color-brand: rgb(168, 28, 47);
+	--custom-color-secondary: rgb(102, 102, 102);
+	--custom-border: 1px solid rgb(51, 51, 51);
 	--custom-border-radius: 5px;
 	--custom-spacing: 5px;
 
+	--color-zinc-200: rgb(204, 204, 204);
 	--color-zinc-300: rgb(199, 197, 197);
-	--color-zinc-400: #a1a1aa;
-	--color-zinc-500: #454545;
-	--color-zinc-700: #3f3f46;
+	--color-zinc-400: rgb(161, 161, 170);
+	--color-zinc-500: rgb(69, 69, 69);
+	--color-zinc-700: rgb(63, 63, 70);
 	--color-zinc-800: rgb(65, 64, 64);
 	--color-black-600: rgba(0, 0, 0, 0.624);
-	--color-black-800: #0F0F0F;
-	--color-black-900: #000;
-	--color-purple-300: #dacdf4;
+	--color-black-700: rgb(40, 40, 40);
+	--color-black-800: rgb(15, 15, 15);
+	--color-black-900: rgb(0, 0, 0);
+	--color-purple-300: rgb(218, 205, 244);
 	--color-purple-400: rgb(147, 147, 227);
-	--color-purple-500: #9270d7;
-	--color-white-800: whitesmoke;
-	--color-white-900: #fff;
+	--color-purple-500: rgb(146, 112, 215);
+	--color-white-500: rgb(221, 221, 221);
+	--color-white-600: rgb(235, 235, 235);
+	--color-white-700: rgb(240, 240, 240);
+	--color-white-800: rgb(245, 245, 245);
+	--color-white-900: rgb(255, 255, 255);
 	--color-yellow-100: rgb(253, 232, 110);
 	--color-yellow-200: rgb(251, 228, 100);
 	--color-yellow-300: rgb(251, 238, 157);
@@ -28,7 +33,9 @@ body {
 	--color-cyan-100: rgb(110, 229, 253);
 	--color-cyan-300: rgb(100, 206, 251);
 	--color-cyan-700: rgb(0, 198, 243);
-	--color-blue-800: #0158fa;
+	--color-blue-800: rgb(1, 88, 250);
+	--color-peach-200: rgb(220, 157, 157);
+	--color-peach-300: rgb(196, 142, 142);
 	--color-orange-700: rgb(215, 78, 9);
 	--color-magenta-700: rgb(110, 14, 10);
 	--color-indigo-400:  rgb(59, 151, 217);

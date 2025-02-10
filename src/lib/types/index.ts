@@ -1,5 +1,5 @@
 import type { Models } from "node-appwrite";
-import type { ESubmissionStatus } from "./enums";
+import type { EEvaluationStatus, ESubmissionStatus } from "./enums";
 
 export type IToast = {
     id: string;
@@ -119,3 +119,47 @@ export type IEvaluatorOnBoardStep2Data = {
 }
 
 export type IUser = (Models.User<Models.Preferences> & { team: Models.Team<Models.Preferences> } & { profile: Models.Document }) | undefined
+
+interface ISubmittedFile {
+    file_id: string;
+    $id: string;
+}
+
+interface IEvaluation {
+    remarks: string | null;
+    $id: string;
+    evaluatedFiles: string[];
+}
+
+export interface IRecentEvaluation {
+    status: string;
+    question_type_lvl1: string;
+    question_type_lvl2: string;
+    question_type_lvl3: string;
+    total_questions: number;
+    is_pyq: boolean;
+    $id: string;
+    $updatedAt: string;
+    submittedFiles: ISubmittedFile[];
+    evaluations: IEvaluation[];
+}
+
+export interface IRecentAssignments {
+    $id: string;
+    assignment_date: string;
+    status: EEvaluationStatus;
+    submittedFiles: ISubmittedFile[];
+    student_submissions: {
+        '$id': string,
+        '$databaseId': string,
+        '$collectionId': string
+    }
+    submissionDetails: {
+        status: string;
+        question_type_lvl1: string;
+        question_type_lvl2: string;
+        question_type_lvl3: string;
+        total_questions: number;
+        is_pyq: boolean;
+    }
+}

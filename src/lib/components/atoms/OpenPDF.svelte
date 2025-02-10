@@ -18,7 +18,7 @@
 	import type { IAnnotation, IPageAnnotations } from '$lib/types'
 	import PDFAnnotateIcons from '../icons/PDFAnnotateIcons.svelte'
 
-	export let pdfUrl: string
+	export let pdfUrl: string | Uint8Array
 	export let initialScale = 1.0
 	export let maxScale = 3.0
 	export let minScale = 0.5
@@ -88,7 +88,7 @@
 		}
 	})
 
-	async function loadPDF(url: string) {
+	async function loadPDF(url: string | Uint8Array) {
 		try {
 			isLoading = true
 			error = null
@@ -721,13 +721,16 @@
 	<div class="canvas-container" class:loading={isLoading}>
 		<div class="thumbnail-sidebar">
 			<div class="thumbnail-scroll">
+				<!-- svelte-ignore a11y_click_events_have_key_events -->
+				<!-- svelte-ignore a11y_no_static_element_interactions -->
 				{#each thumbnailPages as { canvas, pageNum }}
+					<!-- svelte-ignore a11y_click_events_have_key_events -->
 					<div
 						class="thumbnail"
 						class:active={currentPage === pageNum}
 						on:click={() => goToPage(pageNum)}
 					>
-						<img src={canvas.toDataURL()} alt={`Page ${pageNum}`} class="thumbnail-image" />
+						<img src={canvas?.toDataURL()} alt={`Page ${pageNum}`} class="thumbnail-image" />
 						<div class="thumbnail-number">Page {pageNum}</div>
 					</div>
 				{/each}
@@ -739,7 +742,9 @@
 			</div>
 		{/if}
 		<div class="canvas-wrapper">
+			<!-- svelte-ignore element_invalid_self_closing_tag -->
 			<canvas bind:this={pdfCanvas} class="pdf-canvas" />
+			<!-- svelte-ignore element_invalid_self_closing_tag -->
 			<canvas bind:this={canvas} class="annotation-canvas" />
 		</div>
 	</div>

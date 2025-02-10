@@ -6,9 +6,9 @@
 </script>
 
 <div class="banner" style={$topBannerVisible ? '' : 'display: none;'}>
-	<div class="left-banner-img" />
+	<div class="left-banner-img"></div>
 	<span class="text">{bannerText}</span>
-	<div class="right-banner-img" />
+	<div class="right-banner-img"></div>
 	<button on:click={hideTopBanner}>
 		<CrossIcon />
 	</button>

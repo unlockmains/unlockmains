@@ -12,7 +12,7 @@
 <div class="dashboard-container">
 	<div class="dashboard-left">
 		<div class="greeting">
-			<h2>Hello, {user.name}</h2>
+			<h2>Hello, {user.name} 👋</h2>
 			<h6>Nice to have you back, exciting day ahead!</h6>
 		</div>
 		{#if userPermission === 'STUDENT'}

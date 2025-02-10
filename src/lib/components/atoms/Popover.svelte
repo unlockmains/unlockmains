@@ -73,8 +73,8 @@
 			top: 5em;
 			right: 0;
 			width: var(--width);
-			background-color: white;
-			border: 1px solid #ccc;
+			background-color: var(--color-white-900);
+			border: 1px solid var(--color-zinc-200);
 			border-radius: 0.5em;
 			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 			z-index: 1000;
@@ -106,10 +106,10 @@
 
 					a {
 						text-decoration: none;
-						color: black;
+						color: var(--color-black-900);
 					}
 					&:hover {
-						background-color: #f0f0f0;
+						background-color: var(--color-white-700);
 					}
 				}
 			}

@@ -19,6 +19,12 @@ export enum ESubmissionStatus {
     COMPLETED = "Completed"
 }
 
+export enum EEvaluationStatus {
+    PENDING_EVALUATION = "Pending Evaluation",
+    EVALUATED = "Evaluated",
+    UNDER_EVALUATION = "Under Evaluation",
+}
+
 export enum AuthErrorCode {
     INVALID_PARAMETERS = 'INVALID_PARAMETERS',
     INVALID_TOKEN = 'INVALID_TOKEN',

@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation'
 	import { alwaysShow, sideNavOpen, toggleSideNav } from '$lib/stores/sideNavStore'
 	import { topBannerVisible } from '$lib/stores/topBannerStore'
+	import type { IUser } from '$lib/types'
 	import Button from '../atoms/Button.svelte'
 	import CollapsibleSection from '../atoms/CollapsibleSection.svelte'
 	import CrossIcon from '../icons/CrossIcon.svelte'
@@ -11,11 +12,14 @@
 	// import FileIcon from '../icons/FileIcon.svelte'
 	// import PlanIcon from '../icons/PlanIcon.svelte'
 
-	export let slug: string = ''
-	export let parentSlug: string = ''
+	let { slug, parentSlug, user } = $props<{
+		slug: string
+		parentSlug: string
+		user: IUser
+	}>()
 
-	let showSidebar = false
-	let isCollapsed = false
+	let showSidebar = $state(false)
+	let isCollapsed = $state(false)
 
 	alwaysShow.subscribe((alwaysShow) => {
 		if (alwaysShow) {
@@ -45,14 +49,15 @@
 				<span class="link-text">Home</span>
 			</a>
 		</div>
+		{#if user.profile.user_type === 'STUDENT'}
+			<div class="section">
+				<Button label="🗄️" type="nav" onClick={() => goto(`${parentSlug}/new-submission`)}>
+					<!-- <FileIcon /> -->
 
-		<div class="section">
-			<Button label="🗄️" type="nav" onClick={() => goto(`${parentSlug}/new-submission`)}>
-				<!-- <FileIcon /> -->
-
-				<span class="link-text">New Submission</span>
-			</Button>
-		</div>
+					<span class="link-text">New Submission</span>
+				</Button>
+			</div>
+		{/if}
 
 		<CollapsibleSection headerText="💸" noOfLinks={2}>
 			<div class="section">

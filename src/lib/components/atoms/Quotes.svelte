@@ -48,7 +48,7 @@
 			font-family: Georgia, serif;
 			padding: 20px;
 			animation: fadeOut 0.5s ease-out forwards;
-			text-shadow: 0px 0px 4px #dc9d9d;
+			text-shadow: 0px 0px 4px var(--color-peach-200);
 
 			&.active {
 				opacity: 1;
@@ -60,7 +60,7 @@
 			&::after {
 				content: '"';
 				font-size: 80px;
-				color: #ddd;
+				color: var(--color-white-500);
 				position: absolute;
 				height: 30px;
 				line-height: 0;

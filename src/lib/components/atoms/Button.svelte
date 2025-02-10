@@ -10,7 +10,8 @@
 		| 'submit'
 		| 'home-register'
 		| 'next'
-		| 'back' = 'default'
+		| 'back'
+		| 'view' = 'default'
 	export let onClick: (event: MouseEvent) => void = () => {}
 	export let withLoader: boolean = false
 	export let disabled: boolean = false
@@ -159,6 +160,16 @@
 			--btn-height: 3em;
 			--btn-background: var(--color-white-800);
 			--btn-background-hover: var(--color-white-900);
+			--btn-color: var(--color-zinc-800);
+			--btn-box-color: var(--color-black-900);
+			--btn-font-weight: 400;
+		}
+
+		&.view {
+			--btn-width: 10em;
+			--btn-height: 3em;
+			--btn-background: var(--color-peach-200);
+			--btn-background-hover: var(--color-peach-300);
 			--btn-color: var(--color-zinc-800);
 			--btn-box-color: var(--color-black-900);
 			--btn-font-weight: 400;

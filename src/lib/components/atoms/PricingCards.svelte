@@ -143,7 +143,7 @@
 				height: 1px;
 				margin-top: 0.5em;
 				margin-bottom: 0;
-				background-color: #ebebeb;
+				background-color: var(--color-white-600);
 			}
 
 			.pricing-features {

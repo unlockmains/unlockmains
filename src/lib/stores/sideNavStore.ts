@@ -5,6 +5,10 @@ export const sideNavOpen = writable<boolean>(false);
 
 export const toggleSideNav = () => sideNavOpen.update(wasOpen => !wasOpen)
 
+export const sideNavCollapse = writable<boolean>(false);
+
+export const toggleCollapseSideNav = () => sideNavCollapse.update(wasCollapsed => !wasCollapsed)
+
 export const alwaysShow = readable(false, set => {
     let isLargeScreen = false;
     const updateAlwaysShow = () => {

@@ -3,10 +3,22 @@
 	import { page } from '$app/stores'
 	import Button from '$lib/components/atoms/Button.svelte'
 	import OpenPdf from '$lib/components/atoms/OpenPDF.svelte'
-	import type { IPageAnnotations, IRecentAssignments, IUser } from '$lib/types'
+	import PageSpinner from '$lib/components/atoms/PageSpinner.svelte'
+	import type { IPageAnnotations, IRecentAssignments } from '$lib/types'
 	import { onMount } from 'svelte'
 	let assignmentToView = $state<IRecentAssignments>()
-	let pdfBUfferArray = $state<Uint8Array>()
+	let pdfFileData = $state<{
+		loading: boolean
+		error: string | null
+		data?: Uint8Array
+		viewClicked: boolean
+		editClicked: boolean
+	}>({
+		loading: false,
+		error: null,
+		viewClicked: false,
+		editClicked: false
+	})
 
 	onMount(() => {
 		const allAssignments = JSON.parse(localStorage.getItem('recentAssignments') as string)
@@ -31,14 +43,45 @@
 	}
 	const savedAnnotations = browser && JSON.parse(localStorage.getItem('pdfAnnotations') || '{}')
 
+	const getFileDownload = async () => {
+		pdfFileData.loading = true
+		const response = await fetch(
+			`/api/files/download/${assignmentToView?.submittedFiles[0].file_id}`,
+			{
+				method: 'POST'
+			}
+		)
+		if (response.ok) {
+			const blob = await response.blob()
+			const url = window.URL.createObjectURL(blob)
+			const a = document.createElement('a')
+			a.href = url
+			a.download = `${$page.params.id}.pdf`
+			document.body.appendChild(a)
+			a.click()
+			window.URL.revokeObjectURL(url)
+			a.remove()
+			pdfFileData.loading = false
+		}
+	}
+
 	const getFileView = async () => {
-		console.log('url', `/api/files/view/${assignmentToView?.submittedFiles[0].file_id}`)
+		pdfFileData.loading = true
+		pdfFileData.viewClicked = true
 		const response = await fetch(`/api/files/view/${assignmentToView?.submittedFiles[0].file_id}`, {
 			method: 'POST'
 		})
 		if (response.ok) {
-			pdfBUfferArray = (await response.body?.getReader().read())?.value
+			pdfFileData.data = (await response.body?.getReader().read())?.value
+			pdfFileData.loading = false
 		}
+	}
+
+	const makeFileEditable = async () => {
+		if (!pdfFileData.data) {
+			await getFileView()
+		}
+		pdfFileData.editClicked = true
 	}
 </script>
 
@@ -79,14 +122,48 @@
 		</div>
 	</div>
 	<div class="action-button">
-		<Button type="view" label="View" onClick={getFileView} />
-		<Button type="next" label="Download" />
+		<Button
+			type="view"
+			label="Reject"
+			onClick={() => {}}
+			withLoader={pdfFileData.loading}
+			disabled={pdfFileData.loading}
+			style="--btn-background: var(--color-red-400);--btn-background-hover: var(--color-red-700);"
+		/>
+		<Button
+			type="view"
+			label="Edit"
+			onClick={makeFileEditable}
+			withLoader={pdfFileData.loading}
+			disabled={pdfFileData.loading || pdfFileData.editClicked}
+			style="--btn-background: var(--color-yellow-100);--btn-background-hover: var(--color-yellow-500);"
+		/>
+		<Button
+			type="view"
+			label="View"
+			onClick={getFileView}
+			withLoader={pdfFileData.loading}
+			disabled={pdfFileData.loading || pdfFileData.viewClicked}
+		/>
+		<Button
+			onClick={getFileDownload}
+			type="next"
+			label="Download"
+			withLoader={pdfFileData.loading}
+		/>
 	</div>
 </div>
-{#if pdfBUfferArray}
+{#if !pdfFileData.loading && pdfFileData.data}
 	<div class="evaluation-container">
-		<OpenPdf pdfUrl={pdfBUfferArray} onSave={handleSave} {savedAnnotations} />
+		<OpenPdf
+			pdfUrl={pdfFileData.data}
+			onSave={handleSave}
+			{savedAnnotations}
+			showAnnotations={!pdfFileData.editClicked}
+		/>
 	</div>
+{:else if pdfFileData.loading}
+	<PageSpinner />
 {/if}
 
 <style lang="scss">

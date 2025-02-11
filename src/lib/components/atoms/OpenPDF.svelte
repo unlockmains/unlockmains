@@ -24,6 +24,7 @@
 	export let minScale = 0.5
 	export let onSave: (annotations: IPageAnnotations) => Promise<void> | undefined
 	export let savedAnnotations: IPageAnnotations
+	export let showAnnotations: boolean = false
 
 	let pdfCanvas: HTMLCanvasElement
 	let canvas: HTMLCanvasElement
@@ -520,9 +521,19 @@
 		text.selectAll()
 	}
 
-	function changeScale(newScale: number) {
+	async function changeScale(newScale: number) {
 		scale = Math.max(minScale, Math.min(maxScale, newScale))
-		renderPage(currentPage)
+
+		await saveCurrentPageAnnotations()
+		await renderPage(currentPage)
+
+		fabricCanvas.setZoom(scale)
+		fabricCanvas.setDimensions({
+			width: pdfCanvas.width,
+			height: pdfCanvas.height
+		})
+
+		fabricCanvas.requestRenderAll()
 	}
 
 	async function nextPage() {
@@ -640,83 +651,85 @@
 <svelte:window on:keydown={handleKeyDown} />
 
 <div class="pdf-viewer">
-	<div class="toolbar">
-		<div class="tool-group">
-			<button
-				class="tool-button"
-				class:active={$toolState.currentTool === 'select'}
-				on:click={() => setTool('select')}
-			>
-				<PDFAnnotateIcons name="hand" />
-			</button>
-			<button
-				class="tool-button"
-				class:active={$toolState.currentTool === 'rectangle'}
-				on:click={() => setTool('rectangle')}
-			>
-				<PDFAnnotateIcons name="rect" />
-			</button>
-			<button
-				class="tool-button"
-				class:active={$toolState.currentTool === 'circle'}
-				on:click={() => setTool('circle')}
-			>
-				<PDFAnnotateIcons name="circle" />
-			</button>
-			<button
-				class="tool-button"
-				class:active={$toolState.currentTool === 'arrow'}
-				on:click={() => setTool('arrow')}
-			>
-				<PDFAnnotateIcons name="arrow" />
-			</button>
-			<button
-				class="tool-button"
-				class:active={$toolState.currentTool === 'freehand'}
-				on:click={() => setTool('freehand')}
-			>
-				<PDFAnnotateIcons name="pencil" />
-			</button>
-			<button
-				class="tool-button"
-				class:active={$toolState.currentTool === 'text'}
-				on:click={() => setTool('text')}
-			>
-				<PDFAnnotateIcons name="text" />
-			</button>
-			<button on:click={saveCurrentPageAnnotations}> <PDFAnnotateIcons name="save" /> </button>
-		</div>
+	{#if !showAnnotations}
+		<div class="toolbar">
+			<div class="tool-group">
+				<button
+					class="tool-button"
+					class:active={$toolState.currentTool === 'select'}
+					on:click={() => setTool('select')}
+				>
+					<PDFAnnotateIcons name="hand" />
+				</button>
+				<button
+					class="tool-button"
+					class:active={$toolState.currentTool === 'rectangle'}
+					on:click={() => setTool('rectangle')}
+				>
+					<PDFAnnotateIcons name="rect" />
+				</button>
+				<button
+					class="tool-button"
+					class:active={$toolState.currentTool === 'circle'}
+					on:click={() => setTool('circle')}
+				>
+					<PDFAnnotateIcons name="circle" />
+				</button>
+				<button
+					class="tool-button"
+					class:active={$toolState.currentTool === 'arrow'}
+					on:click={() => setTool('arrow')}
+				>
+					<PDFAnnotateIcons name="arrow" />
+				</button>
+				<button
+					class="tool-button"
+					class:active={$toolState.currentTool === 'freehand'}
+					on:click={() => setTool('freehand')}
+				>
+					<PDFAnnotateIcons name="pencil" />
+				</button>
+				<button
+					class="tool-button"
+					class:active={$toolState.currentTool === 'text'}
+					on:click={() => setTool('text')}
+				>
+					<PDFAnnotateIcons name="text" />
+				</button>
+				<button on:click={saveCurrentPageAnnotations}> <PDFAnnotateIcons name="save" /> </button>
+			</div>
 
-		<div class="color-picker">
-			<input
-				type="color"
-				value={$toolState.currentColor}
-				on:input={(e) => setColor(e.currentTarget.value)}
-			/>
-		</div>
+			<div class="color-picker">
+				<input
+					type="color"
+					value={$toolState.currentColor}
+					on:input={(e) => setColor(e.currentTarget.value)}
+				/>
+			</div>
 
-		<div class="zoom-controls">
-			<button on:click={() => changeScale(scale - 0.1)} disabled={scale <= minScale}
-				><PDFAnnotateIcons name="zoom-out" /></button
-			>
-			<span>{(scale * 100).toFixed(0)}%</span>
-			<button on:click={() => changeScale(scale + 0.1)} disabled={scale >= maxScale}
-				><PDFAnnotateIcons name="zoom-in" /></button
-			>
-		</div>
+			<div class="zoom-controls">
+				<button on:click={() => changeScale(scale - 0.1)} disabled={scale <= minScale}
+					><PDFAnnotateIcons name="zoom-out" /></button
+				>
+				<span>{(scale * 100).toFixed(0)}%</span>
+				<button on:click={() => changeScale(scale + 0.1)} disabled={scale >= maxScale}
+					><PDFAnnotateIcons name="zoom-in" /></button
+				>
+			</div>
 
-		<button on:click={clearAnnotations}><PDFAnnotateIcons name="eraser" /></button>
+			<button on:click={clearAnnotations}><PDFAnnotateIcons name="eraser" /></button>
 
-		<div class="page-navigation">
-			<button on:click={prevPage} disabled={currentPage === 1}
-				><PDFAnnotateIcons name="prev" /></button
-			>
-			<span>{currentPage} / {numPages}</span>
-			<button on:click={nextPage} disabled={currentPage === numPages}
-				><PDFAnnotateIcons name="next" /></button
-			>
+			<div class="page-navigation">
+				<button on:click={prevPage} disabled={currentPage === 1}
+					><PDFAnnotateIcons name="prev" /></button
+				>
+				<span>{currentPage} / {numPages}</span>
+				<button on:click={nextPage} disabled={currentPage === numPages}
+					><PDFAnnotateIcons name="next" /></button
+				>
+			</div>
 		</div>
-	</div>
+	{/if}
 
 	<div class="canvas-container" class:loading={isLoading}>
 		<div class="thumbnail-sidebar">
@@ -822,13 +835,12 @@
 		border: 1px solid #ccc;
 		overflow: auto;
 		background: #f0f0f0;
-		width: fit-content;
 		display: flex;
 		width: 100%;
 
 		.canvas-wrapper {
 			position: relative;
-			width: fit-content;
+			width: 80%;
 			margin: 0 auto;
 
 			.pdf-canvas {
@@ -845,7 +857,7 @@
 		}
 
 		.thumbnail-sidebar {
-			width: 200px;
+			width: 20%;
 			background: #f5f5f5;
 			border-right: 1px solid #ccc;
 			overflow: hidden;

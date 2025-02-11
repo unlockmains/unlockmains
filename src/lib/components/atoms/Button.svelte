@@ -10,7 +10,8 @@
 		| 'submit'
 		| 'home-register'
 		| 'next'
-		| 'back' = 'default'
+		| 'back'
+		| 'view' = 'default'
 	export let onClick: (event: MouseEvent) => void = () => {}
 	export let withLoader: boolean = false
 	export let disabled: boolean = false
@@ -164,16 +165,26 @@
 			--btn-font-weight: 400;
 		}
 
+		&.view {
+			--btn-width: 10em;
+			--btn-height: 3em;
+			--btn-background: var(--color-peach-200);
+			--btn-background-hover: var(--color-peach-300);
+			--btn-color: var(--color-black-900);
+			--btn-box-color: var(--color-black-900);
+			--btn-font-weight: 400;
+		}
+
 		&:disabled {
 			cursor: not-allowed;
-			--btn-background: var(--color-zinc-400);
-			--btn-background-hover: var(--color-zinc-400);
-			--btn-box-color: var(--color-zinc-700);
-			--btn-color: var(--color-white-900);
+			--btn-background: var(--color-zinc-400) !important;
+			--btn-background-hover: var(--color-zinc-400) !important;
+			--btn-box-color: var(--color-zinc-700) !important;
+			--btn-color: var(--color-white-900) !important;
 
 			&:active {
-				transform: translateY(0);
-				box-shadow: var(--btn-box-shadow);
+				transform: translateY(0) !important;
+				box-shadow: var(--btn-box-shadow) !important;
 			}
 		}
 

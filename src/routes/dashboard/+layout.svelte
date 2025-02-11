@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Sidebar from '$lib/components/molecules/Sidebar.svelte'
 	import { alwaysShow, sideNavOpen, toggleSideNav } from '$lib/stores/sideNavStore'
+	import type { IUser } from '$lib/types'
 	import type { Snippet } from 'svelte'
 	import { Toaster } from 'svelte-sonner'
 	let { data, children } = $props<{
@@ -8,7 +9,7 @@
 		parentSlug: string
 		userType: string
 		adminApproved: boolean
-		user: { name: string; email: string; photo: string }
+		user: IUser
 		children: Snippet
 	}>()
 </script>
@@ -19,7 +20,7 @@
 
 <div>
 	{#if data.adminApproved}
-		<Sidebar slug={data.slug} parentSlug={data.parentSlug} />
+		<Sidebar slug={data.slug} parentSlug={data.parentSlug} user={data.user} />
 	{/if}
 	{#if $sideNavOpen && !$alwaysShow}
 		<div class="backdrop" on:click={toggleSideNav}></div>

@@ -134,7 +134,7 @@
 				justify-content: space-between;
 				width: 6em;
 				gap: 6px;
-				border: 2px dashed black;
+				border: 2px dashed var(--color-black-900);
 				border-radius: 8px;
 				padding: 0.2em;
 				margin: 0.2em;

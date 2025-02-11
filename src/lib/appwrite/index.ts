@@ -1,4 +1,3 @@
-// src/lib/server/appwrite.js
 import { Client, Account, Databases, Storage, Teams } from 'node-appwrite';
 import { APPWRITE_KEY } from '$env/static/private';
 import { PUBLIC_APPWRITE_ENDPOINT, PUBLIC_APPWRITE_PROJECT } from '$env/static/public';

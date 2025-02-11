@@ -1,11 +1,9 @@
 import { PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB } from '$env/static/public';
 import { createSessionClient, SESSION_COOKIE } from '$lib/appwrite';
 import { authStore } from '$lib/stores/userStore';
-import type { IUser } from '$lib/types';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import { Query } from 'node-appwrite';
-import { get } from 'svelte/store';
 
 export const authentication: Handle = async ({ event, resolve }) => {
   try {

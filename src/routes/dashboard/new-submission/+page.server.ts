@@ -9,8 +9,8 @@ import { EQuestionTypes, ESubmissionStatus } from "$lib/types/enums";
 export const ssr = true;
 
 export const load: PageServerLoad = async ({ locals: { user, databases } }) => {
-    if (!user) {
-        redirect(303, '/')
+    if (!user || user.profile.user_type !== 'STUDENT') {
+        redirect(303, '/dashboard')
     }
     const studentDocument = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB,
         [

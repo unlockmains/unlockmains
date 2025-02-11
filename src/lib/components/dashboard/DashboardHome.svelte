@@ -57,5 +57,14 @@
 			height: 100vh;
 			background-color: var(--color-zinc-300);
 		}
+
+		@media only screen and (max-width: 768px) {
+			flex-direction: column;
+
+			.dashboard-left,
+			.dashboard-right {
+				height: 100%;
+			}
+		}
 	}
 </style>

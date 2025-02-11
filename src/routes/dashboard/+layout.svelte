@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Sidebar from '$lib/components/molecules/Sidebar.svelte'
-	import { alwaysShow, sideNavOpen, toggleSideNav } from '$lib/stores/sideNavStore'
+	import { alwaysShow, sideNavOpen, toggleSideNav, sideNavCollapse } from '$lib/stores/sideNavStore'
 	import type { IUser } from '$lib/types'
 	import type { Snippet } from 'svelte'
 	import { Toaster } from 'svelte-sonner'
@@ -25,7 +25,7 @@
 	{#if $sideNavOpen && !$alwaysShow}
 		<div class="backdrop" on:click={toggleSideNav}></div>
 	{/if}
-	<main class:sideBarSpace={$alwaysShow}>
+	<main class:sideBarSpace={$alwaysShow} class:collapse={$sideNavCollapse}>
 		{@render children()}
 	</main>
 </div>
@@ -56,6 +56,11 @@
 
 		&.sideBarSpace {
 			margin-left: max(15rem, 15%);
+		}
+
+		&.collapse {
+			margin-left: 6em;
+			width: calc(100% - 6em);
 		}
 
 		@media only screen and (max-width: 768px) {

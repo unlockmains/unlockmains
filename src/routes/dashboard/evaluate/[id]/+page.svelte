@@ -1,10 +1,14 @@
 <script lang="ts">
 	import { browser } from '$app/environment'
+	import { enhance } from '$app/forms'
 	import { page } from '$app/stores'
 	import Button from '$lib/components/atoms/Button.svelte'
+	import FileUpload from '$lib/components/atoms/FileUpload.svelte'
+	import Input from '$lib/components/atoms/Input.svelte'
 	import OpenPdf from '$lib/components/atoms/OpenPDF.svelte'
 	import PageSpinner from '$lib/components/atoms/PageSpinner.svelte'
 	import type { IPageAnnotations, IRecentAssignments } from '$lib/types'
+	import type { SubmitFunction } from '@sveltejs/kit'
 	import { onMount } from 'svelte'
 	let assignmentToView = $state<IRecentAssignments>()
 	let pdfFileData = $state<{
@@ -13,12 +17,16 @@
 		data?: Uint8Array
 		viewClicked: boolean
 		editClicked: boolean
+		offlineEvaluateClicked: boolean
 	}>({
 		loading: false,
 		error: null,
 		viewClicked: false,
-		editClicked: false
+		editClicked: false,
+		offlineEvaluateClicked: false
 	})
+
+	let loadingSubmission = $state(false)
 
 	onMount(() => {
 		const allAssignments = JSON.parse(localStorage.getItem('recentAssignments') as string)
@@ -83,6 +91,18 @@
 		}
 		pdfFileData.editClicked = true
 	}
+
+	const makeFileOfflineEvaluate = async () => {
+		pdfFileData.offlineEvaluateClicked = true
+	}
+
+	const handleEvaluationSubmission: SubmitFunction = () => {
+		loadingSubmission = true
+		return async ({ update }) => {
+			update()
+			loadingSubmission = false
+		}
+	}
 </script>
 
 <div><h1>Evaluate</h1></div>
@@ -132,10 +152,18 @@
 		/>
 		<Button
 			type="view"
+			label="Offline Evaluate"
+			onClick={makeFileOfflineEvaluate}
+			withLoader={pdfFileData.loading}
+			disabled={pdfFileData.loading}
+			style="--btn-background: var(--color-cyan-100);--btn-background-hover: var(--color-cyan-300);"
+		/>
+		<Button
+			type="view"
 			label="Edit"
 			onClick={makeFileEditable}
 			withLoader={pdfFileData.loading}
-			disabled={pdfFileData.loading || pdfFileData.editClicked}
+			disabled={true || pdfFileData.loading || pdfFileData.editClicked}
 			style="--btn-background: var(--color-yellow-100);--btn-background-hover: var(--color-yellow-500);"
 		/>
 		<Button
@@ -153,7 +181,7 @@
 		/>
 	</div>
 </div>
-{#if !pdfFileData.loading && pdfFileData.data}
+{#if !pdfFileData.loading && pdfFileData.data && !pdfFileData.offlineEvaluateClicked}
 	<div class="evaluation-container">
 		<OpenPdf
 			pdfUrl={pdfFileData.data}
@@ -162,6 +190,45 @@
 			showAnnotations={!pdfFileData.editClicked}
 		/>
 	</div>
+{:else if !pdfFileData.loading && pdfFileData.offlineEvaluateClicked}
+	<form
+		class="offline-evaluation-container"
+		enctype="multipart/form-data"
+		method="post"
+		action="?/offlineEvaluation"
+		use:enhance={handleEvaluationSubmission}
+	>
+		<input name="id" value={$page.params.id} type="hidden" />
+		<div>
+			<p class="label">Please upload the evaluated file</p>
+			<FileUpload name="evaluated-files" />
+		</div>
+		<div>
+			<Input
+				id="submitted-quantity"
+				name="submitted-quantity"
+				placeholder="Enter Number"
+				type="number"
+				label="Number of Questions Submitted"
+				value=""
+				style="--height: 3em;--font-size: 0.8em;--border-size-focus: 2px; --border-color-focus: var(--custom-color-brand);"
+				min={1}
+			/>
+		</div>
+		<div>
+			<Input
+				id="remarks"
+				name="remarks"
+				placeholder="Enter Remarks"
+				type="textarea"
+				label="Enter remarks if any"
+				value=""
+				rows={10}
+				cols={50}
+			/>
+		</div>
+		<Button type="submit" label="Submit" withLoader={pdfFileData.loading} />
+	</form>
 {:else if pdfFileData.loading}
 	<PageSpinner />
 {/if}
@@ -210,6 +277,26 @@
 			flex-flow: row wrap;
 			align-self: flex-end;
 			gap: 2em;
+			justify-content: space-between;
+		}
+	}
+
+	.offline-evaluation-container {
+		box-shadow: 0 0 4px 4px var(--color-zinc-300);
+		border-radius: 4px;
+		width: 95%;
+		padding: 1em;
+		background-color: var(--color-white-900);
+		display: flex;
+		flex-flow: column wrap;
+		align-items: flex-start;
+		gap: 1em;
+		.label {
+			text-transform: capitalize;
+			display: block;
+			margin: 5px 0;
+			color: var(--custom-color-secondary);
+			font-size: 0.8rem;
 		}
 	}
 </style>

@@ -9,11 +9,24 @@
 
 	let popoverContent: HTMLDivElement
 	let showPopoverContent: boolean = false
+	let image: string
 	const togglePopover = () => {
 		showPopoverContent = !showPopoverContent
 	}
 	const hidePopover = () => {
 		showPopoverContent = false
+	}
+	const getUserAvatar = async () => {
+		if (user.picture) {
+			return user.picture
+		} else {
+			const result = await fetch('/api/user/avatar?user=' + user.name)
+			const arrayBufferView = new Uint8Array(await result.arrayBuffer())
+			const blob = new Blob([arrayBufferView], { type: 'image/jpeg' })
+			const urlCreator = window.URL || window.webkitURL
+			const imageUrl = urlCreator.createObjectURL(blob)
+			image = imageUrl
+		}
 	}
 </script>
 
@@ -21,6 +34,8 @@
 	<button class="avatar" on:click={togglePopover}>
 		{#if user.picture}
 			<img src={user.picture} alt="user avatar" style={`height: 100%;width: 100%`} />
+		{:else if image}
+			<img src={image} alt="user avatar" style={`height: 100%;width: 100%`} />
 		{:else}
 			<UserAvatarIcon />
 		{/if}
@@ -39,6 +54,7 @@
 		<ul>
 			<li><a href="/account">Account</a></li>
 			<li><a href="#profile">Profile</a></li>
+			<li><button on:click={getUserAvatar}>Get User Avatar</button></li>
 			<Button label="Logout" onClick={() => goto('/auth/logout')} />
 		</ul>
 	</div>

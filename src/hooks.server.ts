@@ -7,11 +7,12 @@ import { Query } from 'node-appwrite';
 
 export const authentication: Handle = async ({ event, resolve }) => {
   try {
-    const { account, databases, storage, teams } = createSessionClient(event);
+    const { account, databases, storage, teams, avatars } = createSessionClient(event);
     event.locals.databases = databases;
     event.locals.storage = storage;
     event.locals.account = account;
     event.locals.teams = teams;
+    event.locals.avatars = avatars;
     if (event.cookies.get(SESSION_COOKIE)) {
       const user = await account.get();
       const userProfile = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB, [

@@ -16,7 +16,7 @@
 
 	let { form, data } = $props<{
 		form: ActionData
-		data: { questionTypes: INewSubmissionType[] }
+		data: { questionTypes: INewSubmissionType[]; studentProfile: string }
 	}>()
 
 	let radioValue = $state<'yes' | 'no' | ''>('')
@@ -179,6 +179,7 @@
 			bind:userSelected={radioValue}
 		/>
 	</div>
+	<input name="student-profile" value={data.studentProfile} type="hidden" />
 	<div style="align-self: center;">
 		<Button
 			label={'Submit'}

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { IRecentEvaluation } from '$lib/types'
-	import { onMount } from 'svelte'
+	import { onDestroy, onMount } from 'svelte'
 	import Button from '../atoms/Button.svelte'
 	import SkeletonLoading from '../atoms/SkeletonLoading.svelte'
 	import PdfIcon from '../icons/PDFIcon.svelte'
@@ -8,17 +8,45 @@
 	let loading = $state(false)
 	let evaluations = $state<IRecentEvaluation[]>([])
 
-	const getRecentEvaluations = async () => {
-		loading = true
-		const response = await fetch('/api/recent-evaluation')
-		if (response.ok) {
-			evaluations = await response.json()
-			loading = false
+	let eventSource: EventSource
+	let connectionStatus = 'Disconnected'
+
+	onMount(() => {
+		setupEventSource()
+	})
+
+	function setupEventSource() {
+		eventSource = new EventSource('/api/recent-evaluation-sse')
+
+		eventSource.onopen = () => {
+			connectionStatus = 'Connected'
+		}
+
+		eventSource.onmessage = (event) => {
+			try {
+				const data = JSON.parse(event.data)
+				if (data.connected) {
+					console.log('SSE Connection established')
+					return
+				}
+				evaluations = data
+			} catch (error) {
+				console.error('Error parsing event data:', error)
+			}
+		}
+
+		eventSource.onerror = (error) => {
+			console.error('SSE Error:', error)
+			connectionStatus = 'Error - Reconnecting...'
+			eventSource.close()
+			setTimeout(setupEventSource, 5000)
 		}
 	}
 
-	onMount(() => {
-		getRecentEvaluations()
+	onDestroy(() => {
+		if (eventSource) {
+			eventSource.close()
+		}
 	})
 </script>
 

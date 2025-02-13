@@ -163,3 +163,27 @@ export interface IRecentAssignments {
         is_pyq: boolean;
     }
 }
+
+export interface IUserProfile {
+    $id: string;
+    $createdAt: string;
+    $updatedAt: string;
+    user_type: "STUDENT" | "EVALUATOR" | "ADMIN";
+    admin_approved: boolean;
+    registration_date: string;
+    user_id: string;
+}
+
+export interface IStudentProfile {
+    $id: string;
+    $createdAt: string;
+    $updatedAt: string;
+    gs_submissions_left: number;
+    eassy_submissions_left: number;
+    optional_submissions_left: number;
+    unlimited_plan: boolean;
+    plan_active: boolean;
+    plan_start: string;
+    free_plan: boolean;
+    user_profile: IUserProfile;
+}

@@ -50,11 +50,10 @@
 		</div>
 		{#if user.profile.user_type === 'STUDENT'}
 			<div class="section">
-				<Button label="🗄️" type="nav" onClick={() => goto(`${parentSlug}/new-submission`)}>
-					<!-- <FileIcon /> -->
-
+				<a class="section-link" href="/dashboard/new-submission">
+					<SideBarIcons type="file" />
 					<span class="link-text">New Submission</span>
-				</Button>
+				</a>
 			</div>
 
 			<div class="section">
@@ -184,7 +183,7 @@
 					font-size: 0.9em;
 					font-weight: 300;
 					width: 100%;
-					height: 4em;
+					height: 5em;
 					display: flex;
 					align-items: center;
 					gap: 0.5em;

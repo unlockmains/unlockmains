@@ -128,7 +128,9 @@ interface ISubmittedFile {
 interface IEvaluation {
     remarks: string | null;
     $id: string;
-    evaluatedFiles: string[];
+    evaluatedFiles: { $id: string, file_id: string }[];
+    evaluation_start: string;
+    evaluation_end: string;
 }
 
 export interface IRecentEvaluation {

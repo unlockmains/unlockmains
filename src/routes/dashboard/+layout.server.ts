@@ -15,6 +15,7 @@ export const load: PageServerLoad = async ({ route, locals: { user } }) => {
             slug: route.id,
             parentSlug: `/${route.id.split("/")[1]}`,
             userType: user.profile.user_type,
-            adminApproved: user.profile.admin_approved
+            adminApproved: user.profile.admin_approved,
+            user
       };
 }

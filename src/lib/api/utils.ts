@@ -8,3 +8,15 @@ export const getFileWithUpdatedFileName = ({ file, fileId, additionalName }: { f
     });
     return fileToUpload;
 }
+
+export const convertISODateToDate = (date: string) => {
+    const dateParts = date.split('T');
+    const dateTimeParts = dateParts[0].split('-');
+    const timeParts = dateParts[1].split(':');
+    const year = dateTimeParts[0];
+    const month = dateTimeParts[1];
+    const day = dateTimeParts[2];
+    const hour = timeParts[0];
+    const minute = timeParts[1];
+    return `${day}-${month}-${year} ${hour}:${minute}`
+}

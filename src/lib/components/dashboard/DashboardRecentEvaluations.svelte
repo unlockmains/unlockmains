@@ -4,6 +4,8 @@
 	import Button from '../atoms/Button.svelte'
 	import SkeletonLoading from '../atoms/SkeletonLoading.svelte'
 	import PdfIcon from '../icons/PDFIcon.svelte'
+	import { convertISODateToDate } from '$lib/api/utils'
+	import { browser } from '$app/environment'
 
 	let loading = $state(false)
 	let evaluations = $state<IRecentEvaluation[]>([])
@@ -11,8 +13,15 @@
 	let eventSource: EventSource
 	let connectionStatus = 'Disconnected'
 
-	onMount(() => {
+	onMount(async () => {
+		loading = true
 		setupEventSource()
+		const response = await fetch('/api/recent-evaluation')
+		if (response.ok) {
+			const data = await response.json()
+			evaluations = data
+			loading = false
+		}
 	})
 
 	function setupEventSource() {
@@ -68,11 +77,32 @@
 			</div>
 		{:else}
 			{#each evaluations as evaluation}
-				<div class="each-evaluation">
-					<PdfIcon />
-					<div class="date">{evaluation.$updatedAt}</div>
-					<Button type="link" label="View" />
-				</div>
+				<a
+					href={`/dashboard/view-evaluation/${evaluation.$id}`}
+					onclick={() =>
+						browser && localStorage.setItem('view-evaluation', JSON.stringify(evaluation))}
+					class="each-evaluation"
+				>
+					<PdfIcon color="#414040" />
+					<div class="date">
+						<span>Evaluation Completed</span>
+						{convertISODateToDate(evaluation.evaluations[0].evaluation_start)}
+					</div>
+					<div class="date">
+						<span>Questions Evaluated</span>
+						{evaluation.total_questions}
+					</div>
+					<div class="date">
+						<span>Questions Type</span>
+						{evaluation.question_type_lvl1}
+					</div>
+					{#if evaluation.question_type_lvl2}
+						<div class="date">
+							<span>Questions Type in GS</span>
+							{evaluation.question_type_lvl2}
+						</div>
+					{/if}
+				</a>
 			{/each}
 		{/if}
 	</div>
@@ -96,16 +126,23 @@
 				display: flex;
 				flex-direction: column;
 				align-items: center;
-				justify-content: center;
+				justify-content: space-around;
 				background-color: var(--color-yellow-100);
-				min-height: 10em;
+				min-height: 14em;
 				border-radius: 1em;
 				font-size: 0.8em;
 				gap: 0.5em;
-				width: 100%;
+				width: 33%;
+				text-decoration: none;
+				color: var(--color-zinc-800);
+				padding: 0.3em;
 
 				.date {
 					font-size: 0.8em;
+				}
+
+				&:hover {
+					background-color: var(--color-yellow-500);
 				}
 			}
 
@@ -114,7 +151,7 @@
 				flex-direction: row;
 				align-items: center;
 				justify-content: center;
-				min-height: 10em;
+				min-height: 14em;
 				border-radius: 1em;
 				font-size: 0.8em;
 				gap: 0.5em;

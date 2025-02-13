@@ -3,8 +3,7 @@
 	import InputOtp from '$lib/components/atoms/InputOtp.svelte'
 	import { goto } from '$app/navigation'
 	import { AuthErrorCode } from '$lib/types/enums'
-	let otpValue: string[] = []
-	$: token = otpValue.join('')
+	let otpValue: string = ''
 	let loadingOtp: boolean = false
 	export let data
 
@@ -36,8 +35,11 @@
 						throw new Error('An unexpected error occurred. Please try again later.')
 				}
 			}
-			// need to change to something to replace login button on header
-			goto('/dashboard', { replaceState: true })
+
+			if (response.ok) {
+				loadingOtp = false
+				await goto('/dashboard', { replaceState: true })
+			}
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error('Authentication error:', error.message)
@@ -67,10 +69,11 @@
 			type="email-login"
 			withLoader={loadingOtp}
 			disabled={loadingOtp}
-			onClick={() => handleOtpValidationAndLogin(token)}
+			onClick={() => handleOtpValidationAndLogin(otpValue)}
 		/>
-		<input type="hidden" name="token" value={token} />
+		<input type="hidden" name="token" value={otpValue} />
 	</div>
+	<p>*Please check your SPAM folder also if you don't receive the email.</p>
 </div>
 
 <style lang="scss">
@@ -95,6 +98,11 @@
 			flex-direction: column;
 			align-items: flex-start;
 			gap: 0.5rem;
+		}
+		p {
+			font-size: 0.75em;
+			color: var(--color-zinc-500);
+			font-style: italic;
 		}
 	}
 </style>

@@ -12,8 +12,15 @@
 	let eventSource: EventSource
 	let connectionStatus = 'Disconnected'
 
-	onMount(() => {
+	onMount(async () => {
+		loading = true
 		setupEventSource()
+		const response = await fetch('/api/recent-evaluation')
+		if (response.ok) {
+			const data = await response.json()
+			assignments = data
+			loading = false
+		}
 	})
 
 	function setupEventSource() {
@@ -103,7 +110,7 @@
 				align-items: center;
 				justify-content: center;
 				background-color: var(--color-yellow-100);
-				min-height: 10em;
+				min-height: 14em;
 				border-radius: 1em;
 				font-size: 0.8em;
 				gap: 0.5em;
@@ -111,6 +118,10 @@
 
 				.date {
 					font-size: 0.8em;
+				}
+
+				&:hover {
+					background-color: var(--color-yellow-500);
 				}
 			}
 

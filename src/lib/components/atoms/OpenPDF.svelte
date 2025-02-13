@@ -22,8 +22,8 @@
 	export let initialScale = 1.0
 	export let maxScale = 3.0
 	export let minScale = 0.5
-	export let onSave: (annotations: IPageAnnotations) => Promise<void> | undefined
-	export let savedAnnotations: IPageAnnotations
+	export let onSave: ((annotations: IPageAnnotations) => Promise<void>) | undefined = undefined
+	export let savedAnnotations: IPageAnnotations | undefined = undefined
 	export let showAnnotations: boolean = false
 
 	let pdfCanvas: HTMLCanvasElement

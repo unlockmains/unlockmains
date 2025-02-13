@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { goto } from '$app/navigation'
 	import {
 		alwaysShow,
 		sideNavOpen,
@@ -9,11 +8,10 @@
 	} from '$lib/stores/sideNavStore'
 	import { topBannerVisible } from '$lib/stores/topBannerStore'
 	import type { IUser } from '$lib/types'
-	import Button from '../atoms/Button.svelte'
 	import CrossIcon from '../icons/CrossIcon.svelte'
 	import SideBarIcons from '../icons/SideBarIcons.svelte'
 
-	let { slug, parentSlug, user } = $props<{
+	let { user } = $props<{
 		slug: string
 		parentSlug: string
 		user: IUser

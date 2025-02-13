@@ -1,9 +1,9 @@
 import { PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB } from '$env/static/public';
 import { createSessionClient, SESSION_COOKIE } from '$lib/appwrite';
-import { authStore } from '$lib/stores/userStore';
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import { Query } from 'node-appwrite';
+import { cleanupCache, getUserFromCache, isUserInformationPresentInCache, setUserToCache, userCache } from './routes/auth/cache';
 
 export const authentication: Handle = async ({ event, resolve }) => {
   try {
@@ -14,16 +14,22 @@ export const authentication: Handle = async ({ event, resolve }) => {
     event.locals.teams = teams;
     event.locals.avatars = avatars;
     event.locals.functions = functions;
-    if (event.cookies.get(SESSION_COOKIE)) {
-      const user = await account.get();
-      const userProfile = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB, [
-        Query.equal("user_id", user?.$id)
-      ]);
-      const completeUser = {
-        ...user, team: (await teams.list()).teams[0], profile: userProfile.documents[0]
-      };
-      event.locals.user = completeUser;
-      authStore.setAuth(completeUser)
+    const sessionCookie = event.cookies.get(SESSION_COOKIE);
+    if (sessionCookie) {
+      if (isUserInformationPresentInCache(sessionCookie)) {
+        event.locals.user = getUserFromCache(sessionCookie);
+      } else {
+        const user = await account.get();
+        const userProfile = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB, [
+          Query.equal("user_id", user?.$id)
+        ]);
+        const completeUser = {
+          ...user, team: (await teams.list()).teams[0], profile: userProfile.documents[0]
+        };
+        setUserToCache(sessionCookie, completeUser);
+        event.locals.user = completeUser;
+      }
+      cleanupCache();
     }
   } catch (err) {
     console.error("error session", err)

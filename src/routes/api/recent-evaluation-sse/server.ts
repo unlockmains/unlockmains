@@ -22,7 +22,7 @@ export const getRecentEvaluations = async (databases: Databases, userId: string)
         ])
         const evaluationRemarks = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_REMARK_DB, [
             Query.equal('student_submissions', submission.$id),
-            Query.select(['$id', 'remarks']),
+            Query.select(['$id', 'remarks', 'evaluation_start', 'evaluation_end']),
         ])
 
         const evaluations = await Promise.all(evaluationRemarks.documents.map(async (evaluationRemark) => {

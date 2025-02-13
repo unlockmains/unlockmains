@@ -1,4 +1,4 @@
-import type { Account, Client, Databases, Models, Storage, Teams } from 'node-appwrite';
+import type { Account, Client, Databases, Models, Storage, Teams, Avatars, Functions } from 'node-appwrite';
 declare global {
 	namespace App {
 		// interface Error {}
@@ -9,6 +9,8 @@ declare global {
 			storage: Storage,
 			teams: Teams,
 			toastMessage: string | undefined,
+			avatars: Avatars,
+			functions: Functions,
 		}
 		interface PageData {
 			user: User | null

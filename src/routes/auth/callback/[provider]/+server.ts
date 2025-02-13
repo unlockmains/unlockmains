@@ -8,7 +8,6 @@ import {
 } from "$env/static/public";
 import { AuthError } from "$lib/types/errors";
 import { AuthErrorCode } from "$lib/types/enums";
-import { authStore } from "$lib/stores/userStore";
 
 export const GET: RequestHandler = async ({ url, cookies, params }) => {
   const userId = url.searchParams.get("userId");
@@ -28,7 +27,15 @@ export const GET: RequestHandler = async ({ url, cookies, params }) => {
   const { account, teams, databases } = createAdminClient();
   try {
     const session = await account.createSession(userId, secret);
+    // if (provider === "google") {
+    //   const providerAccessToken = session.providerAccessToken;
+    //   console.log("providerAccessToken", session, providerAccessToken);
+    //   const response = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${providerAccessToken}`);
+    //   console.log(response);
+    //   const json = await response.json();
+    //   console.log(json);
 
+    // }
     const userProfile = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB, [
       Query.equal("user_id", userId)
     ]);

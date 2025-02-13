@@ -5,6 +5,7 @@ import { ID, Query } from "node-appwrite";
 import { PUBLIC_APPWRITE_BUCKET, PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_ENDPOINT, PUBLIC_APPWRITE_PROJECT, PUBLIC_APPWRITE_SUBMITTED_FILES_DB, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, PUBLIC_APPWRITE_STUDENT_SUBMISSION_DB } from "$env/static/public";
 import { getFileWithUpdatedFileName } from "$lib/api/utils";
 import { EQuestionTypes, ESubmissionStatus } from "$lib/types/enums";
+import type { IStudentProfile } from "$lib/types";
 
 export const ssr = true;
 
@@ -24,7 +25,7 @@ export const load: PageServerLoad = async ({ locals: { user, databases } }) => {
         { text: EQuestionTypes.OPTIONAL, value: EQuestionTypes.OPTIONAL, count: studentProfile.optional_submissions_left, disabled: !studentProfile.optional_submissions_left },
         { text: EQuestionTypes.ESSAY, value: EQuestionTypes.ESSAY, count: studentProfile.eassy_submissions_left, disabled: !studentProfile.eassy_submissions_left },
     ]
-    return { user, questionTypes }
+    return { user, questionTypes, studentProfile: JSON.stringify(studentProfile) }
 }
 
 export const actions: Actions = {
@@ -72,7 +73,16 @@ export const actions: Actions = {
                 }
             }
             event.cookies.set('toastMessage', "Submission successful", { path: '/' });
-
+            const studentProfile = JSON.parse(formData.get('student-profile') as string) as IStudentProfile;
+            const fieldToBeUpdated: Record<string, number> = {};
+            if (type === "General Studies") {
+                fieldToBeUpdated["gs_submissions_left"] = studentProfile.gs_submissions_left - Number(quantity);
+            } else if (type === "Optional") {
+                fieldToBeUpdated["optional_submissions_left"] = studentProfile.optional_submissions_left - Number(quantity);
+            } else if (type === "Essay") {
+                fieldToBeUpdated["eassy_submissions_left"] = studentProfile.eassy_submissions_left - Number(quantity);
+            }
+            await databases.updateDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, studentProfile.$id, fieldToBeUpdated);
             throw redirect(303, "/dashboard");
         } catch (err) {
             if (err instanceof Error) {

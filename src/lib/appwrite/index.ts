@@ -1,4 +1,4 @@
-import { Client, Account, Databases, Storage, Teams } from 'node-appwrite';
+import { Client, Account, Databases, Storage, Teams, Avatars, Functions } from 'node-appwrite';
 import { APPWRITE_KEY } from '$env/static/private';
 import { PUBLIC_APPWRITE_ENDPOINT, PUBLIC_APPWRITE_PROJECT } from '$env/static/public';
 import type { RequestEvent } from '@sveltejs/kit';
@@ -24,6 +24,12 @@ export function createAdminClient() {
         },
         get teams() {
             return new Teams(client);
+        },
+        get avatars() {
+            return new Avatars(client);
+        },
+        get functions() {
+            return new Functions(client);
         }
     };
 }
@@ -48,6 +54,12 @@ export function createSessionClient(event: RequestEvent<Partial<Record<string, s
         },
         get teams() {
             return new Teams(client);
+        },
+        get avatars() {
+            return new Avatars(client);
+        },
+        get functions() {
+            return new Functions(client);
         }
     };
 }

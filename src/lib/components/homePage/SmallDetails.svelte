@@ -54,6 +54,10 @@
 		position: relative;
 		padding: 5%;
 
+		.container {
+			max-width: 100%;
+		}
+
 		.left-bg {
 			background: url('/lib/shapes.svg') center center;
 			background-size: cover;
@@ -70,7 +74,7 @@
 			height: 8em;
 			width: 2em;
 			right: 5%;
-			top: 40%;
+			top: 55%;
 			z-index: 10;
 			transform: scale(-1);
 		}

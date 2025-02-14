@@ -3,6 +3,7 @@
 	import InputOtp from '$lib/components/atoms/InputOtp.svelte'
 	import { goto } from '$app/navigation'
 	import { AuthErrorCode } from '$lib/types/enums'
+	import { browser } from '$app/environment'
 	let otpValue: string = ''
 	let loadingOtp: boolean = false
 	export let data
@@ -13,7 +14,8 @@
 			const searchParams = new URLSearchParams({
 				userId: data.userId,
 				secret: token,
-				userType: 'student'
+				userType:
+					browser && localStorage.getItem('userType') === 'evaluator' ? 'evaluator' : 'student'
 			})
 
 			const response = await fetch(`/auth/callback/otp?${searchParams}`)

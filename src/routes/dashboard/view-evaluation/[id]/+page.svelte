@@ -15,14 +15,10 @@
 		error: string | null
 		data?: Uint8Array
 		viewClicked: boolean
-		editClicked: boolean
-		offlineEvaluateClicked: boolean
 	}>({
 		loading: false,
 		error: null,
-		viewClicked: false,
-		editClicked: false,
-		offlineEvaluateClicked: false
+		viewClicked: false
 	})
 
 	let loadingEvaluation = $state(false)
@@ -142,11 +138,11 @@
 		/>
 	</div>
 </div>
-{#if !pdfFileData.loading && pdfFileData.data && !pdfFileData.offlineEvaluateClicked}
+{#if !pdfFileData.loading && pdfFileData.data}
 	<div class="evaluation-container">
-		<OpenPdf pdfUrl={pdfFileData.data} showAnnotations={!pdfFileData.editClicked} />
+		<OpenPdf pdfUrl={pdfFileData.data} showAnnotations={false} />
 	</div>
-{:else if !pdfFileData.loading && pdfFileData.offlineEvaluateClicked}
+{:else if !pdfFileData.loading && false}
 	<form
 		class="offline-evaluation-container"
 		enctype="multipart/form-data"

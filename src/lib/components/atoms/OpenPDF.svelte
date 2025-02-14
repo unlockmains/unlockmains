@@ -651,8 +651,8 @@
 <svelte:window on:keydown={handleKeyDown} />
 
 <div class="pdf-viewer">
-	{#if !showAnnotations}
-		<div class="toolbar">
+	<div class="toolbar">
+		{#if showAnnotations}
 			<div class="tool-group">
 				<button
 					class="tool-button"
@@ -698,7 +698,6 @@
 				</button>
 				<button on:click={saveCurrentPageAnnotations}> <PDFAnnotateIcons name="save" /> </button>
 			</div>
-
 			<div class="color-picker">
 				<input
 					type="color"
@@ -706,30 +705,28 @@
 					on:input={(e) => setColor(e.currentTarget.value)}
 				/>
 			</div>
-
-			<div class="zoom-controls">
-				<button on:click={() => changeScale(scale - 0.1)} disabled={scale <= minScale}
-					><PDFAnnotateIcons name="zoom-out" /></button
-				>
-				<span>{(scale * 100).toFixed(0)}%</span>
-				<button on:click={() => changeScale(scale + 0.1)} disabled={scale >= maxScale}
-					><PDFAnnotateIcons name="zoom-in" /></button
-				>
-			</div>
-
 			<button on:click={clearAnnotations}><PDFAnnotateIcons name="eraser" /></button>
-
-			<div class="page-navigation">
-				<button on:click={prevPage} disabled={currentPage === 1}
-					><PDFAnnotateIcons name="prev" /></button
-				>
-				<span>{currentPage} / {numPages}</span>
-				<button on:click={nextPage} disabled={currentPage === numPages}
-					><PDFAnnotateIcons name="next" /></button
-				>
-			</div>
+		{/if}
+		<div class="zoom-controls">
+			<button on:click={() => changeScale(scale - 0.1)} disabled={scale <= minScale}
+				><PDFAnnotateIcons name="zoom-out" /></button
+			>
+			<span>{(scale * 100).toFixed(0)}%</span>
+			<button on:click={() => changeScale(scale + 0.1)} disabled={scale >= maxScale}
+				><PDFAnnotateIcons name="zoom-in" /></button
+			>
 		</div>
-	{/if}
+
+		<div class="page-navigation">
+			<button on:click={prevPage} disabled={currentPage === 1}
+				><PDFAnnotateIcons name="prev" /></button
+			>
+			<span>{currentPage} / {numPages}</span>
+			<button on:click={nextPage} disabled={currentPage === numPages}
+				><PDFAnnotateIcons name="next" /></button
+			>
+		</div>
+	</div>
 
 	<div class="canvas-container" class:loading={isLoading}>
 		<div class="thumbnail-sidebar">

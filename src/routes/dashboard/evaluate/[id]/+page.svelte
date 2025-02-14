@@ -187,7 +187,7 @@
 			pdfUrl={pdfFileData.data}
 			onSave={handleSave}
 			{savedAnnotations}
-			showAnnotations={!pdfFileData.editClicked}
+			showAnnotations={pdfFileData.editClicked}
 		/>
 	</div>
 {:else if !pdfFileData.loading && pdfFileData.offlineEvaluateClicked}

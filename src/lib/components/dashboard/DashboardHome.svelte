@@ -21,7 +21,19 @@
 			<DashboardRecentAssignments />
 		{/if}
 	</div>
-	<div class="dashboard-right"></div>
+	<div class="dashboard-right">
+		<div class="profile-card">
+			<div class="profile-image">
+				<img src="/images/profile.png" alt="Profile" />
+			</div>
+			<div class="profile-details">
+				<h4>Profile Details</h4>
+				<p>Name: {user.name}</p>
+				<p>Email: {user.email}</p>
+				<p>Phone Number: {user.phone_number}</p>
+			</div>
+		</div>
+	</div>
 </div>
 
 <style lang="scss">

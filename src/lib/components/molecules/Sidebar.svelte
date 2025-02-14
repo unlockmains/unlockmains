@@ -18,6 +18,7 @@
 	}>()
 
 	let showSidebar = $state(false)
+	let activeKey: string = $state('home')
 
 	alwaysShow.subscribe((alwaysShow) => {
 		if (alwaysShow) {
@@ -34,28 +35,43 @@
 
 <aside class:visible={$sideNavOpen || showSidebar} class:collapsed={$sideNavCollapse}>
 	{#if $sideNavOpen && !$alwaysShow}
-		<button class="close-btn" on:click={toggleSideNav}>
+		<button class="close-btn" onclick={toggleSideNav}>
 			<CrossIcon />
 		</button>
 	{/if}
 
 	<nav style={$topBannerVisible ? 'margin-top: 8.5em;' : ''}>
 		<div class="section">
-			<a class="section-link" href="/dashboard">
+			<a
+				class="section-link"
+				href="/dashboard"
+				class:active={activeKey === 'home'}
+				onclick={() => (activeKey = 'home')}
+			>
 				<SideBarIcons type="home" />
 				<span class="link-text">Home</span>
 			</a>
 		</div>
 		{#if user.profile.user_type === 'STUDENT'}
 			<div class="section">
-				<a class="section-link" href="/dashboard/new-submission">
+				<a
+					class="section-link"
+					href="/dashboard/new-submission"
+					class:active={activeKey === 'new-submission'}
+					onclick={() => (activeKey = 'new-submission')}
+				>
 					<SideBarIcons type="file" />
 					<span class="link-text">New Submission</span>
 				</a>
 			</div>
 
 			<div class="section">
-				<a class="section-link" href="/dashboard/evaluation-plan?query=my">
+				<a
+					class="section-link"
+					href="/dashboard/evaluation-plan?query=my"
+					class:active={activeKey === 'my-plan'}
+					onclick={() => (activeKey = 'my-plan')}
+				>
 					<SideBarIcons type="plan" />
 					<span class="link-text">My Plan</span>
 				</a>
@@ -63,7 +79,12 @@
 		{/if}
 		{#if user.profile.user_type === 'EVALUATOR'}
 			<div class="section">
-				<a class="section-link" href="/dashboard/evaluations">
+				<a
+					class="section-link"
+					href="/dashboard/evaluations"
+					class:active={activeKey === 'evaluations'}
+					onclick={() => (activeKey = 'evaluations')}
+				>
 					<SideBarIcons type="evaluation" />
 					<span class="link-text">Evaluations</span>
 				</a>
@@ -71,7 +92,7 @@
 		{/if}
 	</nav>
 
-	<button class="collapse-toggle" on:click={toggleCollapse}>
+	<button class="collapse-toggle" onclick={toggleCollapse}>
 		{#if $sideNavCollapse}
 			<SideBarIcons type="right" />
 		{:else}
@@ -192,7 +213,8 @@
 					background-color: var(--color-white-900);
 					transition: all 0.3s ease;
 
-					&:hover {
+					&:hover,
+					&.active {
 						background-color: var(--custom-color-brand);
 						color: var(--color-white-900);
 

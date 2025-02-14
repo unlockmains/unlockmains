@@ -20,26 +20,26 @@
 
 	let formDataStep1: IEvaluatorOnBoardStep1Data = $state({
 		name: data.userName,
-		phoneNumber: data.evaluatorLead.phone_number ?? '',
-		prelimsAttempts: data.evaluatorLead.prelims_attempts ?? undefined,
-		mainsAttempts: data.evaluatorLead.mains_attempts ?? undefined,
-		interviewsAppeared: data.evaluatorLead.interviews_appeared ?? undefined,
-		optionalSubject: data.evaluatorLead.optional_subject ?? '',
-		existingUser: data.evaluatorLead.existing_user ?? 'No',
-		existingUserEmail: data.evaluatorLead.existing_user_email ?? '',
-		hasRank: data.evaluatorLead.has_rank ?? false,
-		marksheet: data.evaluatorLead.marksheet_id ?? null
+		phoneNumber: data.evaluatorLead?.phone_number ?? '',
+		prelimsAttempts: data.evaluatorLead?.prelims_attempts ?? undefined,
+		mainsAttempts: data.evaluatorLead?.mains_attempts ?? undefined,
+		interviewsAppeared: data.evaluatorLead?.interviews_appeared ?? undefined,
+		optionalSubject: data.evaluatorLead?.optional_subject ?? '',
+		existingUser: data.evaluatorLead?.existing_user ?? 'No',
+		existingUserEmail: data.evaluatorLead?.existing_user_email ?? '',
+		hasRank: data.evaluatorLead?.has_rank ?? false,
+		marksheet: data.evaluatorLead?.marksheet_id ?? null
 	})
 
 	let formDataStep2: IEvaluatorOnBoardStep2Data = $state({
-		evaluationLanguage: data.evaluatorLead.evaluation_language ?? '',
-		experience: data.evaluatorLead.experience ?? '',
-		evaluateGeneralStudies: data.evaluatorLead.evaluate_general_studies ?? [],
-		evaluateEssay: data.evaluatorLead.evaluate_essay ?? false,
-		evaluateOptional: data.evaluatorLead.evaluate_optional ?? false
+		evaluationLanguage: data.evaluatorLead?.evaluation_language ?? '',
+		experience: data.evaluatorLead?.experience ?? '',
+		evaluateGeneralStudies: data.evaluatorLead?.evaluate_general_studies ?? [],
+		evaluateEssay: data.evaluatorLead?.evaluate_essay ?? false,
+		evaluateOptional: data.evaluatorLead?.evaluate_optional ?? false
 	})
 
-	let currentStep = $state(data.evaluatorLead.current_step ?? 1)
+	let currentStep = $state(data.evaluatorLead?.current_step ?? 1)
 	let loadingSubmission = $state(false)
 
 	const handleBasicInformationSubmission: SubmitFunction = () => {

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { enhance } from '$app/forms'
 	import { page } from '$app/stores'
+	import { convertISODateToDate } from '$lib/api/utils'
 	import Button from '$lib/components/atoms/Button.svelte'
 	import FileUpload from '$lib/components/atoms/FileUpload.svelte'
 	import Input from '$lib/components/atoms/Input.svelte'
@@ -109,14 +110,18 @@
 			<h4>Total Question Submitted</h4>
 			<p>{viewEvaluation?.total_questions}</p>
 		</div>
-		<div>
-			<h4>Evaluation Start Date</h4>
-			<p>{viewEvaluation?.evaluations[0].evaluation_start}</p>
-		</div>
-		<div>
-			<h4>Evaluation End Date</h4>
-			<p>{viewEvaluation?.evaluations[0].evaluation_end}</p>
-		</div>
+		{#if viewEvaluation?.evaluations[0].evaluation_start}
+			<div>
+				<h4>Evaluation Start Date</h4>
+				<p>{convertISODateToDate(viewEvaluation?.evaluations[0].evaluation_start)}</p>
+			</div>
+		{/if}
+		{#if viewEvaluation?.evaluations[0].evaluation_end}
+			<div>
+				<h4>Evaluation End Date</h4>
+				<p>{convertISODateToDate(viewEvaluation?.evaluations[0].evaluation_end)}</p>
+			</div>
+		{/if}
 		<div>
 			<h4>Remarks</h4>
 			<p>{viewEvaluation?.evaluations[0].remarks}</p>
@@ -218,7 +223,7 @@
 		.question-type {
 			display: flex;
 			flex-flow: row wrap;
-			align-items: center;
+			align-items: flex-start;
 			justify-content: space-between;
 			width: 100%;
 			gap: 1em;

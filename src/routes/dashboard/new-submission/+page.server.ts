@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ locals: { user, databases } }) => {
     const studentDocument = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB,
         [
             Query.equal("users_profile", user?.profile.$id),
-            Query.select(["gs_submissions_left", "eassy_submissions_left", "optional_submissions_left"]),
+            Query.select(["$id", "gs_submissions_left", "eassy_submissions_left", "optional_submissions_left"]),
             Query.limit(1),
         ]);
     const studentProfile = studentDocument.documents[0];
@@ -46,10 +46,11 @@ export const actions: Actions = {
         const isPyq = formData.get("question-pyq") as string;
 
         const files = formData.getAll("question-files");
-
+        const studentProfile = JSON.parse(formData.get('student-profile') as string) as IStudentProfile;
+        console.log("studentProfile", studentProfile)
         try {
             const savingData = {
-                "users_profile": user?.profile.$id,
+                "student_profile": studentProfile.$id,
                 "question_type_lvl1": type,
                 "question_type_lvl2": gsType,
                 "question_type_lvl3": gsSubjectTag,
@@ -73,7 +74,7 @@ export const actions: Actions = {
                 }
             }
             event.cookies.set('toastMessage', "Submission successful", { path: '/' });
-            const studentProfile = JSON.parse(formData.get('student-profile') as string) as IStudentProfile;
+
             const fieldToBeUpdated: Record<string, number> = {};
             if (type === "General Studies") {
                 fieldToBeUpdated["gs_submissions_left"] = studentProfile.gs_submissions_left - Number(quantity);
@@ -85,6 +86,7 @@ export const actions: Actions = {
             await databases.updateDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, studentProfile.$id, fieldToBeUpdated);
             throw redirect(303, "/dashboard");
         } catch (err) {
+            console.log("error", err)
             if (err instanceof Error) {
                 success = false;
                 message = err.message;

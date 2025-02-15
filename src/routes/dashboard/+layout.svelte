@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Sidebar from '$lib/components/molecules/Sidebar.svelte'
 	import { alwaysShow, sideNavOpen, toggleSideNav, sideNavCollapse } from '$lib/stores/sideNavStore'
-	import type { IUser } from '$lib/types'
+	import type { IStudentProfile, IUser } from '$lib/types'
 	import type { Snippet } from 'svelte'
 	import { Toaster } from 'svelte-sonner'
 	let { data, children } = $props<{
@@ -10,6 +10,7 @@
 		userType: string
 		adminApproved: boolean
 		user: IUser
+		studentProfile: IStudentProfile
 		children: Snippet
 	}>()
 </script>

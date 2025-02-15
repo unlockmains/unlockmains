@@ -266,7 +266,7 @@
 		.question-type {
 			display: flex;
 			flex-flow: row wrap;
-			align-items: center;
+			align-items: flex-start;
 			justify-content: space-between;
 			width: 100%;
 			gap: 1em;

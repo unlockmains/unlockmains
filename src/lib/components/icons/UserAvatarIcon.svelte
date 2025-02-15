@@ -1,10 +1,10 @@
-<svg
-	fill="#707070"
-	width="3em"
-	height="3em"
-	viewBox="0 0 32 32"
-	id="icon"
-	xmlns="http://www.w3.org/2000/svg"
+<script lang="ts">
+	export let color: string = '#707070'
+	export let width: string = '3em'
+	export let height: string = '3em'
+</script>
+
+<svg fill={color} {width} {height} viewBox="0 0 32 32" id="icon" xmlns="http://www.w3.org/2000/svg"
 	><g stroke-width="0"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g>
 		<defs>
 			<style>

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { IUser } from '$lib/types'
+	import UserAvatarIcon from '../icons/UserAvatarIcon.svelte'
 	import DashboardRecentAssignments from './DashboardRecentAssignments.svelte'
 	import DashboardRecentEvaluations from './DashboardRecentEvaluations.svelte'
 
@@ -21,7 +22,19 @@
 			<DashboardRecentAssignments />
 		{/if}
 	</div>
-	<div class="dashboard-right"></div>
+	<div class="dashboard-right">
+		<div class="profile-card">
+			<div class="profile-image">
+				<UserAvatarIcon color="#707070" width="3em" height="3em" />
+			</div>
+			<div class="profile-details">
+				<h4>Profile Details</h4>
+				<p>Name: {user.name}</p>
+				<p>Email: {user.email}</p>
+				<p>Phone Number: {user.phone_number}</p>
+			</div>
+		</div>
+	</div>
 </div>
 
 <style lang="scss">
@@ -56,6 +69,16 @@
 			width: 100%;
 			height: 100vh;
 			background-color: var(--color-zinc-300);
+
+			.profile-card {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 1em;
+				border: 1px solid var(--color-zinc-400);
+				border-radius: var(--custom-border-radius);
+			}
 		}
 
 		@media only screen and (max-width: 768px) {

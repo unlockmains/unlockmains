@@ -28,7 +28,7 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		justify-content: space-between;
+		justify-content: space-around;
 		position: relative;
 		user-select: none;
 		gap: 5em;

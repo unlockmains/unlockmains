@@ -79,7 +79,6 @@
 
 <style lang="scss">
 	.careers-page {
-		font-family: 'Archivo', sans-serif;
 		max-width: 1200px;
 		margin: 0 auto;
 		position: relative;

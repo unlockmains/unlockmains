@@ -274,7 +274,6 @@
 
 <style lang="scss">
 	.terms-of-service {
-		font-family: Archivo, sans-serif;
 		line-height: 1.2;
 		font-weight: 500;
 		letter-spacing: -0.02em;

@@ -234,7 +234,7 @@
 		color: #666;
 		font-size: 0.875rem;
 		margin: 0;
-		font-weight: 900;
+		font-weight: 800;
 	}
 
 	.social-links {

@@ -88,7 +88,7 @@
 				display: flex;
 				justify-content: flex-start;
 				align-items: center;
-				gap: 1em;
+				gap: 0.5em;
 
 				.rupee {
 					font-size: 2.4em;
@@ -111,7 +111,7 @@
 				display: flex;
 				justify-content: flex-end;
 				align-items: center;
-				gap: 1em;
+				gap: 0.5em;
 				color: var(--color-zinc-500);
 				font-style: italic;
 

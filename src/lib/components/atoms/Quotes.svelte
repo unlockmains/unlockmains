@@ -43,9 +43,9 @@
 			text-align: center;
 			opacity: 0;
 			transform: translateY(20px);
-			font-size: 24px;
+			font-size: 1.3em;
 			line-height: 1.6;
-			font-family: Georgia, serif;
+			font-family: 'Poppins', sans-serif;
 			padding: 20px;
 			animation: fadeOut 0.5s ease-out forwards;
 			text-shadow: 0px 0px 4px var(--color-peach-200);

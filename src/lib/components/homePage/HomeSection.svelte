@@ -43,10 +43,11 @@
 			gap: 1em;
 
 			.main-title {
+				font-family: 'Caveat', serif;
+				font-optical-sizing: auto;
 				font-size: 4em;
 				position: relative;
 				color: #000;
-				font-family: Archivo, sans-serif;
 				line-height: 1.2;
 				letter-spacing: -0.02em;
 				margin-top: 0;
@@ -99,7 +100,7 @@
 		p {
 			position: relative;
 			left: 0%;
-			font-family: Archivo, Inter, sans-serif;
+			font-family: 'Poppins', sans-serif;
 			font-size: 1.3em;
 			font-weight: 400;
 			letter-spacing: -0.02em;

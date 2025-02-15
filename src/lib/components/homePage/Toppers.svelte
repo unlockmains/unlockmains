@@ -59,7 +59,6 @@
 		padding: 5%;
 		.heading {
 			z-index: 10;
-			font-family: Archivo, sans-serif;
 			line-height: 1.2;
 			font-weight: 500;
 			letter-spacing: -0.02em;

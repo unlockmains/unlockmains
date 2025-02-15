@@ -112,7 +112,7 @@
 		}
 
 		.header {
-			font-size: 0.75em;
+			font-size: 0.875em;
 			font-weight: 700;
 			color: #8f8f8f;
 			text-transform: uppercase;
@@ -124,8 +124,7 @@
 		}
 		.text {
 			font-size: 1em;
-			font-weight: 300;
-			line-height: 1.2;
+			line-height: 1.8;
 			letter-spacing: -0.02em;
 		}
 

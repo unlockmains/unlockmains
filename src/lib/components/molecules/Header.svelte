@@ -39,9 +39,9 @@
 		<HamburgerIcon />
 	</button>
 
-	<div class="logo-container">
+	<a class="logo-container" href="/">
 		<img src="/um-main.png" alt="logo 1" />
-	</div>
+	</a>
 
 	<nav class:active={isMenuOpen}>
 		<div class="nav-links">
@@ -157,18 +157,14 @@
 
 			a {
 				padding: 8px 16px;
-				border: 1px solid transparent;
 				transition: all 500ms cubic-bezier(0.6, 0.6, 0, 1);
 				color: white;
-				font-size: 14px;
-				line-height: 24px;
-				font-weight: 400;
-				letter-spacing: -0.18px;
 				text-decoration: none;
+				border-radius: 0.5em;
 
 				&:hover {
 					border-color: rgba(255, 255, 255, 0.1);
-					box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+					box-shadow: 0px 0px 4px 4px rgba(0, 0, 0, 0.1);
 				}
 
 				@media (max-width: 768px) {

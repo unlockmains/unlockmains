@@ -1,5 +1,6 @@
 <script lang="ts">
 	import type { IUser } from '$lib/types'
+	import UserAvatarIcon from '../icons/UserAvatarIcon.svelte'
 	import DashboardRecentAssignments from './DashboardRecentAssignments.svelte'
 	import DashboardRecentEvaluations from './DashboardRecentEvaluations.svelte'
 
@@ -24,7 +25,7 @@
 	<div class="dashboard-right">
 		<div class="profile-card">
 			<div class="profile-image">
-				<img src="/images/profile.png" alt="Profile" />
+				<UserAvatarIcon color="#707070" width="3em" height="3em" />
 			</div>
 			<div class="profile-details">
 				<h4>Profile Details</h4>
@@ -68,6 +69,16 @@
 			width: 100%;
 			height: 100vh;
 			background-color: var(--color-zinc-300);
+
+			.profile-card {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				gap: 1em;
+				border: 1px solid var(--color-zinc-400);
+				border-radius: var(--custom-border-radius);
+			}
 		}
 
 		@media only screen and (max-width: 768px) {

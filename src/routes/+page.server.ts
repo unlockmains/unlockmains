@@ -6,7 +6,7 @@ import { PUBLIC_APPWRITE_ENDPOINT, PUBLIC_APPWRITE_PROJECT, PUBLIC_APPWRITE_SAMP
 
 export const prerender = true;
 
-export const load: PageServerLoad = async ({ url, locals: { user, databases, storage } }) => {
+export const load: PageServerLoad = async ({ url, locals: { user, storage } }) => {
   if (user) {
     redirect(303, '/dashboard')
   }

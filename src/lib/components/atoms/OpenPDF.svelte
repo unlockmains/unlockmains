@@ -859,6 +859,7 @@
 			border-right: 1px solid #ccc;
 			overflow: hidden;
 			flex-shrink: 0;
+			max-height: 60em;
 		}
 
 		.thumbnail-scroll {

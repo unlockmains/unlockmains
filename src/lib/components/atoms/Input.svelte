@@ -4,7 +4,7 @@
 	export let name: string
 	export let type: string
 	export let placeholder: string
-	export let value: string | File | undefined
+	export let value: string | File | Date | undefined
 	export let style: string = ''
 	export let min: number | undefined = undefined
 	export let max: number | undefined = undefined
@@ -72,13 +72,16 @@
 			--font-size: 1em;
 			--border-size-focus: 3px;
 			--border-color-focus: var(--color-zinc-700);
-			border: 2px solid var(--color-zinc-700);
+			--gap: 0em;
+			--border-color: var(--color-zinc-700);
+			border: 2px solid var(--border-color);
 			height: var(--height);
 			border-radius: 1em;
 			padding: 1em;
 			font-size: var(--font-size);
 			background-color: var(--custom-bg-color);
 			width: 100%;
+			margin-top: var(--gap);
 
 			&:focus-visible {
 				border: var(--border-size-focus) solid var(--border-color-focus);

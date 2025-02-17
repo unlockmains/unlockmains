@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { browser } from '$app/environment'
+	import { goto } from '$app/navigation'
 	import Sidebar from '$lib/components/molecules/Sidebar.svelte'
 	import { alwaysShow, sideNavOpen, toggleSideNav, sideNavCollapse } from '$lib/stores/sideNavStore'
 	import type { IStudentProfile, IUser } from '$lib/types'
@@ -13,6 +15,12 @@
 		studentProfile: IStudentProfile
 		children: Snippet
 	}>()
+	$effect(() => {
+		const plan = browser && sessionStorage.getItem('plan')
+		if (plan) {
+			goto(`/dashboard/profile`)
+		}
+	})
 </script>
 
 <svelte:head>

@@ -10,15 +10,16 @@
 	import type { IUser } from '$lib/types'
 	import CrossIcon from '../icons/CrossIcon.svelte'
 	import SideBarIcons from '../icons/SideBarIcons.svelte'
+	import UserAvatarIcon from '../icons/UserAvatarIcon.svelte'
 
-	let { user } = $props<{
+	let { slug, user } = $props<{
 		slug: string
 		parentSlug: string
 		user: IUser
 	}>()
 
 	let showSidebar = $state(false)
-	let activeKey: string = $state('home')
+	let activeKey: string = $state(slug.split('/')[2] ?? 'home')
 
 	alwaysShow.subscribe((alwaysShow) => {
 		if (alwaysShow) {
@@ -41,55 +42,70 @@
 	{/if}
 
 	<nav style={$topBannerVisible ? 'margin-top: 8.5em;' : ''}>
-		<div class="section">
-			<a
-				class="section-link"
-				href="/dashboard"
-				class:active={activeKey === 'home'}
-				onclick={() => (activeKey = 'home')}
-			>
-				<SideBarIcons type="home" />
-				<span class="link-text">Home</span>
-			</a>
-		</div>
-		{#if user.profile.user_type === 'STUDENT'}
+		<div class="top-section">
 			<div class="section">
 				<a
 					class="section-link"
-					href="/dashboard/new-submission"
-					class:active={activeKey === 'new-submission'}
-					onclick={() => (activeKey = 'new-submission')}
+					href="/dashboard"
+					class:active={activeKey === 'home'}
+					onclick={() => (activeKey = 'home')}
 				>
-					<SideBarIcons type="file" />
-					<span class="link-text">New Submission</span>
+					<SideBarIcons type="home" />
+					<span class="link-text">Home</span>
 				</a>
 			</div>
+			{#if user.profile.user_type === 'STUDENT'}
+				<div class="section">
+					<a
+						class="section-link"
+						href="/dashboard/new-submission"
+						class:active={activeKey === 'new-submission'}
+						onclick={() => (activeKey = 'new-submission')}
+					>
+						<SideBarIcons type="file" />
+						<span class="link-text">New Submission</span>
+					</a>
+				</div>
 
+				<div class="section">
+					<a
+						class="section-link"
+						href="/dashboard/evaluation-plan?query=my"
+						class:active={activeKey === 'my-plan'}
+						onclick={() => (activeKey = 'my-plan')}
+					>
+						<SideBarIcons type="plan" />
+						<span class="link-text">My Plan</span>
+					</a>
+				</div>
+			{/if}
+			{#if user.profile.user_type === 'EVALUATOR'}
+				<div class="section">
+					<a
+						class="section-link"
+						href="/dashboard/evaluations"
+						class:active={activeKey === 'evaluations'}
+						onclick={() => (activeKey = 'evaluations')}
+					>
+						<SideBarIcons type="evaluation" />
+						<span class="link-text">Evaluations</span>
+					</a>
+				</div>
+			{/if}
+		</div>
+		<div class="bottom-section">
 			<div class="section">
 				<a
 					class="section-link"
-					href="/dashboard/evaluation-plan?query=my"
-					class:active={activeKey === 'my-plan'}
-					onclick={() => (activeKey = 'my-plan')}
+					href="/dashboard/profile"
+					class:active={activeKey === 'profile'}
+					onclick={() => (activeKey = 'profile')}
 				>
-					<SideBarIcons type="plan" />
-					<span class="link-text">My Plan</span>
+					<UserAvatarIcon />
+					<span class="link-text">Profile</span>
 				</a>
 			</div>
-		{/if}
-		{#if user.profile.user_type === 'EVALUATOR'}
-			<div class="section">
-				<a
-					class="section-link"
-					href="/dashboard/evaluations"
-					class:active={activeKey === 'evaluations'}
-					onclick={() => (activeKey = 'evaluations')}
-				>
-					<SideBarIcons type="evaluation" />
-					<span class="link-text">Evaluations</span>
-				</a>
-			</div>
-		{/if}
+		</div>
 	</nav>
 
 	<button class="collapse-toggle" onclick={toggleCollapse}>
@@ -177,49 +193,48 @@
 		nav {
 			margin-top: 6.5em;
 			display: flex;
-			align-items: flex-start;
-			justify-content: center;
 			flex-direction: column;
-			gap: 1em;
+			justify-content: space-between;
+			height: 80%;
 
-			.section {
+			.top-section,
+			.bottom-section {
 				display: flex;
-				flex-direction: column;
+				align-items: flex-start;
 				justify-content: center;
-				gap: 0.5em;
-				width: 100%;
+				flex-direction: column;
+				gap: 1em;
 
-				.section-heading {
-					font-size: 0.75em;
-					font-weight: 700;
-					margin: 0.5em;
-					text-transform: uppercase;
-					margin-bottom: 0;
-					padding-bottom: 0;
-				}
-
-				.section-link {
-					font-size: 0.9em;
-					font-weight: 300;
-					width: 100%;
-					height: 5em;
+				.section {
 					display: flex;
-					align-items: center;
+					flex-direction: column;
+					justify-content: center;
 					gap: 0.5em;
-					padding: 0 1em;
-					border-radius: 8px;
-					text-decoration: none;
-					color: var(--color-black-900);
-					background-color: var(--color-white-900);
-					transition: all 0.3s ease;
+					width: 100%;
 
-					&:hover,
-					&.active {
-						background-color: var(--custom-color-brand);
-						color: var(--color-white-900);
+					.section-link {
+						font-size: 0.9em;
+						font-weight: 300;
+						width: 100%;
+						height: 5em;
+						display: flex;
+						align-items: center;
+						gap: 0.5em;
+						padding: 0 1em;
+						border-radius: 8px;
+						text-decoration: none;
+						color: var(--color-black-900);
+						background-color: var(--color-white-900);
+						transition: all 0.3s ease;
 
-						:global(svg) {
-							fill: var(--color-white-900);
+						&:hover,
+						&.active {
+							background-color: var(--custom-color-brand);
+							color: var(--color-white-900);
+
+							:global(svg) {
+								fill: var(--color-white-900);
+							}
 						}
 					}
 				}

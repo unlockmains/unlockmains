@@ -188,4 +188,10 @@ export interface IStudentProfile {
     plan_start: string;
     free_plan: boolean;
     user_profile: IUserProfile;
+    optional_subject: string;
+    target_year: string;
+    preparing_for: string;
+    other_preparing_for: string;
+    roll_number_pre: string;
+    roll_number_mains: string;
 }

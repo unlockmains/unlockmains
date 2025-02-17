@@ -26,7 +26,6 @@
 
 	onMount(() => {
 		viewEvaluation = JSON.parse(localStorage.getItem('view-evaluation') as string)
-		console.log('viewEvaluation', viewEvaluation)
 	})
 
 	const getFileDownload = async () => {

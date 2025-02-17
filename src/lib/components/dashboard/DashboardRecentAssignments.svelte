@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation'
+	import { browser } from '$app/environment'
 	import type { IRecentAssignments } from '$lib/types'
 	import Button from '../atoms/Button.svelte'
 	import SkeletonLoading from '../atoms/SkeletonLoading.svelte'
@@ -15,7 +15,7 @@
 	onMount(async () => {
 		loading = true
 		setupEventSource()
-		const response = await fetch('/api/recent-evaluation')
+		const response = await fetch('/api/recent-assignments')
 		if (response.ok) {
 			const data = await response.json()
 			assignments = data
@@ -76,15 +76,27 @@
 			</div>
 		{:else}
 			{#each assignments as assignment}
-				<div class="each-Assignments">
-					<PdfIcon />
-					<div class="date">{assignment.assignment_date}</div>
-					<Button
-						type="link"
-						label="View"
-						onClick={() => goto(`/dashboard/evaluate/${assignment.$id}`)}
-					/>
-				</div>
+				<a
+					href={`/dashboard/evaluate/${assignment.$id}`}
+					onclick={() => browser && localStorage.setItem('evaluate', JSON.stringify(assignment))}
+					class="each-assignments"
+				>
+					<PdfIcon color="#414040" />
+					<div class="date">
+						<span>Questions Submitted</span>
+						{assignment.submissionDetails.total_questions}
+					</div>
+					<div class="date">
+						<span>Questions Type</span>
+						{assignment.submissionDetails.question_type_lvl1}
+					</div>
+					{#if assignment.submissionDetails.question_type_lvl2}
+						<div class="date">
+							<span>Questions Type in GS</span>
+							{assignment.submissionDetails.question_type_lvl2}
+						</div>
+					{/if}
+				</a>
 			{/each}
 		{/if}
 	</div>
@@ -104,17 +116,20 @@
 			justify-content: space-between;
 			gap: 1em;
 
-			.each-Assignments {
+			.each-assignments {
 				display: flex;
 				flex-direction: column;
 				align-items: center;
-				justify-content: center;
+				justify-content: space-around;
 				background-color: var(--color-yellow-100);
 				min-height: 14em;
 				border-radius: 1em;
 				font-size: 0.8em;
 				gap: 0.5em;
-				width: 100%;
+				width: 33%;
+				text-decoration: none;
+				color: var(--color-zinc-800);
+				padding: 0.3em;
 
 				.date {
 					font-size: 0.8em;

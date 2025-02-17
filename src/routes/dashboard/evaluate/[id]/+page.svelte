@@ -29,10 +29,7 @@
 	let loadingSubmission = $state(false)
 
 	onMount(() => {
-		const allAssignments = JSON.parse(localStorage.getItem('recentAssignments') as string)
-		assignmentToView = allAssignments.find(
-			(assignment: IRecentAssignments) => assignment.$id === $page.params.id
-		)
+		assignmentToView = JSON.parse(localStorage.getItem('evaluate') as string)
 	})
 
 	async function handleSave(annotations: IPageAnnotations) {

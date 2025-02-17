@@ -7,17 +7,21 @@ export const load: PageServerLoad = async ({ locals: { user, databases } }) => {
   if (!user) {
     redirect(303, '/')
   }
-
-  const studentProfile = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, [
-    Query.equal('users_profile', user.profile.$id),
-    Query.select(['$id', "plan_active", "free_plan", "plan_start", "optional_subject", "target_year", "preparing_for", "other_preparing_for", "roll_number_pre", "roll_number_mains"]),
-    Query.limit(1),
-  ])
+  let profile = null
+  if (user.profile.user_type === "EVALUATOR") {
+    profile = null
+  } else if (user.profile.user_type === "STUDENT") {
+    profile = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, [
+      Query.equal('users_profile', user.profile.$id),
+      Query.select(['$id', "plan_active", "free_plan", "plan_start", "optional_subject", "target_year", "preparing_for", "other_preparing_for", "roll_number_pre", "roll_number_mains"]),
+      Query.limit(1),
+    ])
+  }
 
   // const plan = sessionStorage.getItem("plan")
   // console.log("plan=----", plan)
 
-  return { user, studentProfile: studentProfile.documents[0] }
+  return { user, studentProfile: profile ? profile.documents[0] : null }
 }
 
 export const actions: Actions = {

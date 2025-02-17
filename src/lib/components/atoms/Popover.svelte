@@ -48,15 +48,10 @@
 		transition:fade={{ duration: 1000 }}
 		style={$topBannerVisible ? 'top: 8em;' : ''}
 	>
-		<div class="popover-content-header">
-			{user.email}
-		</div>
-		<ul>
-			<li><a href="/account">Account</a></li>
-			<li><a href="#profile">Profile</a></li>
-			<li><button on:click={getUserAvatar}>Get User Avatar</button></li>
-			<Button label="Logout" onClick={() => goto('/auth/logout')} />
-		</ul>
+		<!-- <li><button on:click={getUserAvatar}>Get User Avatar</button></li> -->
+		<form action="/auth/logout" method="post">
+			<Button label="Logout" />
+		</form>
 	</div>
 </div>
 

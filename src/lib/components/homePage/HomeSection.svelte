@@ -114,5 +114,10 @@
 				font-size: 1em;
 			}
 		}
+		@media only screen and (max-height: 800px) {
+			.rocket {
+				margin-top: 0em;
+			}
+		}
 	}
 </style>

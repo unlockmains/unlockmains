@@ -4,6 +4,7 @@
 	import Combobox from '../atoms/Combobox.svelte'
 	import Input from '../atoms/Input.svelte'
 	import RadioGroup from '../atoms/RadioGroup.svelte'
+	import optionalSubjects from '$lib/api/optionalSubjects.json'
 
 	let { formData = $bindable(), loadingSubmission } = $props<{
 		formData: IEvaluatorOnBoardStep1Data
@@ -83,51 +84,7 @@
 		/>
 
 		<Combobox
-			options={[
-				{ text: 'Agriculture', value: 'Agriculture' },
-				{
-					text: 'Animal Husbandry and Veterinary Science',
-					value: 'Animal Husbandry and Veterinary Science'
-				},
-				{ text: 'Anthropology', value: 'Anthropology' },
-				{ text: 'Botany', value: 'Botany' },
-				{ text: 'Chemistry', value: 'Chemistry' },
-				{ text: 'Civil Engineering', value: 'Civil Engineering' },
-				{ text: 'Commerce and Accountancy', value: 'Commerce and Accountancy' },
-				{ text: 'Economics', value: 'Economics' },
-				{ text: 'Electrical Engineering', value: 'Electrical Engineering' },
-				{ text: 'Geography', value: 'Geography' },
-				{ text: 'Geology', value: 'Geology' },
-				{ text: 'History', value: 'History' },
-				{ text: 'Law', value: 'Law' },
-				{ text: 'Management', value: 'Management' },
-				{ text: 'Mathematics', value: 'Mathematics' },
-				{ text: 'Mechanical Engineering', value: 'Mechanical Engineering' },
-				{ text: 'Medical Science', value: 'Medical Science' },
-				{ text: 'Philosophy', value: 'Philosophy' },
-				{ text: 'Physics', value: 'Physics' },
-				{
-					text: 'Political Science and International Relations',
-					value: 'Political Science and International Relations'
-				},
-				{ text: 'Psychology', value: 'Psychology' },
-				{ text: 'Public Administration', value: 'Public Administration' },
-				{ text: 'Sociology', value: 'Sociology' },
-				{ text: 'Statistics', value: 'Statistics' },
-				{ text: 'Zoology', value: 'Zoology' },
-				{ text: 'Hindi Literature', value: 'Hindi Literature' },
-				{ text: 'English Literature', value: 'English Literature' },
-				{ text: 'Urdu Literature', value: 'Urdu Literature' },
-				{ text: 'Bengali Literature', value: 'Bengali Literature' },
-				{ text: 'Maithili Literature', value: 'Maithili Literature' },
-				{ text: 'Tamil Literature', value: 'Tamil Literature' },
-				{ text: 'Telugu Literature', value: 'Telugu Literature' },
-				{ text: 'Sanskrit Literature', value: 'Sanskrit Literature' },
-				{ text: 'Kannada Literature', value: 'Kannada Literature' },
-				{ text: 'Malayalam Literature', value: 'Malayalam Literature' },
-				{ text: 'Marathi Literature', value: 'Marathi Literature' },
-				{ text: 'Gujarati Literature', value: 'Gujarati Literature' }
-			]}
+			options={optionalSubjects}
 			name="optionalSubject"
 			bind:value={formData.optionalSubject}
 			showRemainingCount={false}

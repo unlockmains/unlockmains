@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from '$app/environment'
 	import { goto } from '$app/navigation'
 	import Button from './Button.svelte'
 
@@ -6,6 +7,11 @@
 
 	const currentYear = new Date().getFullYear()
 	const nextYear = currentYear + 1
+
+	const selectPlan = (planCode: string) => {
+		browser && sessionStorage.setItem('plan', planCode)
+		goto(`/login?plan=${planCode}`)
+	}
 </script>
 
 <div class="cards">
@@ -40,11 +46,7 @@
 					</div>
 				{/each}
 			</div>
-			<Button
-				type="home-register"
-				label="Select Plan"
-				onClick={() => goto(`/login?plan=${planCode}`)}
-			/>
+			<Button type="home-register" label="Select Plan" onClick={() => selectPlan(planCode)} />
 		</div>
 	{/each}
 </div>

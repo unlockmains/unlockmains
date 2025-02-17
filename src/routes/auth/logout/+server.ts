@@ -3,7 +3,7 @@ import type { RequestHandler } from './$types'
 import { SESSION_COOKIE, SESSION_ID } from '$lib/appwrite'
 import { removeUserFromCache } from '../cache';
 
-export const GET: RequestHandler = async ({ locals: { account }, cookies }) => {
+export const POST: RequestHandler = async ({ locals: { account }, cookies }) => {
       const sessionCookie = cookies.get(SESSION_COOKIE)!;
       try {
             await account.deleteSession(

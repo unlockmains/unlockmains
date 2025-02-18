@@ -7,6 +7,7 @@
 	import { toggleTopBannerVisible, topBannerVisible } from '$lib/stores/topBannerStore'
 	import type { LayoutData } from './$types'
 	import { page } from '$app/stores'
+	import HeaderUser from '$lib/components/molecules/HeaderUser.svelte'
 
 	let { data } = $props<{ data: LayoutData }>()
 
@@ -33,7 +34,11 @@
 
 <Banner bannerText={top_banner} />
 
-<Header user={$page.data.user} />
+{#if !data.user}
+	<Header user={$page.data.user} />
+{:else}
+	<HeaderUser user={$page.data.user} />
+{/if}
 <div style={$topBannerVisible ? 'margin-top: 8em' : 'margin-top: 4em'}>
 	<slot />
 </div>

@@ -194,4 +194,58 @@ export interface IStudentProfile {
     other_preparing_for: string;
     roll_number_pre: string;
     roll_number_mains: string;
+    pricing_structure: IPricingStructure;
+}
+
+export interface IPricingStructure {
+    $id: string;
+    $createdAt: string;
+    $updatedAt: string;
+    duration: 'Day' | 'Month' | '{Year}' | '{Year+1}',
+    plan_code: string,
+    gs_allowed: number,
+    optional_allowed: number,
+    essay_allowed: number,
+    category: 'GS/Essay' | 'BPSC' | 'Optional' | 'Combo',
+}
+
+export interface RazorpayResponse {
+    razorpay_payment_id: string;
+    razorpay_order_id: string;
+    razorpay_signature: string;
+}
+
+export interface RazorpayOptions {
+    key: string;
+    amount: number;
+    currency: string;
+    name: string;
+    description?: string;
+    image?: string;
+    order_id: string;
+    handler: (response: RazorpayResponse) => void;
+    prefill?: {
+        name?: string;
+        email?: string;
+        contact?: string;
+    };
+    notes?: {
+        [key: string]: string;
+    };
+    theme?: {
+        color?: string;
+    };
+}
+
+export interface IPaymentHistory {
+    id: string;
+    users_profile: string;
+    payment_id: string;
+    order_id: string;
+    amount: number;
+    currency: string;
+    status: string;
+    customer_email: string;
+    customer_name: string;
+    timestamp: string;
 }

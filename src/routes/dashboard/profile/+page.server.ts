@@ -1,27 +1,30 @@
 import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
-import { PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB } from '$env/static/public'
-import { Query } from 'node-appwrite'
+import { PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_PAYMENT_HISTORY, PUBLIC_APPWRITE_PRICING_STRUCTURE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB } from '$env/static/public'
+import { ID, Query } from 'node-appwrite'
 
 export const load: PageServerLoad = async ({ locals: { user, databases } }) => {
   if (!user) {
     redirect(303, '/')
   }
   let profile = null
+  let paymentHistory = null;
   if (user.profile.user_type === "EVALUATOR") {
     profile = null
   } else if (user.profile.user_type === "STUDENT") {
     profile = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, [
       Query.equal('users_profile', user.profile.$id),
-      Query.select(['$id', "plan_active", "free_plan", "plan_start", "optional_subject", "target_year", "preparing_for", "other_preparing_for", "roll_number_pre", "roll_number_mains"]),
+      Query.select(['$id', "plan_active", "free_plan", "plan_start", "optional_subject", "target_year", "preparing_for", "other_preparing_for", "roll_number_pre", "roll_number_mains", "pricing_structure.*"]),
       Query.limit(1),
+    ])
+    paymentHistory = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_PAYMENT_HISTORY, [
+      Query.equal('users_profile', user.profile.$id),
     ])
   }
 
-  // const plan = sessionStorage.getItem("plan")
-  // console.log("plan=----", plan)
+  const allPlans = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_PRICING_STRUCTURE);
 
-  return { user, studentProfile: profile ? profile.documents[0] : null }
+  return { user, studentProfile: profile ? profile.documents[0] : null, allPlans: allPlans.documents, paymentHistory: paymentHistory ? paymentHistory.documents : [] }
 }
 
 export const actions: Actions = {

@@ -1,6 +1,11 @@
 <script lang="ts">
 	export let data: any[] = []
-	export let columns: { key: string; title: string }[] = []
+	export let columns: {
+		key: string
+		title: string
+		type?: string
+		onClick?: (data: string) => void
+	}[] = []
 
 	let sortedData = [...data]
 	let sortKey: string | null = null
@@ -53,7 +58,7 @@
 			<tr>
 				{#each columns as column}
 					<th
-						on:click={() => handleSort(column.key)}
+						onclick={() => handleSort(column.key)}
 						class:sorted={sortKey === column.key}
 						class:asc={sortKey === column.key && sortDirection === 'asc'}
 						class:desc={sortKey === column.key && sortDirection === 'desc'}
@@ -72,7 +77,15 @@
 			{#each sortedData as row}
 				<tr>
 					{#each columns as column}
-						<td>{row[column.key]}</td>
+						{#if column.type === 'link'}
+							<td
+								><a class="link" onclick={() => column.onClick?.(row[column.key])}
+									>{row[column.key]}</a
+								></td
+							>
+						{:else}
+							<td>{row[column.key]}</td>
+						{/if}
 					{/each}
 				</tr>
 			{/each}
@@ -107,6 +120,11 @@
 			padding: 0.75rem;
 			text-align: left;
 			border-bottom: 1px solid var(--color-zinc-300);
+
+			.link {
+				color: var(--custom-color-brand);
+				cursor: pointer;
+			}
 		}
 
 		th {

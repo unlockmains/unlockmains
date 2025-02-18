@@ -66,7 +66,17 @@
 						<span class="link-text">New Submission</span>
 					</a>
 				</div>
-
+				<div class="section">
+					<a
+						class="section-link"
+						href="/dashboard/submissions"
+						class:active={activeKey === 'my-submissions'}
+						onclick={() => (activeKey = 'my-submissions')}
+					>
+						<SideBarIcons type="submission" />
+						<span class="link-text">My Submissions</span>
+					</a>
+				</div>
 				<div class="section">
 					<a
 						class="section-link"

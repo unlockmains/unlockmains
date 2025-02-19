@@ -93,12 +93,13 @@
 		try {
 			isLoading = true
 			error = null
-
-			currentPDF = await pdfjsLib.getDocument(url).promise
+			let pdf = pdfjsLib.getDocument({ data: url })
+			currentPDF = await pdf.promise
 			numPages = currentPDF.numPages
 			await renderPage(currentPage)
 		} catch (err) {
 			error = err instanceof Error ? err.message : 'Failed to load PDF'
+			console.log('error loading pdf', err)
 		} finally {
 			isLoading = false
 		}

@@ -50,7 +50,7 @@ export const authorization: Handle = async ({ event, resolve }) => {
   if (!unprotectedPrefix.some((path) => event.url.pathname.startsWith(path)) && event.url.pathname !== '/') {
     const loggedInUser = user?.$id
     if (!loggedInUser) {
-      throw redirect(303, '/login');
+      throw redirect(303, '/');
     }
   }
 

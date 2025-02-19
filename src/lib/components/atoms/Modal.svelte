@@ -24,7 +24,12 @@
 	on:keydown|preventDefault
 	on:keypress|preventDefault
 >
-	<button on:click={() => dialog.close()}><CrossIcon /></button>
+	<button
+		on:click={() => {
+			dialog.close()
+			showModal = false
+		}}><CrossIcon /></button
+	>
 	<div>
 		<slot />
 		<!-- svelte-ignore a11y_autofocus -->

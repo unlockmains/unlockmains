@@ -177,5 +177,29 @@
 				}
 			}
 		}
+
+		@media (max-width: 768px) {
+			h1 {
+				font-size: 1.5em;
+			}
+			p {
+				font-size: 0.8em;
+			}
+
+			.basic-information-form {
+				.row {
+					flex-direction: column;
+					&.end {
+						align-items: flex-end;
+					}
+				}
+				margin-bottom: 0.5em;
+			}
+			ul {
+				li {
+					font-size: 0.8em;
+				}
+			}
+		}
 	}
 </style>

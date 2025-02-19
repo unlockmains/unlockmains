@@ -3,19 +3,19 @@
 	import { browser } from '$app/environment'
 	import UserAvatarIcon from '$lib/components/icons/UserAvatarIcon.svelte'
 	import BasicInformation from '$lib/components/profile/BasicInformation.svelte'
-	import BillingAndPayments from '$lib/components/profile/Payment.svelte'
 	import MainsInformation from '$lib/components/profile/MainsInformation.svelte'
 	import type { IPricingStructure, IStudentProfile, IUser } from '$lib/types'
 	import Payment from '$lib/components/profile/Payment.svelte'
 	import BillingHistory from '$lib/components/profile/BillingHistory.svelte'
+	import Preferences from '$lib/components/profile/Preferences.svelte'
 
 	let { data } = $props<{
 		data: { user: IUser; studentProfile: IStudentProfile; allPlans: IPricingStructure[] }
 	}>()
 
-	let activeLink = $state<'basic-information' | 'upsc-mains-exam' | 'billing-history' | 'payment'>(
-		'basic-information'
-	)
+	let activeLink = $state<
+		'basic-information' | 'upsc-mains-exam' | 'billing-history' | 'payment' | 'preferences'
+	>('basic-information')
 
 	$effect(() => {
 		const plan = browser && sessionStorage.getItem('plan')
@@ -26,22 +26,22 @@
 </script>
 
 <div class="profile">
-	<div class="flex row items-center justify-center">
-		<div class="left-nav">
-			<div class="avatar-name">
-				<UserAvatarIcon color="#707070" width="8em" height="8em" />
-				<h3>{data.user.name}</h3>
-				<p>{data.user.email}</p>
+	<div class="left-nav">
+		<div class="avatar-name">
+			<UserAvatarIcon color="#707070" width="8em" height="8em" />
+			<h3>{data.user.name}</h3>
+			<p>{data.user.email}</p>
+		</div>
+		<nav>
+			<div>
+				<button
+					onclick={() => (activeLink = 'basic-information')}
+					class:active={activeLink === 'basic-information'}
+				>
+					Basic Information
+				</button>
 			</div>
-			<nav>
-				<div>
-					<button
-						onclick={() => (activeLink = 'basic-information')}
-						class:active={activeLink === 'basic-information'}
-					>
-						Basic Information
-					</button>
-				</div>
+			{#if data.user.profile.user_type === 'STUDENT'}
 				<div>
 					<button
 						onclick={() => (activeLink = 'upsc-mains-exam')}
@@ -50,34 +50,45 @@
 						Mains Information</button
 					>
 				</div>
+			{:else}
 				<div>
 					<button
-						onclick={() => (activeLink = 'billing-history')}
-						class:active={activeLink === 'billing-history'}>Billings History</button
+						onclick={() => (activeLink = 'preferences')}
+						class:active={activeLink === 'preferences'}
+					>
+						Preferences</button
 					>
 				</div>
-				<div>
-					<button onclick={() => (activeLink = 'payment')} class:active={activeLink === 'payment'}
-						>Payment</button
-					>
-				</div>
-			</nav>
-		</div>
-		<div class="right-data">
-			{#if activeLink === 'basic-information'}
-				<BasicInformation user={data.user} />
-			{:else if activeLink === 'upsc-mains-exam'}
-				<MainsInformation user={data.user} studentProfile={data.studentProfile} />
-			{:else if activeLink === 'billing-history'}
-				<BillingHistory
-					user={data.user}
-					studentProfile={data.studentProfile}
-					paymentHistory={data.paymentHistory}
-				/>
-			{:else if activeLink === 'payment'}
-				<Payment user={data.user} studentProfile={data.studentProfile} allPlans={data.allPlans} />
 			{/if}
-		</div>
+			<div>
+				<button
+					onclick={() => (activeLink = 'billing-history')}
+					class:active={activeLink === 'billing-history'}>Billings History</button
+				>
+			</div>
+			<div>
+				<button onclick={() => (activeLink = 'payment')} class:active={activeLink === 'payment'}
+					>Payment</button
+				>
+			</div>
+		</nav>
+	</div>
+	<div class="right-data">
+		{#if activeLink === 'basic-information'}
+			<BasicInformation user={data.user} />
+		{:else if activeLink === 'upsc-mains-exam'}
+			<MainsInformation user={data.user} profile={data.profile} />
+		{:else if activeLink === 'preferences'}
+			<Preferences user={data.user} profile={data.profile} />
+		{:else if activeLink === 'billing-history'}
+			<BillingHistory
+				user={data.user}
+				studentProfile={data.profile}
+				paymentHistory={data.paymentHistory}
+			/>
+		{:else if activeLink === 'payment'}
+			<Payment user={data.user} studentProfile={data.profile} allPlans={data.allPlans} />
+		{/if}
 	</div>
 </div>
 
@@ -85,6 +96,14 @@
 	.profile {
 		--header-height: 8em;
 		width: 100%;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+
+		@media (max-width: 768px) {
+			flex-direction: column;
+		}
 		.left-nav {
 			width: 20%;
 			height: calc(100vh - var(--header-height));
@@ -142,12 +161,43 @@
 						color: var(--custom-color-brand);
 					}
 				}
+
+				@media (max-width: 768px) {
+					margin-top: 2em;
+					flex-direction: row;
+
+					button {
+						font-size: 0.8em;
+					}
+				}
+			}
+			@media (max-width: 768px) {
+				width: 100%;
+				height: 20%;
+
+				.avatar-name {
+					flex-direction: row;
+					h3 {
+						font-size: 1em;
+					}
+					p {
+						font-size: 0.8em;
+					}
+					:global(svg) {
+						width: 3em;
+						height: 3em;
+					}
+				}
 			}
 		}
 
 		.right-data {
 			width: 80%;
 			height: calc(100vh - var(--header-height));
+
+			@media (max-width: 768px) {
+				width: 100%;
+			}
 		}
 	}
 </style>

@@ -16,6 +16,19 @@
 	if (top_banner) {
 		toggleTopBannerVisible()
 	}
+
+	let isMobile = $state<boolean>(false)
+	function checkMobile() {
+		isMobile = window.innerWidth <= 768
+	}
+
+	$effect(() => {
+		if (typeof window !== 'undefined') {
+			checkMobile()
+			window.addEventListener('resize', checkMobile)
+			return () => window.removeEventListener('resize', checkMobile)
+		}
+	})
 </script>
 
 <svelte:head>
@@ -39,8 +52,28 @@
 {:else}
 	<HeaderUser user={$page.data.user} />
 {/if}
-<div style={$topBannerVisible ? 'margin-top: 8em' : 'margin-top: 4em'}>
+<div
+	class:desktop={$topBannerVisible}
+	class:mobileTopBanner={isMobile}
+	class:mobileNoTopBanner={!$topBannerVisible && isMobile}
+>
 	<slot />
 </div>
 
 <Toaster richColors closeButton />
+
+<style lang="scss">
+	div {
+		margin-top: 4em;
+
+		&.desktop {
+			margin-top: 8em;
+		}
+		&.mobileTopBanner {
+			margin-top: 7em;
+		}
+		&.mobileNoTopBanner {
+			margin-top: 3em;
+		}
+	}
+</style>

@@ -8,7 +8,7 @@ export const ssr = true;
 
 export const load: PageServerLoad = async ({ route, locals: { user, databases } }) => {
       if (!user) {
-            redirect(303, '/login')
+            redirect(303, '/')
       }
       if (!user.profile.admin_approved && user.profile.user_type === "EVALUATOR") {
             redirect(303, "/onboard/evaluator")

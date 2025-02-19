@@ -20,6 +20,19 @@
 
 	let showSidebar = $state(false)
 	let activeKey: string = $state(slug.split('/')[2] ?? 'home')
+	let isMobile = $state(false)
+
+	function checkMobile() {
+		isMobile = window.innerWidth <= 768
+	}
+
+	$effect(() => {
+		if (typeof window !== 'undefined') {
+			checkMobile()
+			window.addEventListener('resize', checkMobile)
+			return () => window.removeEventListener('resize', checkMobile)
+		}
+	})
 
 	alwaysShow.subscribe((alwaysShow) => {
 		if (alwaysShow) {
@@ -32,19 +45,18 @@
 	function toggleCollapse() {
 		toggleCollapseSideNav()
 	}
+
 	$effect(() => {
 		activeKey = slug.split('/')[2] ?? 'home'
 	})
 </script>
 
-<aside class:visible={$sideNavOpen || showSidebar} class:collapsed={$sideNavCollapse}>
-	{#if $sideNavOpen && !$alwaysShow}
-		<button class="close-btn" onclick={toggleSideNav}>
-			<CrossIcon />
-		</button>
-	{/if}
-
-	<nav style={$topBannerVisible ? 'margin-top: 8.5em;' : ''}>
+<aside
+	class:visible={$sideNavOpen || showSidebar}
+	class:collapsed={$sideNavCollapse}
+	class:mobile={isMobile}
+>
+	<nav style={$topBannerVisible && !isMobile ? 'margin-top: 8.5em;' : ''}>
 		<div class="top-section">
 			<div class="section">
 				<a
@@ -121,13 +133,15 @@
 		</div>
 	</nav>
 
-	<button class="collapse-toggle" onclick={toggleCollapse}>
-		{#if $sideNavCollapse}
-			<SideBarIcons type="right" />
-		{:else}
-			<SideBarIcons type="left" />
-		{/if}
-	</button>
+	{#if !isMobile}
+		<button class="collapse-toggle" onclick={toggleCollapse}>
+			{#if $sideNavCollapse}
+				<SideBarIcons type="right" />
+			{:else}
+				<SideBarIcons type="left" />
+			{/if}
+		</button>
+	{/if}
 </aside>
 
 <style lang="scss">
@@ -167,19 +181,67 @@
 			}
 		}
 
-		.close-btn {
-			outline: none;
-			border: none;
-			background: none;
-			display: flex;
-			position: fixed;
-			top: 15px;
-			left: 15px;
-			cursor: pointer;
-			color: var(--color-white-900);
+		&.mobile {
+			top: auto;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			width: 100%;
+			height: auto;
+			transform: translateY(0);
+			padding: 0.5em;
+			border-top: 1px solid var(--color-zinc-700);
+			box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 
-			&:hover {
-				opacity: 0.8;
+			nav {
+				margin-top: 0;
+				height: auto;
+				flex-direction: row;
+
+				.top-section {
+					flex-direction: row;
+					justify-content: flex-start;
+					width: 100%;
+					gap: 2em;
+
+					.section {
+						width: 4em;
+						height: 4em;
+
+						.section-link {
+							flex-direction: column;
+							height: auto;
+							padding: 0.5em;
+							width: auto;
+							gap: 0.2em;
+
+							.link-text {
+								font-size: 0.7em;
+								display: none;
+							}
+						}
+					}
+				}
+
+				.bottom-section {
+					.section {
+						width: 4em;
+						height: 4em;
+
+						.section-link {
+							flex-direction: column;
+							height: auto;
+							padding: 0.5em;
+							width: auto;
+							gap: 0.2em;
+
+							.link-text {
+								font-size: 0.7em;
+								display: none;
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -251,16 +313,6 @@
 						}
 					}
 				}
-			}
-		}
-	}
-
-	@media (max-width: 768px) {
-		aside {
-			width: 4em;
-
-			&.collapsed {
-				width: 4em;
 			}
 		}
 	}

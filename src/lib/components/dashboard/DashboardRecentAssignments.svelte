@@ -34,7 +34,6 @@
 			try {
 				const data = JSON.parse(event.data)
 				if (data.connected) {
-					console.log('SSE Connection established')
 					return
 				}
 				assignments = data

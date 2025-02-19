@@ -44,7 +44,6 @@ export async function GET({ locals: { user, databases } }) {
             }
         },
         cancel() {
-            console.log('Stream cancelled');
             isStreamActive = false;
             clearInterval(interval);
         }

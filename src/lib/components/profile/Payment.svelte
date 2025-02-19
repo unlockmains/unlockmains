@@ -180,13 +180,24 @@
 			background-color: var(--custom-color-brand);
 			color: white;
 			border: none;
-			border-radius: 4px;
+			border-radius: 0.5em;
 			cursor: pointer;
 			font-size: 1.1rem;
 
 			&:disabled {
 				opacity: 0.7;
 				cursor: not-allowed;
+			}
+		}
+		@media (max-width: 768px) {
+			h1 {
+				font-size: 1.5em;
+			}
+			p {
+				font-size: 0.8em;
+			}
+			.payment-button {
+				font-size: 0.8rem;
 			}
 		}
 	}

@@ -56,6 +56,7 @@
 
 		@media (max-width: 768px) {
 			padding: 0.5rem;
+			height: 3.5em;
 		}
 	}
 
@@ -70,13 +71,13 @@
 	}
 
 	.user {
-		border: 1px solid var(--color-zinc-400);
 		border-radius: var(--custom-border-radius);
 		background-color: var(--color-white-500);
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 0.5em;
+		gap: 1em;
+		padding: 0 1em;
 
 		.name-email {
 			display: flex;
@@ -90,9 +91,9 @@
 		}
 
 		form {
-			height: 2em;
-			width: 2em;
 			cursor: pointer;
+			padding: 0;
+			margin: 0;
 			button {
 				background-color: transparent;
 				border: none;
@@ -100,9 +101,6 @@
 				padding: 0;
 				margin: 0;
 			}
-		}
-		@media (max-width: 768px) {
-			display: none;
 		}
 	}
 </style>

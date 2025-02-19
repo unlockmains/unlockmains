@@ -96,6 +96,7 @@
 
 		@media (max-width: 768px) {
 			padding: 0.5rem;
+			height: 4em;
 		}
 	}
 

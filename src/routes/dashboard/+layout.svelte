@@ -21,23 +21,33 @@
 			goto(`/dashboard/profile`)
 		}
 	})
+	let isMobile = $state(false)
+	function checkMobile() {
+		isMobile = window.innerWidth <= 768
+	}
+
+	$effect(() => {
+		if (typeof window !== 'undefined') {
+			checkMobile()
+			window.addEventListener('resize', checkMobile)
+			return () => window.removeEventListener('resize', checkMobile)
+		}
+	})
 </script>
 
 <svelte:head>
 	<title>Unlock Mains</title>
 </svelte:head>
 
-<div>
-	{#if data.adminApproved}
-		<Sidebar slug={data.slug} parentSlug={data.parentSlug} user={data.user} />
-	{/if}
-	{#if $sideNavOpen && !$alwaysShow}
-		<div class="backdrop" on:click={toggleSideNav}></div>
-	{/if}
-	<main class:sideBarSpace={$alwaysShow} class:collapse={$sideNavCollapse}>
-		{@render children()}
-	</main>
-</div>
+{#if data.adminApproved}
+	<Sidebar slug={data.slug} parentSlug={data.parentSlug} user={data.user} />
+{/if}
+{#if $sideNavOpen && !$alwaysShow}
+	<div class="backdrop" on:click={toggleSideNav}></div>
+{/if}
+<main class:sideBarSpace={$alwaysShow} class:collapse={$sideNavCollapse} class:mobile={isMobile}>
+	{@render children()}
+</main>
 
 <Toaster richColors closeButton />
 
@@ -70,6 +80,11 @@
 		&.collapse {
 			margin-left: 6em;
 			width: calc(100% - 6em);
+		}
+
+		&.mobile {
+			width: 100%;
+			margin: 4em 0 5em 0;
 		}
 
 		@media only screen and (max-width: 768px) {

@@ -47,7 +47,7 @@ export const actions: Actions = {
 
         const files = formData.getAll("question-files");
         const studentProfile = JSON.parse(formData.get('student-profile') as string) as IStudentProfile;
-        console.log("studentProfile", studentProfile)
+
         try {
             const savingData = {
                 "student_profile": studentProfile.$id,
@@ -86,7 +86,6 @@ export const actions: Actions = {
             await databases.updateDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, studentProfile.$id, fieldToBeUpdated);
             throw redirect(303, "/dashboard");
         } catch (err) {
-            console.log("error", err)
             if (err instanceof Error) {
                 success = false;
                 message = err.message;

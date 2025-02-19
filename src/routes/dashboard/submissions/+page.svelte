@@ -25,7 +25,8 @@
 			method: 'POST'
 		})
 		if (response.ok) {
-			pdfFileData.data = (await response.body?.getReader().read())?.value
+			const fileData = await response.arrayBuffer()
+			pdfFileData.data = new Uint8Array(fileData)
 			pdfFileData.loading = false
 			showModal = true
 		}
@@ -85,7 +86,7 @@
 				...submission,
 				submittedFile: submission.submittedFiles[0].file_id,
 				evaluatedFile: submission.evaluations[0]?.evaluatedFiles[0]?.file_id,
-				evaluationRemark: submission.evaluations[0].remarks
+				evaluationRemark: submission.evaluations[0]?.remarks
 			}))
 			pdfFileData.loading = false
 		}

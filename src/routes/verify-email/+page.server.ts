@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ url, locals: { user } }) => {
 
   const userId = url.searchParams.get("id");
   if (!userId) {
-    redirect(303, '/login')
+    redirect(303, '/')
   }
   return { url: url.origin, userId }
 }

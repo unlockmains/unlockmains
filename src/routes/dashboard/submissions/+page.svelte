@@ -1,85 +1,115 @@
 <script lang="ts">
-	import Button from '$lib/components/atoms/Button.svelte'
 	import Grid from '$lib/components/atoms/Grid.svelte'
 	import Modal from '$lib/components/atoms/Modal.svelte'
 	import OpenPdf from '$lib/components/atoms/OpenPDF.svelte'
-	import type { IPageAnnotations } from '$lib/types/index.js'
+	import PageSpinner from '$lib/components/atoms/PageSpinner.svelte'
+	import type { IRecentEvaluation, ISubmission } from '$lib/types'
+	import { onMount } from 'svelte'
 
-	export let data
-	$: ({ submissions } = data)
+	let submissions = $state<ISubmission[]>([])
 
-	let columns = [
+	let pdfFileData = $state<{
+		loading: boolean
+		error: string | null
+		data?: Uint8Array
+	}>({
+		loading: false,
+		error: null
+	})
+
+	let getFileView = async (fileId: string, type?: string) => {
+		pdfFileData.loading = true
+		showModal = false
+		pdfFileData.data = undefined
+		const response = await fetch(`/api/files/view/${fileId}?type=${type}`, {
+			method: 'POST'
+		})
+		if (response.ok) {
+			pdfFileData.data = (await response.body?.getReader().read())?.value
+			pdfFileData.loading = false
+			showModal = true
+		}
+	}
+
+	let columns = $state([
 		{
-			key: 'name',
-			title: 'Name'
+			key: 'question_type_lvl1',
+			title: 'Question Type 1'
 		},
 		{
-			key: 'noOfQuestions',
-			title: 'No. of Questions'
+			key: 'question_type_lvl2',
+			title: 'Question Type 2'
 		},
 		{
-			key: 'questionType',
-			title: 'Question Type'
+			key: 'question_type_lvl3',
+			title: 'Question Type 3'
 		},
 		{
 			key: 'status',
 			title: 'Status'
 		},
 		{
-			key: 'pyq',
-			title: 'PYQ'
+			key: 'is_pyq',
+			title: 'is PYQ'
 		},
 		{
-			key: 'submissionDate',
-			title: 'Submission Date'
+			key: 'total_questions',
+			title: 'Questions Submitted'
 		},
 		{
-			key: 'submittedFileName',
-			title: 'Submitted File'
+			key: 'submittedFile',
+			title: 'Submitted File',
+			type: 'link',
+			onClick: getFileView
+		},
+		{
+			key: 'evaluatedFile',
+			title: 'Evaluated File',
+			type: 'link',
+			onClick: (value: string) => getFileView(value, 'evaluation')
+		},
+		{
+			key: 'evaluationRemark',
+			title: 'Evaluator Remarks'
 		}
-	]
+	])
 
-	let showModal = false
+	let showModal = $state(false)
 
-	async function handleSave(annotations: IPageAnnotations) {
-		try {
-			// Save to localStorage
-			localStorage.setItem('pdfAnnotations', JSON.stringify(annotations))
-
-			// Or save to backend
-			// await fetch('/api/save-annotations', {
-			//   method: 'POST',
-			//   headers: { 'Content-Type': 'application/json' },
-			//   body: JSON.stringify(annotations)
-			// })
-		} catch (error) {
-			console.error('Failed to save annotations:', error)
+	onMount(async () => {
+		pdfFileData.loading = true
+		const response = await fetch('/api/student/all-submissions')
+		if (response.ok) {
+			const data = await response.json()
+			submissions = data.map((submission: IRecentEvaluation) => ({
+				...submission,
+				submittedFile: submission.submittedFiles[0].file_id,
+				evaluatedFile: submission.evaluations[0]?.evaluatedFiles[0]?.file_id,
+				evaluationRemark: submission.evaluations[0].remarks
+			}))
+			pdfFileData.loading = false
 		}
-	}
-
-	// Load saved annotations
-	const savedAnnotations = JSON.parse(localStorage.getItem('pdfAnnotations') || '{}')
+	})
 </script>
 
-<div style="width: 100%;">
+<div class="dashboard-submissions">
 	<h1>Submissions</h1>
-	<!-- {#each submissions as submission}
-		<div>{submission.name}</div>
-	{/each} -->
 	<Grid bind:data={submissions} bind:columns />
-
-	<!-- <Button label="show modal" onClick={() => (showModal = true)} /> -->
-
-	<!-- <Modal {showModal}> -->
-	<!-- <OpenPdf
-		pdfUrl="https://shrey.shreykumar.com/api/files/question_submissions/g97jfi4t6rc5sc8/sample_multiple_onil1GEFjd.pdf"
-		onSave={handleSave}
-		{savedAnnotations}
-	/> -->
-	<!-- </Modal> -->
-
-	<!-- /bminycuzvo03uqb/sample_R2Li3rnQNX.pdf -->
+	{#if pdfFileData.loading}
+		<PageSpinner />
+	{:else if pdfFileData.data && !pdfFileData.loading}
+		<Modal {showModal}>
+			<OpenPdf pdfUrl={pdfFileData.data} showAnnotations={false} />
+		</Modal>
+	{/if}
 </div>
 
 <style lang="scss">
+	.dashboard-submissions {
+		width: 100%;
+		display: flex;
+		flex-flow: column wrap;
+		align-items: center;
+		padding: 1em;
+	}
 </style>

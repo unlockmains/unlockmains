@@ -18,16 +18,18 @@ export type INewSubmissionType = {
 }
 
 export type ISubmission = {
-    collectionId: string,
-    collectionName: string,
-    id: string,
-    isPyq: boolean,
-    name: string,
-    noOfQuestions: number,
-    questionType: string,
+    question_type_lvl1: string,
+    question_type_lvl2: string,
+    question_type_lvl3: string,
+    total_questions: number,
+    is_pyq: boolean,
     status: ESubmissionStatus,
-    submissionDate: string,
-    submittedFile: string[]
+    $id: string,
+    $createdAt: string,
+    $updatedAt: string[],
+    student_profile: IStudentProfile,
+    $databaseId: string,
+    $collectionId: string,
 }
 
 type AnnotateObject = {
@@ -195,6 +197,26 @@ export interface IStudentProfile {
     roll_number_pre: string;
     roll_number_mains: string;
     pricing_structure: IPricingStructure;
+}
+
+export interface IEvaluatorProfile {
+    $id: string;
+    $createdAt: string;
+    $updatedAt: string;
+    user_profile: IUserProfile;
+    general_studies: string[];
+    essay: boolean;
+    optional: boolean;
+    optional_subject: string;
+    evaluation_language: string;
+    available: boolean;
+    unavailable_reason: string;
+    gs_total_bw: number;
+    gs_available_bw: number;
+    optional_total_bw: number;
+    optional_available_bw: number;
+    essay_total_bw: number;
+    essay_available_bw: number;
 }
 
 export interface IPricingStructure {

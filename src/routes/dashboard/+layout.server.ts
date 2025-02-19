@@ -2,7 +2,6 @@ import { PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB } from "$e
 import { Query, type Models } from "node-appwrite";
 import type { PageServerLoad } from "../$types.js";
 import { redirect } from "@sveltejs/kit";
-import type { IStudentProfile } from "$lib/types/index.js";
 /** @type {import('./$types').PageLoad} */
 
 export const ssr = true;
@@ -19,7 +18,7 @@ export const load: PageServerLoad = async ({ route, locals: { user, databases } 
             const studentDocument = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB,
                   [
                         Query.equal("users_profile", user?.profile.$id),
-                        Query.select(["unlimited_plan", "plan_active", "plan_start", "free_plan"]),
+                        Query.select(["$id", "unlimited_plan", "plan_active", "plan_start", "free_plan"]),
                         Query.limit(1),
                   ]);
             studentProfile = studentDocument.documents[0];

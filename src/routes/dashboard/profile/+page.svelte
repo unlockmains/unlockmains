@@ -3,19 +3,19 @@
 	import { browser } from '$app/environment'
 	import UserAvatarIcon from '$lib/components/icons/UserAvatarIcon.svelte'
 	import BasicInformation from '$lib/components/profile/BasicInformation.svelte'
-	import BillingAndPayments from '$lib/components/profile/Payment.svelte'
 	import MainsInformation from '$lib/components/profile/MainsInformation.svelte'
 	import type { IPricingStructure, IStudentProfile, IUser } from '$lib/types'
 	import Payment from '$lib/components/profile/Payment.svelte'
 	import BillingHistory from '$lib/components/profile/BillingHistory.svelte'
+	import Preferences from '$lib/components/profile/Preferences.svelte'
 
 	let { data } = $props<{
 		data: { user: IUser; studentProfile: IStudentProfile; allPlans: IPricingStructure[] }
 	}>()
 
-	let activeLink = $state<'basic-information' | 'upsc-mains-exam' | 'billing-history' | 'payment'>(
-		'basic-information'
-	)
+	let activeLink = $state<
+		'basic-information' | 'upsc-mains-exam' | 'billing-history' | 'payment' | 'preferences'
+	>('basic-information')
 
 	$effect(() => {
 		const plan = browser && sessionStorage.getItem('plan')
@@ -42,14 +42,25 @@
 						Basic Information
 					</button>
 				</div>
-				<div>
-					<button
-						onclick={() => (activeLink = 'upsc-mains-exam')}
-						class:active={activeLink === 'upsc-mains-exam'}
-					>
-						Mains Information</button
-					>
-				</div>
+				{#if data.user.profile.user_type === 'STUDENT'}
+					<div>
+						<button
+							onclick={() => (activeLink = 'upsc-mains-exam')}
+							class:active={activeLink === 'upsc-mains-exam'}
+						>
+							Mains Information</button
+						>
+					</div>
+				{:else}
+					<div>
+						<button
+							onclick={() => (activeLink = 'preferences')}
+							class:active={activeLink === 'preferences'}
+						>
+							Preferences</button
+						>
+					</div>
+				{/if}
 				<div>
 					<button
 						onclick={() => (activeLink = 'billing-history')}
@@ -67,15 +78,17 @@
 			{#if activeLink === 'basic-information'}
 				<BasicInformation user={data.user} />
 			{:else if activeLink === 'upsc-mains-exam'}
-				<MainsInformation user={data.user} studentProfile={data.studentProfile} />
+				<MainsInformation user={data.user} profile={data.profile} />
+			{:else if activeLink === 'preferences'}
+				<Preferences user={data.user} profile={data.profile} />
 			{:else if activeLink === 'billing-history'}
 				<BillingHistory
 					user={data.user}
-					studentProfile={data.studentProfile}
+					studentProfile={data.profile}
 					paymentHistory={data.paymentHistory}
 				/>
 			{:else if activeLink === 'payment'}
-				<Payment user={data.user} studentProfile={data.studentProfile} allPlans={data.allPlans} />
+				<Payment user={data.user} studentProfile={data.profile} allPlans={data.allPlans} />
 			{/if}
 		</div>
 	</div>

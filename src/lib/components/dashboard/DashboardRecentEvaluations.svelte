@@ -6,6 +6,7 @@
 	import PdfIcon from '../icons/PDFIcon.svelte'
 	import { convertISODateToDate } from '$lib/api/utils'
 	import { browser } from '$app/environment'
+	import { goto } from '$app/navigation'
 
 	let loading = $state(false)
 	let evaluations = $state<IRecentEvaluation[]>([])
@@ -62,7 +63,7 @@
 <div class="dashboard-recent-evaluations">
 	<div class="header">
 		<h4>Recent Evaluations</h4>
-		<Button type="link" label="View All" />
+		<Button type="link" label="View All" onClick={() => goto('/dashboard/submissions')} />
 	</div>
 	<div class="recent-evaluations">
 		{#if loading}

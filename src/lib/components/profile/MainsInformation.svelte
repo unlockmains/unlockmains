@@ -11,10 +11,10 @@
 	let loadingSubmission = $state(false)
 	let {
 		user,
-		studentProfile
+		profile
 	}: {
 		user: IUser
-		studentProfile: IStudentProfile
+		profile: IStudentProfile
 	} = $props()
 
 	let mainInformation = $state<{
@@ -25,12 +25,12 @@
 		rollNumberPre: string
 		rollNumberMains: string
 	}>({
-		optionalSubject: studentProfile.optional_subject,
-		targetYear: studentProfile.target_year,
-		preparingFor: studentProfile.preparing_for,
-		otherPreparingFor: studentProfile.other_preparing_for,
-		rollNumberPre: studentProfile.roll_number_pre,
-		rollNumberMains: studentProfile.roll_number_mains
+		optionalSubject: profile.optional_subject,
+		targetYear: profile.target_year,
+		preparingFor: profile.preparing_for,
+		otherPreparingFor: profile.other_preparing_for,
+		rollNumberPre: profile.roll_number_pre,
+		rollNumberMains: profile.roll_number_mains
 	})
 
 	let targetYearOptions = [
@@ -88,7 +88,7 @@
 		use:enhance={handleSubmit}
 	>
 		<input type="hidden" name="userId" value={user?.$id} />
-		<input type="hidden" name="studentProfileId" value={studentProfile?.$id} />
+		<input type="hidden" name="studentProfileId" value={profile?.$id} />
 		<div class="row">
 			<Combobox
 				options={optionalSubjects}

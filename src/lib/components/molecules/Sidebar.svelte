@@ -32,6 +32,9 @@
 	function toggleCollapse() {
 		toggleCollapseSideNav()
 	}
+	$effect(() => {
+		activeKey = slug.split('/')[2] ?? 'home'
+	})
 </script>
 
 <aside class:visible={$sideNavOpen || showSidebar} class:collapsed={$sideNavCollapse}>
@@ -70,8 +73,8 @@
 					<a
 						class="section-link"
 						href="/dashboard/submissions"
-						class:active={activeKey === 'my-submissions'}
-						onclick={() => (activeKey = 'my-submissions')}
+						class:active={activeKey === 'submissions'}
+						onclick={() => (activeKey = 'submissions')}
 					>
 						<SideBarIcons type="submission" />
 						<span class="link-text">My Submissions</span>

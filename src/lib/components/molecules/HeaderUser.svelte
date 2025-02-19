@@ -1,9 +1,9 @@
 <script lang="ts">
-	import ClickOutsideContext from '$lib/context/ClickOutsideContext.svelte'
 	import { topBannerVisible } from '$lib/stores/topBannerStore'
 	import type { IUser } from '$lib/types'
-	import Popover from '../atoms/Popover.svelte'
 	import { onMount } from 'svelte'
+	import UserAvatarIcon from '../icons/UserAvatarIcon.svelte'
+	import LogoutIcon from '../icons/LogoutIcon.svelte'
 	let { user } = $props<{ user: IUser }>()
 
 	let isMenuOpen = $state(false)
@@ -28,10 +28,15 @@
 		<img src="/um-main.png" alt="logo 1" />
 	</a>
 
-	<div class="desktop-auth">
-		<ClickOutsideContext>
-			<Popover {user} />
-		</ClickOutsideContext>
+	<div class="user">
+		<UserAvatarIcon />
+		<div class="name-email">
+			<p>{user.name}</p>
+			<p>{user.email}</p>
+		</div>
+		<form action="/auth/logout" method="post">
+			<button><LogoutIcon /></button>
+		</form>
 	</div>
 </header>
 
@@ -64,7 +69,38 @@
 		}
 	}
 
-	.desktop-auth {
+	.user {
+		border: 1px solid var(--color-zinc-400);
+		border-radius: var(--custom-border-radius);
+		background-color: var(--color-white-500);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.5em;
+
+		.name-email {
+			display: flex;
+			flex-direction: column;
+			gap: 0.5em;
+			p {
+				font-size: 0.8em;
+				padding: 0;
+				margin: 0;
+			}
+		}
+
+		form {
+			height: 2em;
+			width: 2em;
+			cursor: pointer;
+			button {
+				background-color: transparent;
+				border: none;
+				cursor: pointer;
+				padding: 0;
+				margin: 0;
+			}
+		}
 		@media (max-width: 768px) {
 			display: none;
 		}

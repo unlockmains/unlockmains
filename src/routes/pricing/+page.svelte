@@ -23,15 +23,3 @@
 <Background />
 <Pricing pricingPbData={PricingCardsData} />
 <HomeFooter />
-
-<style lang="scss">
-	.careers-page {
-		max-width: 1200px;
-		margin: 0 auto;
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 1em;
-	}
-</style>

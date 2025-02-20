@@ -4,7 +4,7 @@ import PricingCardsData from '$lib/api/mockPlansData.json'
 import quotesData from '$lib/api/quotes.json'
 import { PUBLIC_APPWRITE_ENDPOINT, PUBLIC_APPWRITE_PROJECT, PUBLIC_APPWRITE_SAMPLE_FILE_BUCKET } from '$env/static/public'
 
-export const prerender = true;
+export const ssr = true;
 
 export const load: PageServerLoad = async ({ url, locals: { user, storage } }) => {
   if (user) {

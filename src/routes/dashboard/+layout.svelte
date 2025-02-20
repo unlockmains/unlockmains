@@ -69,9 +69,10 @@
 		align-items: center;
 		justify-content: center;
 		background-color: var(--color-white-800);
-		width: calc(100% - max(15rem, 15%));
+		width: calc(100% - max(15%, 15em));
 		min-height: max(100%, 100vh);
 		margin-top: 5em;
+		margin-left: max(15%, 15em);
 
 		&.sideBarSpace {
 			margin-left: max(15rem, 15%);

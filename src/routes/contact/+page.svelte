@@ -3,6 +3,21 @@
 	import HomeFooter from '$lib/components/homePage/HomeFooter.svelte'
 </script>
 
+<svelte:head>
+	<title>Contact Us - Unlock Mains</title>
+	<meta
+		name="description"
+		content="Contact us to know more about Unlock Mains and you can take full advantage of the services."
+	/>
+	<meta property="og:title" content="Contact Us" />
+	<meta
+		property="og:description"
+		content="Contact us to know more about Unlock Mains and you can take full advantage of the services."
+	/>
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://unlockmains.com/contact" />
+</svelte:head>
+
 <Background />
 <div class="contact">
 	<h1>Contact Us</h1>

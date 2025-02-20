@@ -6,8 +6,10 @@
 	import Banner from '$lib/components/atoms/Banner.svelte'
 	import { toggleTopBannerVisible, topBannerVisible } from '$lib/stores/topBannerStore'
 	import type { LayoutData } from './$types'
-	import { page } from '$app/stores'
 	import HeaderUser from '$lib/components/molecules/HeaderUser.svelte'
+	import { writable } from 'svelte/store'
+	import type { IUser } from '$lib/types'
+	import { setContext } from 'svelte'
 
 	let { data } = $props<{ data: LayoutData }>()
 
@@ -29,6 +31,11 @@
 			return () => window.removeEventListener('resize', checkMobile)
 		}
 	})
+
+	const userStore = writable<IUser>(data.user || null)
+	userStore.set(data.user)
+
+	setContext('userStore', userStore)
 </script>
 
 <svelte:head>
@@ -48,9 +55,9 @@
 <Banner bannerText={top_banner} />
 
 {#if !data.user}
-	<Header user={$page.data.user} />
+	<Header />
 {:else}
-	<HeaderUser user={$page.data.user} />
+	<HeaderUser />
 {/if}
 <div
 	class:desktop={$topBannerVisible}

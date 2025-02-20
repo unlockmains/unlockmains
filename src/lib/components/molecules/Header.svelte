@@ -1,13 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation'
-	import ClickOutsideContext from '$lib/context/ClickOutsideContext.svelte'
 	import { topBannerVisible } from '$lib/stores/topBannerStore'
-	import type { IUser } from '$lib/types'
 	import Button from '../atoms/Button.svelte'
-	import Popover from '../atoms/Popover.svelte'
 	import HamburgerIcon from '../icons/HamburgerIcon.svelte'
 	import { onMount } from 'svelte'
-	let { user } = $props<{ user: IUser }>()
 
 	let isMenuOpen = $state(false)
 	let headerElement: HTMLElement
@@ -53,30 +49,18 @@
 		</div>
 
 		<div class="mobile-auth">
-			{#if user}
-				<ClickOutsideContext>
-					<Popover {user} />
-				</ClickOutsideContext>
-			{:else}
-				<Button
-					label="Login"
-					onClick={() => {
-						handleLinkClick()
-						goto('/login')
-					}}
-				/>
-			{/if}
+			<Button
+				label="Login"
+				onClick={() => {
+					handleLinkClick()
+					goto('/login')
+				}}
+			/>
 		</div>
 	</nav>
 
 	<div class="desktop-auth">
-		{#if user}
-			<ClickOutsideContext>
-				<Popover {user} />
-			</ClickOutsideContext>
-		{:else}
-			<Button label="Login" onClick={() => goto('/login')} />
-		{/if}
+		<Button label="Login" onClick={() => goto('/login')} />
 	</div>
 </header>
 

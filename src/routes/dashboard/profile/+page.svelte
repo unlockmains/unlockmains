@@ -8,9 +8,11 @@
 	import Payment from '$lib/components/profile/Payment.svelte'
 	import BillingHistory from '$lib/components/profile/BillingHistory.svelte'
 	import Preferences from '$lib/components/profile/Preferences.svelte'
+	import { getContext } from 'svelte'
+	import type { Writable } from 'svelte/store'
 
 	let { data } = $props<{
-		data: { user: IUser; studentProfile: IStudentProfile; allPlans: IPricingStructure[] }
+		data: { studentProfile: IStudentProfile; allPlans: IPricingStructure[] }
 	}>()
 
 	let activeLink = $state<
@@ -23,14 +25,25 @@
 			activeLink = 'payment'
 		}
 	})
+
+	const fetchDetails = async () => {
+		const response = await fetch('/api/user/details', { method: 'post' })
+		if (response.ok) {
+			const data = await response.json()
+			console.log(data)
+		}
+	}
+
+	const userStore = getContext<Writable<IUser>>('userStore')
 </script>
 
 <div class="profile">
 	<div class="left-nav">
 		<div class="avatar-name">
 			<UserAvatarIcon color="#707070" width="8em" height="8em" />
-			<h3>{data.user.name}</h3>
-			<p>{data.user.email}</p>
+			<h3>{$userStore?.name}</h3>
+			<p>{$userStore?.email}</p>
+			<!-- <button onclick={fetchDetails}>Test Click</button> -->
 		</div>
 		<nav>
 			<div>
@@ -41,7 +54,7 @@
 					Basic Information
 				</button>
 			</div>
-			{#if data.user.profile.user_type === 'STUDENT'}
+			{#if $userStore?.profile.user_type === 'STUDENT'}
 				<div>
 					<button
 						onclick={() => (activeLink = 'upsc-mains-exam')}
@@ -75,19 +88,19 @@
 	</div>
 	<div class="right-data">
 		{#if activeLink === 'basic-information'}
-			<BasicInformation user={data.user} />
+			<BasicInformation user={$userStore} />
 		{:else if activeLink === 'upsc-mains-exam'}
-			<MainsInformation user={data.user} profile={data.profile} />
+			<MainsInformation user={$userStore} profile={data.profile} />
 		{:else if activeLink === 'preferences'}
-			<Preferences user={data.user} profile={data.profile} />
+			<Preferences user={$userStore} profile={data.profile} />
 		{:else if activeLink === 'billing-history'}
 			<BillingHistory
-				user={data.user}
+				user={$userStore}
 				studentProfile={data.profile}
 				paymentHistory={data.paymentHistory}
 			/>
 		{:else if activeLink === 'payment'}
-			<Payment user={data.user} studentProfile={data.profile} allPlans={data.allPlans} />
+			<Payment user={$userStore} studentProfile={data.profile} allPlans={data.allPlans} />
 		{/if}
 	</div>
 </div>

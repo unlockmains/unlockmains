@@ -1,34 +1,16 @@
 import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
-import { PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_PROFILE_DB, PUBLIC_APPWRITE_PAYMENT_HISTORY, PUBLIC_APPWRITE_PRICING_STRUCTURE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB } from '$env/static/public'
-import { ID, Query } from 'node-appwrite'
+import { PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_PRICING_STRUCTURE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB } from '$env/static/public'
 
-export const load: PageServerLoad = async ({ locals: { user, databases } }) => {
+export const load: PageServerLoad = async ({ locals: { user, databases }, parent }) => {
   if (!user) {
     redirect(303, '/')
   }
-  let profile = null
-  let paymentHistory = null;
-  if (user.profile.user_type === "EVALUATOR") {
-    profile = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_PROFILE_DB, [
-      Query.equal('users_profile', user.profile.$id),
-      Query.select(['$id', "general_studies", "essay", "optional", "optional_subject", "evaluation_language", "available", "unavailable_reason", "gs_total_bw", "gs_available_bw", "optional_total_bw", "optional_available_bw", "essay_total_bw", "essay_available_bw"]),
-      Query.limit(1),
-    ])
-  } else if (user.profile.user_type === "STUDENT") {
-    profile = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, [
-      Query.equal('users_profile', user.profile.$id),
-      Query.select(['$id', "plan_active", "free_plan", "plan_start", "optional_subject", "target_year", "preparing_for", "other_preparing_for", "roll_number_pre", "roll_number_mains", "pricing_structure.*"]),
-      Query.limit(1),
-    ])
-    paymentHistory = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_PAYMENT_HISTORY, [
-      Query.equal('users_profile', user.profile.$id),
-    ])
-  }
 
+  const layoutData = await parent();
   const allPlans = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_PRICING_STRUCTURE);
 
-  return { user, profile: profile ? profile.documents[0] : null, allPlans: allPlans.documents, paymentHistory: paymentHistory ? paymentHistory.documents : [] }
+  return { user, profile: layoutData.profile ? layoutData.profile.documents[0] : null, allPlans: allPlans.documents, paymentHistory: layoutData.paymentHistory ? layoutData.paymentHistory.documents : [] }
 }
 
 export const actions: Actions = {

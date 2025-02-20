@@ -3,12 +3,10 @@
 		alwaysShow,
 		sideNavOpen,
 		toggleCollapseSideNav,
-		toggleSideNav,
 		sideNavCollapse
 	} from '$lib/stores/sideNavStore'
 	import { topBannerVisible } from '$lib/stores/topBannerStore'
 	import type { IUser } from '$lib/types'
-	import CrossIcon from '../icons/CrossIcon.svelte'
 	import SideBarIcons from '../icons/SideBarIcons.svelte'
 	import UserAvatarIcon from '../icons/UserAvatarIcon.svelte'
 
@@ -95,9 +93,9 @@
 				<div class="section">
 					<a
 						class="section-link"
-						href="/dashboard/evaluation-plan?query=my"
-						class:active={activeKey === 'my-plan'}
-						onclick={() => (activeKey = 'my-plan')}
+						href="/dashboard/plans"
+						class:active={activeKey === 'plans'}
+						onclick={() => (activeKey = 'plans')}
 					>
 						<SideBarIcons type="plan" />
 						<span class="link-text">My Plan</span>

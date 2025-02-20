@@ -3,14 +3,17 @@
 	import { goto } from '$app/navigation'
 	import Button from './Button.svelte'
 
-	let { pricingCardData, selectedOption } = $props()
+	let { pricingCardData, selectedOption, afterAuth = false } = $props()
 
 	const currentYear = new Date().getFullYear()
 	const nextYear = currentYear + 1
 
 	const selectPlan = (planCode: string) => {
+		if (afterAuth) {
+			browser && sessionStorage.setItem('plan', planCode)
+			goto(`/dashboard/profile`)
+		}
 		browser && sessionStorage.setItem('plan', planCode)
-		goto(`/login?plan=${planCode}`)
 	}
 </script>
 

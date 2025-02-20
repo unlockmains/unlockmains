@@ -2,7 +2,7 @@
 	import Combobox from '../atoms/Combobox.svelte'
 	import PricingCards from '../atoms/PricingCards.svelte'
 	import Tabs from '../molecules/Tabs.svelte'
-	let { pricingPbData } = $props()
+	let { pricingPbData, afterAuth = false } = $props()
 	let activeTab: number = $state(0)
 	let selectedOption: string = $state(pricingPbData[1].options[0])
 
@@ -49,7 +49,7 @@
 		</form>
 	{/if}
 	<div class="pricing-divider"></div>
-	<PricingCards pricingCardData={pricingPbData[activeTab].pricings} {selectedOption} />
+	<PricingCards pricingCardData={pricingPbData[activeTab].pricings} {selectedOption} {afterAuth} />
 	<div class="pricing-note">
 		<h3><i><b>Note:</b></i></h3>
 		<ul>

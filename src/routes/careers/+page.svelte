@@ -27,6 +27,21 @@
 	]
 </script>
 
+<svelte:head>
+	<title>Careers - Unlock Mains</title>
+	<meta
+		name="description"
+		content="Checkout career opportunities and become a part of Unlock Mains."
+	/>
+	<meta property="og:title" content="Careers" />
+	<meta
+		property="og:description"
+		content="Checkout career opportunities and become a part of Unlock Mains"
+	/>
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://unlockmains.com/careers" />
+</svelte:head>
+
 <Background />
 <section class="careers-page">
 	<h1>Careers in Unlock Mains</h1>

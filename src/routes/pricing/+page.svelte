@@ -5,6 +5,21 @@
 	import HomeFooter from '$lib/components/homePage/HomeFooter.svelte'
 </script>
 
+<svelte:head>
+	<title>Pricing - Unlock Mains</title>
+	<meta
+		name="description"
+		content="Get to know about our competitive pricing for your Mains/Civil Services qualifications."
+	/>
+	<meta property="og:title" content="Contact Us" />
+	<meta
+		property="og:description"
+		content="Get to know about our competitive pricing for your Mains/Civil Services qualifications."
+	/>
+	<meta property="og:type" content="website" />
+	<meta property="og:url" content="https://unlockmains.com/pricing" />
+</svelte:head>
+
 <Background />
 <Pricing pricingPbData={PricingCardsData} />
 <HomeFooter />

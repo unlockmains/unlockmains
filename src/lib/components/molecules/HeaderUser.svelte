@@ -26,7 +26,7 @@
 </script>
 
 <header bind:this={headerElement} style={$topBannerVisible ? '--top: 3em;' : '--top: 0em;'}>
-	<a class="logo-container" href="/">
+	<a class="logo-container" href="/dashboard">
 		<img src="/um-main.png" alt="logo 1" />
 	</a>
 

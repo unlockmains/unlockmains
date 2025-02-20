@@ -32,6 +32,23 @@ export type ISubmission = {
     $collectionId: string,
 }
 
+export type IEvaluations = {
+    $id: string,
+    assignment_date: string,
+    status: EEvaluationStatus,
+    student_submissions: string,
+    submittedFile: string,
+    question_type_lvl1: string,
+    question_type_lvl2: string,
+    question_type_lvl3: string,
+    total_questions: number,
+    is_pyq: boolean,
+    remarks: string,
+    evaluation_start: string,
+    evaluation_end: string,
+    evaluatedFile: string,
+}
+
 type AnnotateObject = {
     fontSize: number;
     fontWeight: "normal" | "bold" | "bolder" | "lighter" | number;
@@ -165,7 +182,16 @@ export interface IRecentAssignments {
         question_type_lvl3: string;
         total_questions: number;
         is_pyq: boolean;
-    }
+    },
+    evaluations: {
+        remarks: string;
+        evaluation_start: string;
+        evaluation_end: string;
+        evaluatedFiles: {
+            file_id: string;
+            $id: string;
+        }[]
+    }[]
 }
 
 export interface IUserProfile {

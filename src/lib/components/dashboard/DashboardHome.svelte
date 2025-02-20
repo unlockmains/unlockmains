@@ -1,19 +1,21 @@
 <script lang="ts">
 	import type { IUser } from '$lib/types'
+	import { getContext } from 'svelte'
 	import UserAvatarIcon from '../icons/UserAvatarIcon.svelte'
 	import DashboardRecentAssignments from './DashboardRecentAssignments.svelte'
 	import DashboardRecentEvaluations from './DashboardRecentEvaluations.svelte'
+	import type { Writable } from 'svelte/store'
 
-	let { userPermission, user } = $props<{
+	let { userPermission } = $props<{
 		userPermission: 'STUDENT' | 'EVALUATOR' | 'ADMIN'
-		user: IUser
 	}>()
+	const userStore = getContext<Writable<IUser>>('userStore')
 </script>
 
 <div class="dashboard-container">
 	<div class="dashboard-left">
 		<div class="greeting">
-			<h2>Hello, {user.name} 👋</h2>
+			<h2>Hello, {$userStore?.name} 👋</h2>
 			<h6>Nice to have you back, exciting day ahead!</h6>
 		</div>
 		{#if userPermission === 'STUDENT'}
@@ -29,9 +31,8 @@
 			</div>
 			<div class="profile-details">
 				<h4>Profile Details</h4>
-				<p>Name: {user.name}</p>
-				<p>Email: {user.email}</p>
-				<p>Phone Number: {user.phone_number}</p>
+				<p>Name: {$userStore?.name}</p>
+				<p>Email: {$userStore?.email}</p>
 			</div>
 		</div>
 	</div>

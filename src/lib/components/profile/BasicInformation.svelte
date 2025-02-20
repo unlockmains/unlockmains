@@ -5,10 +5,13 @@
 	import Button from '../atoms/Button.svelte'
 	import Input from '../atoms/Input.svelte'
 	import { toast } from 'svelte-sonner'
+	import type { Writable } from 'svelte/store'
+	import { getContext } from 'svelte'
 	let { user } = $props<{
 		user: IUser
 	}>()
 	let loadingSubmission = $state(false)
+	const userStore = getContext<Writable<IUser>>('userStore')
 
 	let basicInformation = $state<{
 		name: string
@@ -52,6 +55,7 @@
 			loadingSubmission = false
 			toast.success(actionResult.data?.basicInformation.message)
 			basicInformation = actionResult.data?.basicInformation
+			userStore.set({ ...$userStore!, name: basicInformation.name })
 		}
 	}
 </script>

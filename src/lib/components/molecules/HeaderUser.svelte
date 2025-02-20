@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { topBannerVisible } from '$lib/stores/topBannerStore'
 	import type { IUser } from '$lib/types'
-	import { onMount } from 'svelte'
+	import { getContext, onMount } from 'svelte'
 	import UserAvatarIcon from '../icons/UserAvatarIcon.svelte'
 	import LogoutIcon from '../icons/LogoutIcon.svelte'
-	let { user } = $props<{ user: IUser }>()
+	import type { Writable } from 'svelte/store'
 
 	let isMenuOpen = $state(false)
 	let headerElement: HTMLElement
@@ -21,6 +21,8 @@
 			document.removeEventListener('click', handleClickOutside)
 		}
 	})
+
+	const userStore = getContext<Writable<IUser>>('userStore')
 </script>
 
 <header bind:this={headerElement} style={$topBannerVisible ? '--top: 3em;' : '--top: 0em;'}>
@@ -31,8 +33,8 @@
 	<div class="user">
 		<UserAvatarIcon />
 		<div class="name-email">
-			<p>{user.name}</p>
-			<p>{user.email}</p>
+			<p>{$userStore?.name}</p>
+			<p>{$userStore?.email}</p>
 		</div>
 		<form action="/auth/logout" method="post">
 			<button><LogoutIcon /></button>

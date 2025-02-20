@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { browser } from '$app/environment'
+	import { goto } from '$app/navigation'
 	import type { IRecentAssignments } from '$lib/types'
 	import Button from '../atoms/Button.svelte'
 	import SkeletonLoading from '../atoms/SkeletonLoading.svelte'
@@ -60,7 +61,7 @@
 <div class="dashboard-recent-Assignments">
 	<div class="header">
 		<h4>Recent Assignments</h4>
-		<Button type="link" label="View All" />
+		<Button type="link" label="View All" onClick={() => goto('/dashboard/evaluations')} />
 	</div>
 	<div class="recent-Assignments">
 		{#if loading}

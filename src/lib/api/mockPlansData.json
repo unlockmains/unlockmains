@@ -68,7 +68,7 @@
     ]
   },
   {
-    "sectionName": "BPSC Mains",
+    "sectionName": "BPSC",
     "options": [],
     "pricings": [
       {
@@ -81,7 +81,7 @@
           "Essay Topic from any source"
         ],
         "originalPrice": 5999,
-        "currentPrice": 3999,
+        "currentPrice": 1999,
         "duration": "year",
         "color": "#fbee9d",
         "planCode": "BPSC-Summit"

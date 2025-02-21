@@ -35,16 +35,12 @@
 	<div class="left-nav">
 		<div class="avatar-name">
 			<button class="user-avatar" onclick={() => (userAvatar = true)}>
-				{#if userAvatar}
-					<img
-						src={`${PUBLIC_AVATAR_API}${$userStore?.name}`}
-						alt="avatar"
-						width="8em"
-						height="8em"
-					/>
-				{:else}
-					<UserAvatarIcon color="#707070" width="8em" height="8em" />
-				{/if}
+				<img
+					src={`${PUBLIC_AVATAR_API}${$userStore?.name}`}
+					alt="avatar"
+					width="8em"
+					height="8em"
+				/>
 			</button>
 			<h3>{$userStore?.name}</h3>
 			<p>{$userStore?.email}</p>

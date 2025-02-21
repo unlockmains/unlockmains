@@ -43,7 +43,8 @@
 
 	const handleRazorpayResponse = async (
 		response: RazorpayResponse,
-		order: { amount: number; currency: string }
+		order: { amount: number; currency: string },
+		planDetails?: IPricingStructure
 	) => {
 		const storeResponse = await fetch('/api/payment/payment-verify', {
 			method: 'POST',
@@ -55,7 +56,7 @@
 				name: user?.name,
 				email: user?.email,
 				studentProfileId: studentProfile.$id,
-				planDetails: getPlanDetails(planSelected as string)
+				planDetails
 			})
 		})
 
@@ -74,6 +75,7 @@
 		try {
 			loading = true
 			const planFeatures = getPlanFeatures(planSelected as string)
+			const planDetails = getPlanDetails(planSelected as string)
 			const response = await fetch('/api/payment/create-order', {
 				method: 'POST',
 				headers: {
@@ -95,7 +97,8 @@
 				description: 'One stop solution for cracking your Mains exams.',
 				order_id: order.id,
 				image: 'https://www.unlockmains.com/um-main.png',
-				handler: (response: RazorpayResponse) => handleRazorpayResponse(response, order),
+				handler: (response: RazorpayResponse) =>
+					handleRazorpayResponse(response, order, planDetails),
 				prefill: {
 					name: user?.name,
 					email: user?.email,
@@ -115,11 +118,13 @@
 			planSelected = null
 		}
 	}
+	const currentYear = new Date().getFullYear()
+	const nextYear = currentYear + 1
 </script>
 
 <div class="billing-information">
-	<h1>Billing Information</h1>
-	<p>Check your billing information, plan, and payments.</p>
+	<h1>Payment Information</h1>
+	<p>Check your plan and payments.</p>
 	<div class="separator"></div>
 	{#if studentProfile.free_plan}
 		<p class="plan-details"><i>You are currently on the free plan.</i></p>
@@ -130,17 +135,39 @@
 		<p>This plan comes with following features:</p>
 		<ul>
 			{#each getPlanFeatures(studentProfile.pricing_structure.plan_code).features as feature}
-				<li>{feature}</li>
+				<li>
+					{feature
+						.replace('{year}', currentYear.toString())
+						.replace('{year+1}', nextYear.toString())}
+				</li>
 			{/each}
 		</ul>
 	{/if}
 	{#if planSelected}
 		<h1>Selected Plan {planSelected}</h1>
-		<p>Duration: {getPlanDetails(planSelected)?.duration}</p>
-		<p>Category: {getPlanDetails(planSelected)?.category}</p>
-		<p>GS Allowed: {getPlanDetails(planSelected)?.gs_allowed}</p>
-		<p>Optional Allowed: {getPlanDetails(planSelected)?.optional_allowed}</p>
-		<p>Essay Allowed: {getPlanDetails(planSelected)?.essay_allowed}</p>
+		<p>
+			Duration: {getPlanDetails(planSelected)?.duration === '{Year}'
+				? currentYear
+				: getPlanDetails(planSelected)?.duration === '{Year+1}'
+					? nextYear
+					: getPlanDetails(planSelected)?.duration}
+		</p>
+		<p>Category: <b>{getPlanDetails(planSelected)?.category}</b></p>
+		<p>
+			GS Allowed: {getPlanDetails(planSelected)?.gs_allowed === -1
+				? 'Unlimited'
+				: getPlanDetails(planSelected)?.gs_allowed}
+		</p>
+		<p>
+			Optional Allowed: {getPlanDetails(planSelected)?.optional_allowed === -1
+				? 'Unlimited'
+				: getPlanDetails(planSelected)?.optional_allowed}
+		</p>
+		<p>
+			Essay Allowed: {getPlanDetails(planSelected)?.essay_allowed === -1
+				? 'Unlimited'
+				: getPlanDetails(planSelected)?.essay_allowed}
+		</p>
 		<p>Price: ₹ {getPlanFeatures(planSelected)?.currentPrice}</p>
 		<div>
 			<button

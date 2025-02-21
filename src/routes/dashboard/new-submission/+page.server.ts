@@ -77,11 +77,11 @@ export const actions: Actions = {
 
             const fieldToBeUpdated: Record<string, number> = {};
             if (type === "General Studies") {
-                fieldToBeUpdated["gs_submissions_left"] = studentProfile.gs_submissions_left - Number(quantity);
+                fieldToBeUpdated["gs_submissions_left"] = studentProfile.gs_submissions_left < 0 ? -1 : studentProfile.gs_submissions_left - Number(quantity);
             } else if (type === "Optional") {
-                fieldToBeUpdated["optional_submissions_left"] = studentProfile.optional_submissions_left - Number(quantity);
+                fieldToBeUpdated["optional_submissions_left"] = studentProfile.optional_submissions_left < 0 ? -1 : studentProfile.optional_submissions_left - Number(quantity);
             } else if (type === "Essay") {
-                fieldToBeUpdated["eassy_submissions_left"] = studentProfile.eassy_submissions_left - Number(quantity);
+                fieldToBeUpdated["eassy_submissions_left"] = studentProfile.eassy_submissions_left < 0 ? -1 : studentProfile.eassy_submissions_left - Number(quantity);
             }
             await databases.updateDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, studentProfile.$id, fieldToBeUpdated);
             throw redirect(303, "/dashboard");

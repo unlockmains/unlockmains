@@ -5,6 +5,7 @@
 	import UserAvatarIcon from '../icons/UserAvatarIcon.svelte'
 	import LogoutIcon from '../icons/LogoutIcon.svelte'
 	import type { Writable } from 'svelte/store'
+	import { PUBLIC_AVATAR_API } from '$env/static/public'
 
 	let isMenuOpen = $state(false)
 	let headerElement: HTMLElement
@@ -31,7 +32,7 @@
 	</a>
 
 	<div class="user">
-		<UserAvatarIcon />
+		<img src={`${PUBLIC_AVATAR_API}${$userStore?.name}`} alt="avatar" width="32px" height="32px" />
 		<div class="name-email">
 			<p>{$userStore?.name}</p>
 			<p>{$userStore?.email}</p>

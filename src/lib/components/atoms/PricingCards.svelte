@@ -44,7 +44,7 @@
 				<div class="title">Features</div>
 				{#each features as feature}
 					<div class="feature">
-						<img src="lib/feature-yes.svg" alt="icon" />
+						<img src={`${afterAuth ? '../' : ''}lib/feature-yes.svg`} alt="icon" />
 						<span>{feature.replace('{year}', currentYear).replace('{year+1}', nextYear)}</span>
 					</div>
 				{/each}

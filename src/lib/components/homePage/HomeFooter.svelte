@@ -137,21 +137,6 @@
 		border-radius: 1em;
 	}
 
-	.brand-logo {
-		width: 1.5rem;
-		height: 1.5rem;
-	}
-
-	.brand-name {
-		font-size: 1.25rem;
-		font-weight: 600;
-	}
-
-	.brand-description {
-		color: #666;
-		margin: 0;
-	}
-
 	.brand-email {
 		color: #6366f1;
 		text-decoration: none;
@@ -257,11 +242,6 @@
 	.social-link:hover {
 		border-color: #9ca3af;
 		color: #000;
-	}
-
-	.social-icon {
-		width: 1.25rem;
-		height: 1.25rem;
 	}
 
 	.sr-only {

@@ -121,7 +121,8 @@
 			text-align: left;
 			border-bottom: 1px solid var(--color-zinc-300);
 			font-size: 0.8em;
-
+		}
+		td {
 			.link {
 				color: var(--custom-color-brand);
 				cursor: pointer;

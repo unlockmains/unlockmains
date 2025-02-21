@@ -70,6 +70,7 @@
 			width: 100%;
 			height: 100vh;
 			background-color: var(--color-zinc-300);
+			box-shadow: inset 0px 0px 4px 8px rgba(0, 0, 0, 0.2);
 
 			.profile-card {
 				display: flex;

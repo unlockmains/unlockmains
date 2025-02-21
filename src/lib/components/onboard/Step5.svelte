@@ -29,15 +29,6 @@
 </div>
 
 <style lang="scss">
-	.form-container {
-		display: flex;
-		flex-direction: column;
-		gap: 1em;
-
-		h4 {
-			margin: 0.3em 1em;
-		}
-	}
 	.form-navigation {
 		display: flex;
 		gap: 1em;

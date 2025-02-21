@@ -9,9 +9,9 @@
 	import HeaderUser from '$lib/components/molecules/HeaderUser.svelte'
 	import { writable } from 'svelte/store'
 	import type { IUser } from '$lib/types'
-	import { setContext } from 'svelte'
+	import { setContext, type Snippet } from 'svelte'
 
-	let { data } = $props<{ data: LayoutData }>()
+	let { data, children } = $props<{ data: LayoutData; children: Snippet }>()
 
 	let { top_banner } = data
 
@@ -54,7 +54,7 @@
 
 <Banner bannerText={top_banner} />
 
-{#if !data.user}
+{#if !$userStore}
 	<Header />
 {:else}
 	<HeaderUser />
@@ -64,7 +64,7 @@
 	class:mobileTopBanner={isMobile}
 	class:mobileNoTopBanner={!$topBannerVisible && isMobile}
 >
-	<slot />
+	{@render children()}
 </div>
 
 <Toaster richColors closeButton />

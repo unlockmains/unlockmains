@@ -212,11 +212,6 @@
 				}
 				margin-bottom: 0.5em;
 			}
-			ul {
-				li {
-					font-size: 0.8em;
-				}
-			}
 		}
 	}
 </style>

@@ -4,8 +4,9 @@
 	import Sidebar from '$lib/components/molecules/Sidebar.svelte'
 	import { alwaysShow, sideNavOpen, toggleSideNav, sideNavCollapse } from '$lib/stores/sideNavStore'
 	import type { IStudentProfile, IUser } from '$lib/types'
-	import { type Snippet } from 'svelte'
+	import { getContext, type Snippet } from 'svelte'
 	import { Toaster } from 'svelte-sonner'
+	import { writable, type Writable } from 'svelte/store'
 	let { data, children } = $props<{
 		slug: string
 		parentSlug: string
@@ -33,6 +34,10 @@
 			return () => window.removeEventListener('resize', checkMobile)
 		}
 	})
+	const userStore = getContext<Writable<IUser>>('userStore')
+	if (!$userStore) {
+		userStore.set(data.user)
+	}
 </script>
 
 <svelte:head>
@@ -43,7 +48,7 @@
 	<Sidebar slug={data.slug} parentSlug={data.parentSlug} user={data.user} />
 {/if}
 {#if $sideNavOpen && !$alwaysShow}
-	<div class="backdrop" on:click={toggleSideNav}></div>
+	<div class="backdrop" onclick={toggleSideNav}></div>
 {/if}
 <main class:sideBarSpace={$alwaysShow} class:collapse={$sideNavCollapse} class:mobile={isMobile}>
 	{@render children()}

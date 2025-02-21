@@ -7,6 +7,7 @@
 	import Input from '$lib/components/atoms/Input.svelte'
 	import OpenPdf from '$lib/components/atoms/OpenPDF.svelte'
 	import PageSpinner from '$lib/components/atoms/PageSpinner.svelte'
+	import StarRating from '$lib/components/atoms/StarRating.svelte'
 	import type { IRecentEvaluation } from '$lib/types'
 	import type { SubmitFunction } from '@sveltejs/kit'
 	import { onMount } from 'svelte'
@@ -142,6 +143,10 @@
 		/>
 	</div>
 </div>
+<div class="student-remark">
+	<h3>Ask questions or provide any remarks/feedbacks to evaluation</h3>
+	<p><i>No need to worry all the feedbacks and remarks will stay anonymous.</i></p>
+</div>
 {#if !pdfFileData.loading && pdfFileData.data}
 	<div class="evaluation-container">
 		<OpenPdf pdfUrl={pdfFileData.data} showAnnotations={false} />
@@ -259,5 +264,12 @@
 			color: var(--custom-color-secondary);
 			font-size: 0.8rem;
 		}
+	}
+	.student-remark {
+		box-shadow: 0 0 4px 4px var(--color-zinc-300);
+		border-radius: 4px;
+		width: 95%;
+		padding: 1em;
+		background-color: var(--color-white-900);
 	}
 </style>

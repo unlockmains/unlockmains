@@ -26,10 +26,12 @@
 </script>
 
 <section class="pricing">
-	<div class="heading">
-		<h1>Our Plans</h1>
-		<h4>All affordable plans. Choose the one that suits you best.</h4>
-	</div>
+	{#if !afterAuth}
+		<div class="heading">
+			<h1>Our Plans</h1>
+			<h4>All affordable plans. Choose the one that suits you best.</h4>
+		</div>
+	{/if}
 	<Tabs items={pricingSections} {activeTab} {handleTabClick} />
 	{#if pricingPbData[activeTab].options.length}
 		<form class="subject-select">

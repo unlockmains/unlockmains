@@ -7,7 +7,7 @@
 
 <div class="banner" style={$topBannerVisible ? '' : 'display: none;'}>
 	<div class="left-banner-img"></div>
-	<span class="text">{bannerText}</span>
+	<span class="text">{@html bannerText}</span>
 	<div class="right-banner-img"></div>
 	<button on:click={hideTopBanner}>
 		<CrossIcon />
@@ -20,14 +20,14 @@
 		color: white;
 		text-align: center;
 		align-content: center;
-		padding: 1em 5%;
+		height: 3em;
 		position: fixed;
 		width: 100%;
 		z-index: 999;
 
 		.text {
 			position: relative;
-			font-size: 0.8em;
+			font-size: 1em;
 			z-index: 1000;
 		}
 

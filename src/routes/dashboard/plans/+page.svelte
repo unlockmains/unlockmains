@@ -1,20 +1,26 @@
 <script lang="ts">
-	import type { IPricingStructure, IStudentProfile, IUser } from '$lib/types'
-	import Payment from '$lib/components/profile/Payment.svelte'
-	import { getContext } from 'svelte'
-	import type { Writable } from 'svelte/store'
+	import type { IPricingStructure, IStudentProfile } from '$lib/types'
 	import Pricing from '$lib/components/homePage/Pricing.svelte'
 	import PricingCardsData from '$lib/api/mockPlansData.json'
 
 	let { data } = $props<{
-		data: { studentProfile: IStudentProfile; allPlans: IPricingStructure[] }
+		data: { profile: IStudentProfile; allPlans: IPricingStructure[] }
 	}>()
-
-	const userStore = getContext<Writable<IUser>>('userStore')
 </script>
 
 <div class="profile">
-	<Payment user={$userStore} studentProfile={data.profile} allPlans={data.allPlans} />
+	<h1>Plans</h1>
+	<div class="separator"></div>
+	<div class="active-plan">
+		{#if data.profile.free_plan}
+			<p class="plan-details"><i>You are currently on the free plan.</i></p>
+		{/if}
+		{#if data.profile.pricing_structure}
+			<p class="plan-details">
+				<i>You have an active plan</i> - {data.profile.pricing_structure.plan_code}
+			</p>
+		{/if}
+	</div>
 	<Pricing pricingPbData={PricingCardsData} afterAuth={true} />
 </div>
 
@@ -26,6 +32,11 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+
+		.active-plan {
+			display: flex;
+			flex-flow: column wrap;
+		}
 
 		@media (max-width: 768px) {
 			flex-direction: column;

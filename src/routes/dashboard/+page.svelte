@@ -1,12 +1,12 @@
 <script lang="ts">
 	import DashboardHome from '$lib/components/dashboard/DashboardHome.svelte'
+	import type { IUser } from '$lib/types'
 	import { toast } from 'svelte-sonner'
 
 	let { data } = $props<{
 		data: {
 			toastMessage: string | undefined
 			userPermission: 'STUDENT' | 'EVALUATOR' | 'ADMIN'
-			user: { name: string; email: string; photo: string }
 		}
 	}>()
 	const { userPermission, user } = data
@@ -18,4 +18,4 @@
 	})
 </script>
 
-<DashboardHome {userPermission} {user} />
+<DashboardHome {userPermission} />

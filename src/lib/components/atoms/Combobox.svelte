@@ -283,7 +283,8 @@
 							</svg>
 						{/if}
 						{#if showRemainingCount}
-							<span style="font-size: 0.6em; height: 1em; width: 4em">Remaining {option.count}</span
+							<span style="font-size: 0.6em; height: 1em; width: 4em"
+								>Remaining {option.count! < 0 ? 'unlimited' : option.count}</span
 							>
 						{/if}
 					</li>

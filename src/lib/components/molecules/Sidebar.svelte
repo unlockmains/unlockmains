@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { PUBLIC_AVATAR_API } from '$env/static/public'
 	import {
 		alwaysShow,
 		sideNavOpen,
@@ -124,7 +125,7 @@
 					class:active={activeKey === 'profile'}
 					onclick={() => (activeKey = 'profile')}
 				>
-					<UserAvatarIcon />
+					<img src={`${PUBLIC_AVATAR_API}${user?.name}`} alt="avatar" width="32px" height="32px" />
 					<span class="link-text">Profile</span>
 				</a>
 			</div>

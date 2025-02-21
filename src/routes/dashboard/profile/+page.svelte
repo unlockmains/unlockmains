@@ -10,6 +10,7 @@
 	import Preferences from '$lib/components/profile/Preferences.svelte'
 	import { getContext } from 'svelte'
 	import type { Writable } from 'svelte/store'
+	import { PUBLIC_AVATAR_API } from '$env/static/public'
 
 	let { data } = $props<{
 		data: { studentProfile: IStudentProfile; allPlans: IPricingStructure[] }
@@ -26,24 +27,27 @@
 		}
 	})
 
-	const fetchDetails = async () => {
-		const response = await fetch('/api/user/details', { method: 'post' })
-		if (response.ok) {
-			const data = await response.json()
-			console.log(data)
-		}
-	}
-
 	const userStore = getContext<Writable<IUser>>('userStore')
+	let userAvatar = $state(false)
 </script>
 
 <div class="profile">
 	<div class="left-nav">
 		<div class="avatar-name">
-			<UserAvatarIcon color="#707070" width="8em" height="8em" />
+			<button class="user-avatar" onclick={() => (userAvatar = true)}>
+				{#if userAvatar}
+					<img
+						src={`${PUBLIC_AVATAR_API}${$userStore?.name}`}
+						alt="avatar"
+						width="8em"
+						height="8em"
+					/>
+				{:else}
+					<UserAvatarIcon color="#707070" width="8em" height="8em" />
+				{/if}
+			</button>
 			<h3>{$userStore?.name}</h3>
 			<p>{$userStore?.email}</p>
-			<!-- <button onclick={fetchDetails}>Test Click</button> -->
 		</div>
 		<nav>
 			<div>
@@ -146,6 +150,21 @@
 					font-weight: normal;
 					margin: 0;
 					color: var(--color-zinc-500);
+				}
+
+				.user-avatar {
+					outline: none;
+					border: none;
+					background-color: transparent;
+					cursor: pointer;
+					transition: all 0.3s ease;
+					height: 8em;
+					width: 8em;
+
+					img {
+						height: 100%;
+						width: 100%;
+					}
 				}
 			}
 

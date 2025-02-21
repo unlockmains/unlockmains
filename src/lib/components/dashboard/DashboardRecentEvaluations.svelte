@@ -136,6 +136,8 @@
 				text-decoration: none;
 				color: var(--color-zinc-800);
 				padding: 0.3em;
+				box-shadow: 0 6px rgba(0, 0, 0);
+				border: 1px solid;
 
 				.date {
 					font-size: 0.8em;

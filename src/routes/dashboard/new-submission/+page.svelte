@@ -156,7 +156,7 @@
 			value=""
 			style="--height: 3em;--font-size: 0.8em;--border-size-focus: 2px; --border-color-focus: var(--custom-color-brand);"
 			min={1}
-			max={maxQuestions}
+			max={maxQuestions < 0 ? 20 : maxQuestions}
 		/>
 	</div>
 	<div class="question-file">

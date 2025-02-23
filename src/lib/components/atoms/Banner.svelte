@@ -69,5 +69,12 @@
 			justify-content: center;
 			align-items: center;
 		}
+
+		@media only screen and (max-width: 768px) {
+			.text {
+				font-size: 0.8em;
+				padding: 0 5%;
+			}
+		}
 	}
 </style>

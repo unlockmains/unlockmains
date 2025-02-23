@@ -214,6 +214,10 @@
 							width: auto;
 							gap: 0.2em;
 
+							img {
+								border-radius: 50%;
+							}
+
 							.link-text {
 								font-size: 0.7em;
 								display: none;

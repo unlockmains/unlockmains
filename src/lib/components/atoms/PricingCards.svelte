@@ -18,8 +18,12 @@
 </script>
 
 <div class="cards">
-	{#each pricingCardData as { name, color, currentPrice, originalPrice, duration, features, planCode }}
+	{#each pricingCardData as { name, color, currentPrice, originalPrice, duration, features, planCode, popular }}
 		<div class="card">
+			{#if popular}
+				<div class="most-popular-plan">Most Popular Plan</div>
+			{/if}
+			<div class="plan-code">{planCode}</div>
 			<div class="pricing-name" style={`--bg-color: ${color}`}>
 				{name
 					.replace('{year}', currentYear)
@@ -76,6 +80,57 @@
 			border-radius: 1em;
 			background: var(--custom-bg-color);
 			box-shadow: 0 10px 0 0 rgba(0, 0, 0, 1);
+			position: relative;
+
+			.most-popular-plan {
+				color: white;
+				font-weight: bold;
+				display: inline-block;
+				font-size: 0.8em;
+				height: 2em;
+				padding: 0.2em 0.5em;
+				position: absolute;
+				top: -1em;
+				left: 0.5em;
+				border-radius: 0.5em;
+				background: rgb(2, 0, 36);
+				background: linear-gradient(
+					90deg,
+					rgba(2, 0, 36, 0.5788690476) 0%,
+					rgb(216 48 78 / 91%) 35%,
+					rgb(57 13 13 / 83%) 100%
+				);
+				animation: change-color 1s ease-in-out infinite;
+				background-size: 400% 400%;
+
+				@keyframes change-color {
+					0% {
+						background-position: 0% 50%;
+					}
+					50% {
+						background-position: 100% 50%;
+					}
+					100% {
+						background-position: 0% 50%;
+					}
+				}
+			}
+
+			.plan-code {
+				background: #ffd700;
+				color: black;
+				text-align: center;
+				font-size: 0.8em;
+				height: 2em;
+				padding: 0 1em;
+				position: absolute;
+				top: -1em;
+				right: 0.5em;
+				border-radius: 0.5em;
+				clip-path: polygon(0% 0%, 5% 50%, 0% 100%, 100% 100%, 95% 50%, 100% 0%);
+				display: flex;
+				align-items: center;
+			}
 
 			.pricing-name {
 				border: 1px solid black;
@@ -173,6 +228,7 @@
 
 		@media only screen and (max-width: 768px) {
 			overflow-x: scroll;
+			padding-top: 1em;
 			.card {
 				min-width: 80%;
 			}

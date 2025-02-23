@@ -56,6 +56,10 @@
 			cursor: pointer;
 			color: var(--color-black-600);
 			font-size: 1.5em;
+
+			&:focus-visible {
+				outline: none;
+			}
 		}
 	}
 	dialog::backdrop {

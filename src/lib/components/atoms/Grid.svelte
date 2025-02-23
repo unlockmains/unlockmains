@@ -3,9 +3,12 @@
 	export let columns: {
 		key: string
 		title: string
+		size?: string
 		type?: string
 		onClick?: (data: string) => void
 	}[] = []
+
+	export let onRowClick: (id: string) => void = () => {}
 
 	let sortedData = [...data]
 	let sortKey: string | null = null
@@ -62,6 +65,7 @@
 						class:sorted={sortKey === column.key}
 						class:asc={sortKey === column.key && sortDirection === 'asc'}
 						class:desc={sortKey === column.key && sortDirection === 'desc'}
+						style={column.size ? `width: ${column.size}` : ''}
 					>
 						{column.title}
 						{#if sortKey === column.key}
@@ -75,14 +79,10 @@
 		</thead>
 		<tbody>
 			{#each sortedData as row}
-				<tr>
+				<tr onclick={() => onRowClick?.(row.$id)} class:rowClick={!!onRowClick}>
 					{#each columns as column}
 						{#if column.type === 'link'}
-							<td
-								><a class="link" onclick={() => column.onClick?.(row[column.key])}
-									>{row[column.key]}</a
-								></td
-							>
+							<td><a class="link" onclick={() => column.onClick?.(row[column.key])}>View</a></td>
 						{:else}
 							<td>{row[column.key]}</td>
 						{/if}
@@ -121,6 +121,7 @@
 			text-align: left;
 			border-bottom: 1px solid var(--color-zinc-300);
 			font-size: 0.8em;
+			text-align: center;
 		}
 		td {
 			.link {
@@ -149,6 +150,11 @@
 
 		tr:hover {
 			background-color: var(--color-white-800);
+		}
+
+		tr.rowClick:hover {
+			background-color: var(--color-purple-300);
+			cursor: pointer;
 		}
 	}
 

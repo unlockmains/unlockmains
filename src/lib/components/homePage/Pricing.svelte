@@ -84,6 +84,7 @@
 		margin-bottom: 5em;
 		gap: 0.5em;
 		padding: 5%;
+		width: 100%;
 
 		.heading {
 			z-index: 10;

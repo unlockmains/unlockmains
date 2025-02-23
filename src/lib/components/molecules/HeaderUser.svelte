@@ -66,6 +66,7 @@
 	.logo-container {
 		img {
 			height: 4em;
+			border-radius: 50%;
 
 			@media (max-width: 768px) {
 				height: 3em;

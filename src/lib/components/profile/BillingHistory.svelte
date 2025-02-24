@@ -12,7 +12,7 @@
 		paymentHistory.map((payment) => ({
 			...payment,
 			timestamp: new Date(payment.timestamp).toLocaleDateString(),
-			planCode: studentProfile.pricing_structure.plan_code,
+			planCode: studentProfile?.pricing_structure?.plan_code,
 			amount:
 				payment.currency === 'INR' ? '₹' + payment.amount : payment.currency + ' ' + payment.amount
 		}))

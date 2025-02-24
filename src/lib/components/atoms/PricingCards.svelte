@@ -226,9 +226,15 @@
 			}
 		}
 
-		@media only screen and (max-width: 768px) {
+		@media only screen and (max-width: 960px) {
 			overflow-x: scroll;
 			padding-top: 1em;
+			.card {
+				min-width: 50%;
+			}
+		}
+
+		@media only screen and (max-width: 768px) {
 			.card {
 				min-width: 80%;
 			}

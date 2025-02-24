@@ -10,12 +10,18 @@
 	import mockPlansData from '$lib/api/mockPlansData.json'
 	import { PUBLIC_RAZORPAY_ID } from '$env/static/public'
 	import Razorpay from '$lib/razorpay'
+	import { writable } from 'svelte/store'
 
 	let {
 		user,
 		studentProfile,
 		allPlans
 	}: { user: IUser; studentProfile: IStudentProfile; allPlans: IPricingStructure[] } = $props()
+
+	const paymentStore = writable<any>(null)
+	paymentStore.set({
+		planCode: studentProfile?.pricing_structure?.plan_code
+	})
 
 	let loading = $state(false)
 
@@ -64,6 +70,7 @@
 
 		if (result.success) {
 			browser && sessionStorage.removeItem('plan')
+			paymentStore.set({ planCode: planDetails?.plan_code })
 			planSelected = null
 			alert('Payment successful! Your transaction is saved.')
 		} else {
@@ -129,12 +136,12 @@
 	{#if studentProfile.free_plan}
 		<p class="plan-details"><i>You are currently on the free plan.</i></p>
 	{/if}
-	{#if studentProfile.pricing_structure}
+	{#if $paymentStore.planCode}
 		<p class="plan-details"><i>You have an active plan.</i></p>
-		<h4>Selected Plan {studentProfile.pricing_structure.plan_code}</h4>
+		<h4>Selected Plan {$paymentStore.planCode}</h4>
 		<p>This plan comes with following features:</p>
 		<ul>
-			{#each getPlanFeatures(studentProfile.pricing_structure.plan_code).features as feature}
+			{#each getPlanFeatures($paymentStore.planCode).features as feature}
 				<li>
 					{feature
 						.replace('{year}', currentYear.toString())

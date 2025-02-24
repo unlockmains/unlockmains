@@ -32,7 +32,7 @@ export const actions: Actions = {
     default: async (event) => {
         const {
             request,
-            locals: { databases, storage, user }
+            locals: { databases, storage }
         } = event;
 
         let success = false;

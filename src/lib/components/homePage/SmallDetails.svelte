@@ -104,7 +104,7 @@
 				}
 			}
 			.right-border {
-				border-right: 1px solid var(--color-black-500);
+				border-right: 1px solid var(--color-white-900);
 			}
 		}
 

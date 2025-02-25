@@ -27,8 +27,7 @@
 	<ul>
 		<li>For Quick Resolution Call on - <a href="tel:+919220252724">+919220252724</a></li>
 		<li>
-			General Question - <a href="https://unlockmains.com" target="_blank">UnlockMains</a> /
-			<a href="https://wa.me/+919470067051" target="_blank">+919470067051</a>
+			General Question - <a href="https://unlockmains.com" target="_blank">UnlockMains</a>
 		</li>
 		<li>
 			Telegram Channel - <a href="https://t.me/UnlockMains" target="_blank">Telegram Channel</a>

@@ -8,12 +8,14 @@ body {
 	--custom-border-radius: 5px;
 	--custom-spacing: 5px;
 
+	--color-zinc-100: rgb(205, 205, 205);
 	--color-zinc-200: rgb(204, 204, 204);
 	--color-zinc-300: rgb(199, 197, 197);
 	--color-zinc-400: rgb(161, 161, 170);
 	--color-zinc-500: rgb(69, 69, 69);
 	--color-zinc-700: rgb(63, 63, 70);
 	--color-zinc-800: rgb(65, 64, 64);
+	--color-black-500: rgba(5, 5, 5, 0.776);
 	--color-black-600: rgba(0, 0, 0, 0.624);
 	--color-black-700: rgb(40, 40, 40);
 	--color-black-800: rgb(15, 15, 15);
@@ -30,6 +32,7 @@ body {
 	--color-yellow-200: rgb(251, 228, 100);
 	--color-yellow-300: rgb(251, 238, 157);
 	--color-yellow-500: rgb(243, 211, 0);
+	--color-cyan-000: rgb(205 227 235);
 	--color-cyan-100: rgb(110, 229, 253);
 	--color-cyan-300: rgb(100, 206, 251);
 	--color-cyan-700: rgb(0, 198, 243);

@@ -8,8 +8,10 @@
 	} from '$lib/stores/sideNavStore'
 	import { topBannerVisible } from '$lib/stores/topBannerStore'
 	import type { IUser } from '$lib/types'
+	import { getContext } from 'svelte'
 	import SideBarIcons from '../icons/SideBarIcons.svelte'
 	import UserAvatarIcon from '../icons/UserAvatarIcon.svelte'
+	import type { Writable } from 'svelte/store'
 
 	let { slug, user } = $props<{
 		slug: string
@@ -48,6 +50,8 @@
 	$effect(() => {
 		activeKey = slug.split('/')[2] ?? 'home'
 	})
+
+	const userStore = getContext<Writable<IUser>>('userStore')
 </script>
 
 <aside
@@ -125,7 +129,12 @@
 					class:active={activeKey === 'profile'}
 					onclick={() => (activeKey = 'profile')}
 				>
-					<img src={`${PUBLIC_AVATAR_API}${user?.name}`} alt="avatar" width="32px" height="32px" />
+					<img
+						src={`${PUBLIC_AVATAR_API}${$userStore?.name}`}
+						alt="avatar"
+						width="32px"
+						height="32px"
+					/>
 					<span class="link-text">Profile</span>
 				</a>
 			</div>

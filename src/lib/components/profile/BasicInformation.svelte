@@ -28,10 +28,10 @@
 	})
 
 	const handleSubmit: SubmitFunction = () => {
-		if (!basicInformation.oldPassword) {
-			toast.error('Please enter your current password')
-			return
-		}
+		// if (!basicInformation.oldPassword) {
+		// 	toast.error('Please enter your current password')
+		// 	return
+		// }
 		loadingSubmission = true
 		return async ({ update, result }) => {
 			const actionResult = result as ActionResult & {
@@ -112,7 +112,7 @@
 				disabled
 			/>
 		</div>
-		<div class="row">
+		<!-- <div class="row">
 			<Input
 				id="oldPassword"
 				name="oldPassword"
@@ -131,7 +131,7 @@
 				bind:value={basicInformation.newPassword}
 				style="--height: 3em;--border-size-focus: 2px; --border-color-focus: var(--custom-color-brand)"
 			/>
-		</div>
+		</div> -->
 		<div class="row end">
 			<Button
 				type="submit"

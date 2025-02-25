@@ -16,39 +16,38 @@ export const load: PageServerLoad = async ({ locals: { user, databases }, parent
 export const actions: Actions = {
   basicInformation: async ({ request, locals: { account } }) => {
     const formData = await request.formData()
-    const userId = formData.get('userId') as string
     const name = formData.get('name') as string
     const phone = formData.get('phone') as string
     const email = formData.get('email') as string
-    const oldPassword = formData.get('oldPassword') as string
-    const newPassword = formData.get('newPassword') as string
+    // const oldPassword = formData.get('oldPassword') as string
+    // const newPassword = formData.get('newPassword') as string
     const errors: string[] = []
     const validPhone = '+91' + phone.replace(/\D/g, '');
 
-    if (newPassword.length < 8) {
-      errors.push('Password must be at least 8 characters long')
-    }
-    if (!/[A-Z]/.test(newPassword)) {
-      errors.push('Password must contain at least one uppercase letter')
-    }
-    if (!/[a-z]/.test(newPassword)) {
-      errors.push('Password must contain at least one lowercase letter')
-    }
-    if (!/[0-9]/.test(newPassword)) {
-      errors.push('Password must contain at least one number')
-    }
-    if (!/[!@#$%^&*]/.test(newPassword)) {
-      errors.push('Password must contain at least one special character (!@#$%^&*)')
-    }
+    // // if (newPassword.length < 8) {
+    // //   errors.push('Password must be at least 8 characters long')
+    // // }
+    // // if (!/[A-Z]/.test(newPassword)) {
+    // //   errors.push('Password must contain at least one uppercase letter')
+    // // }
+    // // if (!/[a-z]/.test(newPassword)) {
+    // //   errors.push('Password must contain at least one lowercase letter')
+    // // }
+    // // if (!/[0-9]/.test(newPassword)) {
+    // //   errors.push('Password must contain at least one number')
+    // // }
+    // // if (!/[!@#$%^&*]/.test(newPassword)) {
+    // //   errors.push('Password must contain at least one special character (!@#$%^&*)')
+    // // }
 
-    if (errors.length) {
-      return fail(400, { basicInformation: { name, phone, email, success: false, message: "Password does not meet the requirements" } })
-    }
+    // if (errors.length) {
+    //   return fail(400, { basicInformation: { name, phone, email, success: false, message: "Password does not meet the requirements" } })
+    // }
 
     try {
-      await account.updatePassword(newPassword, oldPassword);
+      // await account.updatePassword(newPassword, oldPassword);
       await account.updateName(name);
-      await account.updatePhone(validPhone, oldPassword);
+      // await account.updatePhone(validPhone, oldPassword);
     } catch (error) {
       console.error('Error updating user information:', error);
       return fail(400, { basicInformation: { name, phone, email, success: false, message: (error as Error).message } });

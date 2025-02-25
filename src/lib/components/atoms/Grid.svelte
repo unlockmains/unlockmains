@@ -81,7 +81,7 @@
 			{#each sortedData as row}
 				<tr onclick={() => onRowClick?.(row.$id)} class:rowClick={!!onRowClick}>
 					{#each columns as column}
-						{#if column.type === 'link'}
+						{#if column.type === 'link' && row[column.key]}
 							<td><a class="link" onclick={() => column.onClick?.(row[column.key])}>View</a></td>
 						{:else}
 							<td>{row[column.key]}</td>

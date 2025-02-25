@@ -1,9 +1,7 @@
 <script>
-	import Background from '../atoms/Background.svelte'
 	import LottieAnimation from '../atoms/LottieAnimation.svelte'
 </script>
 
-<Background />
 <section class="more-details">
 	<div class="left-bg"></div>
 	<div class="flex row flex-start items-start container">
@@ -84,15 +82,14 @@
 			width: 100%;
 			margin-right: auto;
 			margin-left: auto;
-			border-radius: var(--custom-border-radius);
 			display: flex;
 			padding: 1em;
 			border-style: solid;
 			border-width: 1px;
-			border-color: #050505;
-			border-radius: 12px;
-			background-color: #050505;
-			color: #fff;
+			border-color: var(--color-black-500);
+			border-radius: 1em;
+			background-color: var(--color-black-500);
+			color: var(--color-white-900);
 			min-height: 10em;
 
 			.column {
@@ -107,14 +104,14 @@
 				}
 			}
 			.right-border {
-				border-right: 1px solid #8f8f8f;
+				border-right: 1px solid var(--color-black-500);
 			}
 		}
 
 		.header {
 			font-size: 0.875em;
 			font-weight: 700;
-			color: #8f8f8f;
+			color: var(--color-zinc-100);
 			text-transform: uppercase;
 		}
 		.animation {
@@ -145,7 +142,7 @@
 				}
 				.right-border {
 					border-right: 0;
-					border-bottom: 1px solid #8f8f8f;
+					border-bottom: 1px solid var(--color-black-500);
 					padding-right: 0em;
 				}
 			}

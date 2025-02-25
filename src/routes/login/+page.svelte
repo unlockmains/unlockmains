@@ -25,6 +25,10 @@
 
 	const loginType = $derived(password?.length ? 'Login' : 'Login without Password')
 
+	const userLoginType = $state(
+		browser && localStorage?.getItem('userType') === 'evaluator' ? 'evaluator' : 'student'
+	)
+
 	const handleSubmitOtp: SubmitFunction = () => {
 		loadingOtp = true
 		password = ''
@@ -79,18 +83,16 @@
 		action="?/googleAuth"
 		use:enhance={handleGoogleSignIn}
 	>
-		<input
-			type="hidden"
-			name="userType"
-			value={browser && localStorage?.getItem('userType') === 'evaluator' ? 'evaluator' : 'student'}
-		/>
+		<input type="hidden" name="userType" value={userLoginType} />
 		<div class="row flex flex-center">
 			<Button
 				label="Login with Google"
 				type="google-login"
 				withLoader={loadingGoogle}
-				disabled={loadingGoogle}><GoogleIcon /></Button
+				disabled={loadingGoogle}
 			>
+				<GoogleIcon />
+			</Button>
 		</div>
 	</form>
 
@@ -111,7 +113,7 @@
 							value={formData?.signInOtp?.email ?? ''}
 						/>
 					</div>
-					<div>
+					<!-- <div>
 						<Input
 							label="Password"
 							id="password"
@@ -120,7 +122,7 @@
 							placeholder="Password (Optional)"
 							bind:value={password}
 						/>
-					</div>
+					</div> -->
 					<div>
 						<Button
 							label={loginType}
@@ -136,18 +138,20 @@
 					We will send you an email with a 6 digit code that you can use to sign in.
 				</h5>
 			{/if}
-			<div class="flex row items-center gap-4">
+			<!-- <div class="flex row items-center gap-4">
 				<h5>Forgot your Password?</h5>
 				<Button type="link" label="Reset it!" />
-			</div>
+			</div> -->
 		</div>
-		<div class="flex column col-6-sm">
-			<h1>Want to be an evaluator?</h1>
-			<h5>Click the button below to find out more.</h5>
-			<div style="width: 100%;">
-				<Button label="Join Now" type="register" onClick={() => goto('/careers')} />
+		{#if userLoginType === 'student'}
+			<div class="flex column col-6-sm">
+				<h1>Want to be an evaluator?</h1>
+				<h5>Click the button below to find out more.</h5>
+				<div style="width: 100%;">
+					<Button label="Join Now" type="register" onClick={() => goto('/careers')} />
+				</div>
 			</div>
-		</div>
+		{/if}
 	</div>
 </div>
 <HomeFooter />

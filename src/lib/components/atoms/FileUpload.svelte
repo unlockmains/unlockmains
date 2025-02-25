@@ -33,7 +33,7 @@
 		const input = event.target as HTMLInputElement
 		if (input.files) {
 			const newFiles = Array.from(input.files)
-			files = [...files, ...newFiles]
+			files = [...newFiles]
 		}
 	}
 
@@ -97,15 +97,16 @@
 
 <style lang="scss">
 	.upload-area {
-		border: 2px dashed var(--custom-color-brand);
+		border: 2px solid var(--custom-color-brand);
 		border-radius: 10px;
 		padding: 0.8em;
 		text-align: center;
 		transition: background-color 0.3s;
 		user-select: none;
+		width: 70%;
 
 		&:hover {
-			background-color: var(--color-gold-400);
+			background-color: var(--color-zinc-400);
 		}
 
 		.upload-icon {

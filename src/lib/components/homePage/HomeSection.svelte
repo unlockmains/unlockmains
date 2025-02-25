@@ -12,7 +12,7 @@
 	<div class="main-details">
 		<div class="main-title">Answer writing made easy with Unlock Mains</div>
 		<p class="sub-text">Get your ability validated and verified by interview appeared faculty.</p>
-		<Button type="home-register" label="Register" onClick={() => goto('/login')} />
+		<Button type="home-register" label="Start your Free Trial" onClick={() => goto('/login')} />
 	</div>
 	<div class="side-details">
 		<div class="rocket">

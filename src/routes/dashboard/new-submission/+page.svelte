@@ -13,6 +13,7 @@
 	import type { INewSubmissionType } from '$lib/types'
 	import questionTypesMapping from '$lib/api/questionTypesMapping.json'
 	import { EQuestionTypes } from '$lib/types/enums'
+	import { fail, redirect } from '@sveltejs/kit'
 
 	let { form, data } = $props<{
 		form: ActionData
@@ -30,11 +31,28 @@
 		)?.count ?? 0
 	)
 
-	const handleQuestionSubmission: SubmitFunction = () => {
+	const handleQuestionSubmission: SubmitFunction = async ({ formData }) => {
 		loadingSubmission = true
-		return async ({ update }) => {
-			update()
-			loadingSubmission = false
+		const file = formData.get('question-files') as File
+		formData.append('file', file)
+		const response = await fetch('/api/pdf/watermark', {
+			method: 'POST',
+			body: formData
+		})
+		if (response.ok) {
+			const data = await response.arrayBuffer()
+			formData.append('updated-file', new File([data], file.name, { type: file.type }))
+		}
+		return async ({ update, result }) => {
+			if (result.status === 200) {
+				update()
+				loadingSubmission = false
+				redirect(303, '/dashboard')
+			} else {
+				update()
+				loadingSubmission = false
+				fail(400, { success: false, message: 'An unexpected error occurred' })
+			}
 		}
 	}
 
@@ -214,7 +232,7 @@
 		box-shadow: 0 0 4px 4px var(--color-zinc-300);
 		border-radius: 4px;
 		width: 95%;
-		padding: 1em;
+		padding: 1em 5%;
 		background-color: var(--color-white-900);
 		display: flex;
 		flex-flow: column wrap;
@@ -226,6 +244,7 @@
 		}
 		.question-file {
 			width: 100%;
+			display: flex;
 		}
 
 		.question-type-container {

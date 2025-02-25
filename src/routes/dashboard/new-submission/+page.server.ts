@@ -45,9 +45,11 @@ export const actions: Actions = {
         const quantity = formData.get("question-quantity")!;
         const isPyq = formData.get("question-pyq") as string;
 
-        const files = formData.getAll("question-files");
+        const files = formData.getAll("updated-file");
+
         const studentProfile = JSON.parse(formData.get('student-profile') as string) as IStudentProfile;
 
+        const studentSubmissionId = ID.unique();
         try {
             const savingData = {
                 "student_profile": studentProfile.$id,
@@ -58,7 +60,8 @@ export const actions: Actions = {
                 "is_pyq": isPyq === "" ? null : isPyq === 'yes' ? true : false,
                 "status": ESubmissionStatus.SUBMITTED,
             }
-            const document = await databases.createDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_SUBMISSION_DB, ID.unique(), savingData);
+
+            const document = await databases.createDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_SUBMISSION_DB, studentSubmissionId, savingData);
 
             for (const file of files) {
                 if (file instanceof File) {
@@ -84,19 +87,32 @@ export const actions: Actions = {
                 fieldToBeUpdated["eassy_submissions_left"] = studentProfile.eassy_submissions_left < 0 ? -1 : studentProfile.eassy_submissions_left - Number(quantity);
             }
             await databases.updateDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, studentProfile.$id, fieldToBeUpdated);
-            throw redirect(303, "/dashboard");
+            success = true;
+            message = "Submission successful";
         } catch (err) {
             if (err instanceof Error) {
                 success = false;
                 message = err.message;
+                try {
+                    await databases.deleteDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_SUBMISSION_DB, studentSubmissionId);
+                    const ids = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_SUBMITTED_FILES_DB, [
+                        Query.equal("student_submission", studentSubmissionId),
+                        Query.select(["$id"])
+                    ]);
+                    for (const id of ids.documents) {
+                        await databases.deleteDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_SUBMITTED_FILES_DB, id.$id);
+                    }
+                } catch (err) {
+                    console.log("error deleting documents", err);
+                }
                 return fail(400, { success, message });
             } else if ((err as unknown as { message: string, status: number }).status === 303) {
-                throw err;
+                success = false;
             }
 
             success = false;
             message = "An unexpected error occurred";
-            return fail(500, { success, message });
         }
+        return { success, message };
     }
 }

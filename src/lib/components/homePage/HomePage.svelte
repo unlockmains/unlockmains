@@ -3,6 +3,7 @@
 	import HomeFaq from './HomeFAQ.svelte'
 	import HomeFooter from './HomeFooter.svelte'
 	import HomeSection from './HomeSection.svelte'
+	import HomeTrialPeriod from './HomeTrialPeriod.svelte'
 	import Pricing from './Pricing.svelte'
 	import SampleFiles from './SampleFiles.svelte'
 	import SmallDetails from './SmallDetails.svelte'
@@ -18,6 +19,7 @@
 	<HomeSection {quotes} />
 	<SmallDetails />
 	<Pricing {pricingPbData} />
+	<HomeTrialPeriod />
 	<SampleFiles {sampleFilesToShow} />
 	<!-- <Toppers /> -->
 	<HomeFaq />

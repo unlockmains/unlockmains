@@ -12,13 +12,13 @@ export const load: PageServerLoad = async ({ url, locals: { user, storage } }) =
   }
   const sample_files = await storage?.listFiles('6797ad5300336b23d2ce');
 
-  const sampleFilesToShow = sample_files.files.map((file) => {
-    return {
-      id: file.$id,
-      name: file.name,
-      url: `${PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${PUBLIC_APPWRITE_SAMPLE_FILE_BUCKET}/files/${file.$id}/view?project=${PUBLIC_APPWRITE_PROJECT}&project=${PUBLIC_APPWRITE_PROJECT}`
-    }
-  })
+  // const sampleFilesToShow = sample_files.files.map((file) => {
+  //   return {
+  //     id: file.$id,
+  //     name: file.name,
+  //     url: `${PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${PUBLIC_APPWRITE_SAMPLE_FILE_BUCKET}/files/${file.$id}/view?project=${PUBLIC_APPWRITE_PROJECT}&project=${PUBLIC_APPWRITE_PROJECT}`
+  //   }
+  // })
 
-  return { url: url.origin, quotes: quotesData, pricingPbData: PricingCardsData, sampleFilesToShow }
+  return { url: url.origin, quotes: quotesData, pricingPbData: PricingCardsData, sampleFilesToShow: [] }
 }

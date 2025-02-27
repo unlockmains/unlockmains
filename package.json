@@ -23,6 +23,8 @@
   },
   "type": "module",
   "dependencies": {
+    "@supabase/ssr": "^0.5.2",
+    "@supabase/supabase-js": "^2.49.1",
     "appwrite": "^16.1.0",
     "crypto-js": "^4.2.0",
     "fabric": "^6.4.3",

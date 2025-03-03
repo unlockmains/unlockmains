@@ -1,30 +1,26 @@
 import { fail, redirect } from "@sveltejs/kit";
 import type { PageServerLoad } from "../$types";
 import type { Actions } from "./$types";
-import { ID, Query } from "node-appwrite";
-import { PUBLIC_APPWRITE_BUCKET, PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_ENDPOINT, PUBLIC_APPWRITE_PROJECT, PUBLIC_APPWRITE_SUBMITTED_FILES_DB, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, PUBLIC_APPWRITE_STUDENT_SUBMISSION_DB } from "$env/static/public";
 import { getFileWithUpdatedFileName } from "$lib/api/utils";
 import { EQuestionTypes, ESubmissionStatus } from "$lib/types/enums";
 import type { IStudentProfile } from "$lib/types";
+import { v4 as uuidv4 } from "uuid"
 
 export const ssr = true;
 
-export const load: PageServerLoad = async ({ locals: { user, databases } }) => {
+export const load: PageServerLoad = async ({ locals: { user, supabase } }) => {
     if (!user || user.profile.user_type !== 'STUDENT') {
         redirect(303, '/dashboard')
     }
-    const studentDocument = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB,
-        [
-            Query.equal("users_profile", user?.profile.$id),
-            Query.select(["$id", "gs_submissions_left", "eassy_submissions_left", "optional_submissions_left"]),
-            Query.limit(1),
-        ]);
-    const studentProfile = studentDocument.documents[0];
+    const studentDocument = await supabase.from("student_profile").select("id, gs_submissions_left, essay_submissions_left, optional_submissions_left").eq("user_id", user.id).single();
+
+    const studentProfile = studentDocument.data!;
     const questionTypes = [
         { text: EQuestionTypes.GENERAL_STUDIES, value: EQuestionTypes.GENERAL_STUDIES, count: studentProfile.gs_submissions_left, disabled: !studentProfile.gs_submissions_left },
         { text: EQuestionTypes.OPTIONAL, value: EQuestionTypes.OPTIONAL, count: studentProfile.optional_submissions_left, disabled: !studentProfile.optional_submissions_left },
-        { text: EQuestionTypes.ESSAY, value: EQuestionTypes.ESSAY, count: studentProfile.eassy_submissions_left, disabled: !studentProfile.eassy_submissions_left },
+        { text: EQuestionTypes.ESSAY, value: EQuestionTypes.ESSAY, count: studentProfile.essay_submissions_left, disabled: !studentProfile.essay_submissions_left },
     ]
+
     return { user, questionTypes, studentProfile: JSON.stringify(studentProfile) }
 }
 
@@ -32,7 +28,7 @@ export const actions: Actions = {
     default: async (event) => {
         const {
             request,
-            locals: { databases, storage }
+            locals: { user, supabase }
         } = event;
 
         let success = false;
@@ -49,31 +45,36 @@ export const actions: Actions = {
 
         const studentProfile = JSON.parse(formData.get('student-profile') as string) as IStudentProfile;
 
-        const studentSubmissionId = ID.unique();
+        const studentSubmissionId = uuidv4();
         try {
             const savingData = {
-                "student_profile": studentProfile.$id,
+                "student_profile": studentProfile.id,
                 "question_type_lvl1": type,
                 "question_type_lvl2": gsType,
                 "question_type_lvl3": gsSubjectTag,
                 "total_questions": Number(quantity),
-                "is_pyq": isPyq === "" ? null : isPyq === 'yes' ? true : false,
+                ... (isPyq !== null && { "is_pyq": isPyq === 'yes' ? true : false }),
                 "status": ESubmissionStatus.SUBMITTED,
             }
 
-            const document = await databases.createDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_SUBMISSION_DB, studentSubmissionId, savingData);
+            await supabase.from("student_submissions").insert({
+                id: studentSubmissionId,
+                ...savingData
+            });
 
             for (const file of files) {
                 if (file instanceof File) {
-                    const fileId = ID.unique();
+                    const fileId = uuidv4();
                     const fileToUpload = getFileWithUpdatedFileName({ file, fileId })
-                    const uploadedFile = await storage.createFile(PUBLIC_APPWRITE_BUCKET, fileId, fileToUpload);
-                    const fileUrl = `${PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${PUBLIC_APPWRITE_BUCKET}/files/${uploadedFile.$id}/view?project=${PUBLIC_APPWRITE_PROJECT}&project=${PUBLIC_APPWRITE_PROJECT}`;
-                    await databases.createDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_SUBMITTED_FILES_DB, ID.unique(), {
-                        student_submission: document.$id,
-                        file_id: uploadedFile.$id,
-                        file_url: fileUrl,
-                    });
+                    const { data } = await supabase.storage.from("submissions").upload(`${user?.id}/${fileId}_${file.name}`, fileToUpload);
+                    if (data) {
+                        await supabase.from("student_submissions_files").insert({
+                            student_submissions: studentSubmissionId,
+                            file_id: data.id,
+                            full_path: data.fullPath,
+                            path: data.path,
+                        });
+                    }
                 }
             }
             event.cookies.set('toastMessage', "Submission successful", { path: '/' });
@@ -84,9 +85,9 @@ export const actions: Actions = {
             } else if (type === "Optional") {
                 fieldToBeUpdated["optional_submissions_left"] = studentProfile.optional_submissions_left < 0 ? -1 : studentProfile.optional_submissions_left - Number(quantity);
             } else if (type === "Essay") {
-                fieldToBeUpdated["eassy_submissions_left"] = studentProfile.eassy_submissions_left < 0 ? -1 : studentProfile.eassy_submissions_left - Number(quantity);
+                fieldToBeUpdated["essay_submissions_left"] = studentProfile.essay_submissions_left < 0 ? -1 : studentProfile.essay_submissions_left - Number(quantity);
             }
-            await databases.updateDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, studentProfile.$id, fieldToBeUpdated);
+            await supabase.from("student_profile").update(fieldToBeUpdated).eq("user_id", user?.id!);
             success = true;
             message = "Submission successful";
         } catch (err) {
@@ -94,14 +95,8 @@ export const actions: Actions = {
                 success = false;
                 message = err.message;
                 try {
-                    await databases.deleteDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_SUBMISSION_DB, studentSubmissionId);
-                    const ids = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_SUBMITTED_FILES_DB, [
-                        Query.equal("student_submission", studentSubmissionId),
-                        Query.select(["$id"])
-                    ]);
-                    for (const id of ids.documents) {
-                        await databases.deleteDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_SUBMITTED_FILES_DB, id.$id);
-                    }
+                    await supabase.from("student_submissions").delete().eq("id", studentSubmissionId);
+                    await supabase.from("student_submissions_files").delete().eq("student_submissions", studentSubmissionId);
                 } catch (err) {
                     console.log("error deleting documents", err);
                 }

@@ -38,10 +38,9 @@
 			await update()
 			if (result.type === 'success') {
 				const updatedFormData = result.data as ActionData
-
 				if (updatedFormData?.signInOtp?.success) {
 					toast.success(updatedFormData.signInOtp.message)
-					await goto(`/verify-email?id=${updatedFormData.signInOtp.userId}&type=email`)
+					await goto(`/verify-email?email=${updatedFormData.signInOtp.email}&type=email`)
 				} else if (updatedFormData?.signInOtp?.message) {
 					toast.error(updatedFormData.signInOtp.message)
 				}

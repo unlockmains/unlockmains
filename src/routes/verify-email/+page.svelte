@@ -12,7 +12,7 @@
 		loadingOtp = true
 		try {
 			const searchParams = new URLSearchParams({
-				userId: data.userId,
+				email: data.email,
 				secret: token,
 				userType:
 					browser && localStorage.getItem('userType') === 'evaluator' ? 'evaluator' : 'student'

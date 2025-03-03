@@ -1,103 +1,67 @@
-import { type RequestHandler } from "@sveltejs/kit";
-import { SESSION_COOKIE, createAdminClient } from "$lib/appwrite";
-import { ID, Query } from "node-appwrite";
-import {
-  PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_TEAM,
-  PUBLIC_APPWRITE_STUDENT_PROFILE_DB, PUBLIC_APPWRITE_STUDENT_TEAM,
-  PUBLIC_APPWRITE_USER_PROFILE_DB
-} from "$env/static/public";
-import { AuthError } from "$lib/types/errors";
-import { AuthErrorCode } from "$lib/types/enums";
+import { redirect } from '@sveltejs/kit';
+import { OAuth2Client } from "google-auth-library"
+import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "$env/static/private";
+import { PUBLIC_GOOGLE_REDIRECT_URI } from "$env/static/public";
+import type { EmailOtpType, User } from '@supabase/supabase-js';
 
-export const GET: RequestHandler = async ({ url, cookies, params }) => {
-  const userId = url.searchParams.get("userId");
-  const secret = url.searchParams.get("secret");
-  const userType = url.searchParams.get("userType");
+export async function GET(event) {
+  const { url, locals, params } = event;
+  const { supabase } = locals;
   const provider = params.provider;
 
-
-  if (!userId || !secret) {
-    throw new AuthError(
-      AuthErrorCode.INVALID_PARAMETERS,
-      "Missing userId or secret parameters",
-      400
-    );
-  }
-
-  const { account, teams, databases } = createAdminClient();
+  const code = url.searchParams.get('code');
+  const secret = url.searchParams.get('secret');
+  const email = url.searchParams.get('email');
+  const type = url.searchParams.get("type") as EmailOtpType ?? "magiclink"
+  let user: User | null = null;
   try {
-    const session = await account.createSession(userId, secret);
-    // if (provider === "google") {
-    //   const providerAccessToken = session.providerAccessToken;
-    //   console.log("providerAccessToken", session, providerAccessToken);
-    //   const response = await fetch(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${providerAccessToken}`);
-    //   console.log(response);
-    //   const json = await response.json();
-    //   console.log(json);
-
-    // }
-    const userProfile = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB, [
-      Query.equal("user_id", userId)
-    ]);
-
-    if (!userProfile.documents.length) {
-      const isEvaluator = userType === "evaluator";
-      const teamId = isEvaluator ? PUBLIC_APPWRITE_EVALUATOR_TEAM : PUBLIC_APPWRITE_STUDENT_TEAM;
-      await teams.createMembership(teamId, [], undefined, userId)
-
-      const newUserProfile = await databases.createDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_USER_PROFILE_DB, ID.unique(), {
-        "user_id": userId,
-        "registration_date": new Date().toISOString(),
-        "user_type": isEvaluator ? "EVALUATOR" : "STUDENT",
-        "admin_approved": isEvaluator ? false : true
+    if (code && provider === 'google') {
+      const oAuth2Client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, PUBLIC_GOOGLE_REDIRECT_URI);
+      const token = await oAuth2Client.getToken(code);
+      oAuth2Client.setCredentials(token.tokens);
+      const user = oAuth2Client.credentials;
+      const id_token = user.id_token?.split(".")[1];
+      const id_token_payload = JSON.parse(atob(id_token!));
+      /*
+      ID Token Payload: {
+        iss: 'https://accounts.google.com',
+        azp: '787617848849-t1c874tb20fvt15sbf7so6eri814b213.apps.googleusercontent.com',
+        aud: '787617848849-t1c874tb20fvt15sbf7so6eri814b213.apps.googleusercontent.com',
+        sub: '117221575420963506838',
+        email: 'krshrey2802@gmail.com',
+        email_verified: true,
+        at_hash: 'PgKLQLLNa1rBEtOjbXcRFw',
+        name: 'Shrey Kumar',
+        picture: 'https://lh3.googleusercontent.com/a/ACg8ocJ0mddThh5vYfVCzwthHLfbWIX2I12s6WjH_CAcnU7kgpbpmg=s96-c',
+        given_name: 'Shrey',
+        family_name: 'Kumar',
+        iat: 1740924535,
+        exp: 1740928135
+      } 
+      */
+    } else if (email && secret && provider === 'otp') {
+      const res = await supabase.auth.verifyOtp({
+        email,
+        token: secret,
+        type
       })
-
-      if (!isEvaluator) {
-        await databases.createDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, ID.unique(), {
-          "users_profile": newUserProfile.$id,
-          "gs_submissions_left": 2,
-          "optional_submissions_left": 0,
-          "eassy_submissions_left": 0,
-          "unlimited_plan": false,
-          "plan_active": false,
-          "free_plan": true,
-          "plan_start": new Date().toISOString(),
+      user = res.data.user
+    }
+    if (user) {
+      const userProfile = await supabase.from("user_profile").select("*").eq("user_id", user.id).single();
+      if (!userProfile.count) {
+        await supabase.from("user_profile").insert({
+          user_id: user.id,
+          user_type: "STUDENT",
+          admin_approved: true,
         });
+        await supabase.from("student_profile").insert({
+          user_id: user.id,
+        })
       }
     }
-
-    const headers = new Headers({
-      location: "/dashboard",
-      "set-cookie": cookies.serialize(SESSION_COOKIE, session.secret, {
-        sameSite: "lax",
-        expires: new Date(session.expire),
-        secure: true,
-        path: "/",
-      }),
-    });
-
-    return new Response(null, { status: 302, headers });
-
-  } catch (error) {
-    if (error instanceof AuthError) {
-      return new Response(
-        JSON.stringify({
-          code: error.code,
-          message: error.message
-        }), {
-        status: error.status,
-        headers: { 'Content-Type': 'application/json' }
-      });
-    }
-
-    console.error('Unexpected authentication error:', error);
-    return new Response(
-      JSON.stringify({
-        code: AuthErrorCode.UNKNOWN_ERROR,
-        message: 'An unexpected error occurred'
-      }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
+  } catch (err) {
+    console.log("Error logging with google", err)
   }
-};
+  throw redirect(303, '/dashboard');
+}

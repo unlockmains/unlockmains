@@ -195,9 +195,8 @@ export interface IRecentAssignments {
 }
 
 export interface IUserProfile {
-    $id: string;
-    $createdAt: string;
-    $updatedAt: string;
+    id: string;
+    createdAt: string;
     user_type: "STUDENT" | "EVALUATOR" | "ADMIN";
     admin_approved: boolean;
     registration_date: string;
@@ -205,11 +204,10 @@ export interface IUserProfile {
 }
 
 export interface IStudentProfile {
-    $id: string;
-    $createdAt: string;
-    $updatedAt: string;
+    id: string;
+    createdAt: string;
     gs_submissions_left: number;
-    eassy_submissions_left: number;
+    essay_submissions_left: number;
     optional_submissions_left: number;
     unlimited_plan: boolean;
     plan_active: boolean;
@@ -226,9 +224,8 @@ export interface IStudentProfile {
 }
 
 export interface IEvaluatorProfile {
-    $id: string;
-    $createdAt: string;
-    $updatedAt: string;
+    id: string;
+    createdAt: string;
     user_profile: IUserProfile;
     general_studies: string[];
     essay: boolean;

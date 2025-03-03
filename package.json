@@ -29,6 +29,7 @@
     "appwrite": "^16.1.0",
     "crypto-js": "^4.2.0",
     "fabric": "^6.4.3",
+    "google-auth-library": "^9.15.1",
     "lottie-web": "^5.12.2",
     "node-appwrite": "^14.1.0",
     "pdf-annotate.js": "^1.0.0",
@@ -37,6 +38,7 @@
     "razorpay": "^2.9.5",
     "sass": "^1.80.4",
     "sharp": "^0.33.5",
-    "svelte-sonner": "^0.3.28"
+    "svelte-sonner": "^0.3.28",
+    "uuid": "^11.1.0"
   }
 }

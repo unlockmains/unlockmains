@@ -2,23 +2,25 @@ import { redirect } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 import PricingCardsData from '$lib/api/mockPlansData.json'
 import quotesData from '$lib/api/quotes.json'
-import { PUBLIC_APPWRITE_ENDPOINT, PUBLIC_APPWRITE_PROJECT, PUBLIC_APPWRITE_SAMPLE_FILE_BUCKET } from '$env/static/public'
+import { PUBLIC_SUPABASE_URL } from '$env/static/public'
 
 export const ssr = true;
 
-export const load: PageServerLoad = async ({ url, locals: { user, storage } }) => {
+export const load: PageServerLoad = async ({ url, locals: { user, supabase } }) => {
   if (user) {
     redirect(303, '/dashboard')
   }
-  const sample_files = await storage?.listFiles('6797ad5300336b23d2ce');
+  const { data: sampleFilesData } = await supabase.storage.from("sample_files").list("active");
 
-  // const sampleFilesToShow = sample_files.files.map((file) => {
-  //   return {
-  //     id: file.$id,
-  //     name: file.name,
-  //     url: `${PUBLIC_APPWRITE_ENDPOINT}/storage/buckets/${PUBLIC_APPWRITE_SAMPLE_FILE_BUCKET}/files/${file.$id}/view?project=${PUBLIC_APPWRITE_PROJECT}&project=${PUBLIC_APPWRITE_PROJECT}`
-  //   }
-  // })
+  const sampleFilesToShow = sampleFilesData
+    ? sampleFilesData.filter(file => file.metadata.mimetype.includes("pdf"))
+      .map((file) => {
+        return {
+          id: file.id,
+          name: file.name,
+          url: `${PUBLIC_SUPABASE_URL}storage/v1/object/public/sample_files/${file.name}?t=${file.last_accessed_at}`
+        }
+      }) : []
 
-  return { url: url.origin, quotes: quotesData, pricingPbData: PricingCardsData, sampleFilesToShow: [] }
+  return { url: url.origin, quotes: quotesData, pricingPbData: PricingCardsData, sampleFilesToShow }
 }

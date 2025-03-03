@@ -1,17 +1,16 @@
 import { fail, redirect, type Actions } from "@sveltejs/kit"
 import type { PageServerLoad } from "./$types"
-import { createAdminClient, createSessionClient, SESSION_COOKIE } from "$lib/appwrite"
 
 export const load: PageServerLoad = async ({ url, locals: { user } }) => {
   if (user) {
     redirect(303, '/dashboard')
   }
 
-  const userId = url.searchParams.get("id");
-  if (!userId) {
+  const email = url.searchParams.get("email");
+  if (!email) {
     redirect(303, '/')
   }
-  return { url: url.origin, userId }
+  return { url: url.origin, email }
 }
 
 // export const actions: Actions = {

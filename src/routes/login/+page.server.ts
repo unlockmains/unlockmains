@@ -2,8 +2,9 @@
 import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
 
-import { createAdminClient } from "$lib/appwrite";
-import { ID, OAuthProvider } from "node-appwrite";
+import { OAuth2Client } from "google-auth-library"
+import { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } from "$env/static/private";
+import { PUBLIC_GOOGLE_REDIRECT_URI } from "$env/static/public";
 
 export const load: PageServerLoad = async ({ url, locals: { user } }) => {
 	if (user) {
@@ -17,19 +18,29 @@ export const actions: Actions = {
 	googleAuth: async (event) => {
 		const formData = await event.request.formData();
 		const userType = formData.get('userType') as string;
+		const { locals } = event;
+		const {
+			supabase,
+		} = locals;
 
-		const { account } = createAdminClient();
-		const redirectUrl = await account.createOAuth2Token(
-			OAuthProvider.Google,
-			`${event.url.origin}/auth/callback/google?userType=${userType}`,
-			`${event.url.origin}/404`
-		);
-		throw redirect(302, redirectUrl)
+		const oAuth2Client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, PUBLIC_GOOGLE_REDIRECT_URI);
+
+		const authorizedUrl = oAuth2Client.generateAuthUrl({
+			access_type: 'offline',
+			scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
+			prompt: 'consent',
+		});
+
+		throw redirect(302, authorizedUrl);
 	},
 	signInOtp: async (event) => {
 		const {
 			request,
+			locals
 		} = event
+		const {
+			supabase
+		} = locals;
 		const formData = await request.formData()
 		const email = formData.get('email') as string
 		const password = formData.get('password') as string
@@ -39,25 +50,19 @@ export const actions: Actions = {
 			return fail(400, { signInOtp: { success: false, type: "error", email, password, message: "Please enter a valid email address", userId } })
 		}
 		let error = null;
-		const { account } = createAdminClient();
 
 		if (email && password) {
-			const authData = await account.createEmailToken(
-				ID.unique(),
-				email,
-			);
+			//emial password login
 			// error = "error while login"
 
 		} else {
 			try {
-				const sessionToken = await account.createEmailToken(
-					ID.unique(),
+				const response = await supabase.auth.signInWithOtp({
 					email,
-				);
-				if (!sessionToken.userId) {
-					throw Error("There was an issue while logging in")
-				}
-				userId = sessionToken.userId
+					options: {
+						shouldCreateUser: true,
+					}
+				});
 			} catch (err) {
 				error = (err as Error).message;
 			}

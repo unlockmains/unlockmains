@@ -9,11 +9,17 @@
 	import HeaderUser from '$lib/components/molecules/HeaderUser.svelte'
 	import { writable } from 'svelte/store'
 	import type { IUser } from '$lib/types'
-	import { setContext, type Snippet } from 'svelte'
+	import { onMount, setContext, type Snippet } from 'svelte'
+	import type { Session, SupabaseClient } from '@supabase/supabase-js'
+	import { goto, invalidate } from '$app/navigation'
 
 	let { data, children } = $props<{ data: LayoutData; children: Snippet }>()
 
-	let { top_banner } = data
+	let {
+		top_banner,
+		supabase,
+		session
+	}: { top_banner: string; supabase: SupabaseClient; session: Session | null } = data
 
 	if (top_banner) {
 		toggleTopBannerVisible()
@@ -23,6 +29,17 @@
 	function checkMobile() {
 		isMobile = window.innerWidth <= 768
 	}
+
+	onMount(() => {
+		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
+			if (session) goto('/dashboard')
+			if (newSession?.expires_at !== session?.expires_at) {
+				invalidate('supabase:auth')
+			}
+		})
+
+		return () => data.subscription.unsubscribe()
+	})
 
 	$effect(() => {
 		if (typeof window !== 'undefined') {

@@ -48,8 +48,8 @@ export async function GET(event) {
       user = res.data.user
     }
     if (user) {
-      const userProfile = await supabase.from("user_profile").select("*").eq("user_id", user.id).single();
-      if (!userProfile.count) {
+      const { data } = await supabase.from("user_profile").select("*").eq("user_id", user.id);
+      if (!data?.length) {
         await supabase.from("user_profile").insert({
           user_id: user.id,
           user_type: "STUDENT",

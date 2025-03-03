@@ -34,10 +34,11 @@
 	const handleQuestionSubmission: SubmitFunction = async ({ formData }) => {
 		loadingSubmission = true
 		const file = formData.get('question-files') as File
-		formData.append('file', file)
+		const fileFormData = new FormData()
+		fileFormData.append('file', file)
 		const response = await fetch('/api/pdf/watermark', {
 			method: 'POST',
-			body: formData
+			body: fileFormData
 		})
 		if (response.ok) {
 			const data = await response.arrayBuffer()

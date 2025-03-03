@@ -74,4 +74,8 @@ export const authorization: Handle = async ({ event, resolve }) => {
   return resolve(event)
 };
 
+export const config = {
+  bodyLimit: '100mb',
+};
+
 export const handle = sequence(authentication, authorization)

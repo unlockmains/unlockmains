@@ -14,7 +14,6 @@ const config = {
 		adapter: adapter({
 			maxRequestBodySize: 100 * 1024 * 1024,
 		}),
-		bodyLimit: '100mb',
 	},
 };
 

@@ -3,7 +3,8 @@ import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 import { cleanupCache, getUserFromCache, isUserInformationPresentInCache, setUserToCache, userCache } from './routes/auth/cache';
 import { createServerClient } from '@supabase/ssr';
-import type { IUserProfile } from '$lib/types';
+import type { IUser, IUserProfile } from '$lib/types';
+import type { User } from '@supabase/supabase-js';
 
 export const authentication: Handle = async ({ event, resolve }) => {
   try {
@@ -32,13 +33,14 @@ export const authentication: Handle = async ({ event, resolve }) => {
       if (error) {
         return { session: null, user: null }
       }
-      const userProfile = await event.locals.supabase.from("user_profile").select("*").eq("user_id", user?.id).single();
+      const { data: userProfile } = await event.locals.supabase.from("user_profile").select("*").eq("user_id", user?.id).single();
+      let userWithProfile: IUser;
       if (user)
-        event.locals.user = {
+        userWithProfile = {
           ...user,
-          profile: userProfile.data as IUserProfile
+          profile: userProfile as IUserProfile
         };
-      return { session, user }
+      return { session, user: userWithProfile }
     }
 
     return resolve(event, {
@@ -61,11 +63,11 @@ const unprotectedPrefix = ['/login', '/auth', '/verify-email', '/careers', '/qui
 export const authorization: Handle = async ({ event, resolve }) => {
   const { session, user } = await event.locals.safeGetSession()
   event.locals.session = session
-  const userProfile = await event.locals.supabase.from("user_profile").select("*").eq("user_id", user?.id).single();
+  const { data: userProfile } = await event.locals.supabase.from("user_profile").select("*").eq("user_id", user?.id).single();
   if (user)
     event.locals.user = {
       ...user,
-      profile: userProfile.data as IUserProfile
+      profile: userProfile as IUserProfile
     };
 
   if (!event.locals.session && !unprotectedPrefix.some((path) => event.url.pathname.startsWith(path)) && event.url.pathname !== '/') {

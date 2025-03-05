@@ -1,20 +1,21 @@
 import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
-import { PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_PRICING_STRUCTURE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB } from '$env/static/public'
+import { PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB } from '$env/static/public'
 
-export const load: PageServerLoad = async ({ locals: { user, databases }, parent }) => {
+export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase }, parent }) => {
+  const { user } = await safeGetSession()
   if (!user) {
     redirect(303, '/')
   }
 
   const layoutData = await parent();
-  const allPlans = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_PRICING_STRUCTURE);
-
-  return { user, profile: layoutData.profile ? layoutData.profile.documents[0] : null, allPlans: allPlans.documents, paymentHistory: layoutData.paymentHistory ? layoutData.paymentHistory.documents : [] }
+  const { data: allPlans, error } = await supabase.from("pricing_structure").select("*");
+  //layoutData.paymentHistory.documents
+  return { user, profile: layoutData.profile ? layoutData.profile.data : null, allPlans: allPlans, paymentHistory: layoutData.paymentHistory ? [] : [] }
 }
 
 export const actions: Actions = {
-  basicInformation: async ({ request, locals: { account } }) => {
+  basicInformation: async ({ request, locals: { supabase } }) => {
     const formData = await request.formData()
     const name = formData.get('name') as string
     const phone = formData.get('phone') as string
@@ -44,11 +45,14 @@ export const actions: Actions = {
     //   return fail(400, { basicInformation: { name, phone, email, success: false, message: "Password does not meet the requirements" } })
     // }
 
-    try {
-      // await account.updatePassword(newPassword, oldPassword);
-      await account.updateName(name);
-      // await account.updatePhone(validPhone, oldPassword);
-    } catch (error) {
+
+    // await account.updatePassword(newPassword, oldPassword);
+    // await supabase.auth.updateUser()
+    // await account.updatePhone(validPhone, oldPassword);
+    const { error } = await supabase.auth.updateUser({
+      data: { name }
+    })
+    if (error) {
       console.error('Error updating user information:', error);
       return fail(400, { basicInformation: { name, phone, email, success: false, message: (error as Error).message } });
     }
@@ -61,7 +65,7 @@ export const actions: Actions = {
       }
     }
   },
-  mainInformation: async ({ request, locals: { databases } }) => {
+  mainInformation: async ({ request, locals: { supabase } }) => {
     const formData = await request.formData()
     const studentProfileId = formData.get('studentProfileId') as string
     const optionalSubject = formData.get('optionalSubject') as string
@@ -71,16 +75,16 @@ export const actions: Actions = {
     const rollNumberPre = formData.get('rollNumberPre') as string
     const rollNumberMains = formData.get('rollNumberMains') as string
 
-    try {
-      await databases.updateDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB, studentProfileId, {
-        optional_subject: optionalSubject,
-        target_year: targetYear,
-        preparing_for: preparingFor,
-        other_preparing_for: preparingFor === "Others" ? otherPreparingFor : null,
-        roll_number_pre: rollNumberPre,
-        roll_number_mains: rollNumberMains
-      });
-    } catch (error) {
+    const { error } = await supabase.from("student_profile").update({
+      id: studentProfileId,
+      optional_subject: optionalSubject,
+      target_year: targetYear,
+      preparing_for: preparingFor,
+      other_preparing_for: preparingFor === "Others" ? otherPreparingFor : null,
+      roll_number_pre: rollNumberPre,
+      roll_number_mains: rollNumberMains
+    });
+    if (error) {
       console.error('Error updating user information:', error);
       return fail(400, {
         mainInformation: {
@@ -99,8 +103,8 @@ export const actions: Actions = {
       }
     }
   },
-  signout: async ({ locals: { account } }) => {
-    await account.deleteSession('current')
+  signout: async ({ locals: { supabase } }) => {
+    await supabase.auth.signOut();
     redirect(303, '/')
   },
 }

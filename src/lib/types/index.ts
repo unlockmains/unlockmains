@@ -1,5 +1,6 @@
 import type { Models } from "node-appwrite";
 import type { EEvaluationStatus, ESubmissionStatus } from "./enums";
+import type { User } from "@supabase/supabase-js";
 
 export type IToast = {
     id: string;
@@ -137,7 +138,7 @@ export type IEvaluatorOnBoardStep2Data = {
     evaluateOptional: boolean,
 }
 
-export type IUser = (Models.User<Models.Preferences> & { team: Models.Team<Models.Preferences> } & { profile: Models.Document }) | undefined
+export type IUser = (User & { profile: IUserProfile }) | undefined
 
 interface ISubmittedFile {
     file_id: string;

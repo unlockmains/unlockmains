@@ -13,7 +13,7 @@ export async function GET(event) {
   const secret = url.searchParams.get('secret');
   const email = url.searchParams.get('email');
   let { data: userProfileData } = await supabase.from("user_profile").select("*").eq("email", email).single();
-  console.log("data", userProfileData)
+
   let user: User | null = null;
   try {
     if (code && provider === 'google') {
@@ -49,7 +49,8 @@ export async function GET(event) {
       user = res.data.user
     }
     if (user) {
-      if (!userProfileData?.length) {
+      const { data } = await supabase.from("user_profile").select("*").eq("user_id", user.id);
+      if (!data?.length) {
         await supabase.from("user_profile").insert({
           user_id: user.id,
           user_type: "STUDENT",

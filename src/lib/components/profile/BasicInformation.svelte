@@ -55,7 +55,10 @@
 			loadingSubmission = false
 			toast.success(actionResult.data?.basicInformation.message)
 			basicInformation = actionResult.data?.basicInformation
-			userStore.set({ ...$userStore!, name: basicInformation.name })
+			userStore.set({
+				...$userStore!,
+				user_metadata: { ...$userStore?.user_metadata, name: basicInformation.name }
+			})
 		}
 	}
 </script>

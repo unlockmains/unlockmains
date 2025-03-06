@@ -32,7 +32,7 @@
 	}
 
 	onMount(() => {
-		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
+		const { data } = supabase?.auth.onAuthStateChange((_, newSession) => {
 			if (session) goto('/dashboard')
 			if (newSession?.expires_at !== session?.expires_at) {
 				invalidate('supabase:auth')

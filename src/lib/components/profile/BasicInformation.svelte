@@ -7,7 +7,7 @@
 	import { toast } from 'svelte-sonner'
 	import type { Writable } from 'svelte/store'
 	import { getContext } from 'svelte'
-	let { user } = $props<{
+	let { user }: { user: IUser } = $props<{
 		user: IUser
 	}>()
 	let loadingSubmission = $state(false)
@@ -20,9 +20,9 @@
 		oldPassword: string
 		newPassword: string
 	}>({
-		name: user.name,
-		email: user.email,
-		phone: user.phone,
+		name: user?.user_metadata.name,
+		email: user?.user_metadata.email,
+		phone: user?.user_metadata.phone,
 		oldPassword: '',
 		newPassword: ''
 	})
@@ -46,12 +46,16 @@
 					}
 				}
 			}
+			console.log('action', actionResult, userStore, $userStore)
 			if (actionResult.status === 400) {
 				loadingSubmission = false
 				toast.error(actionResult.data?.basicInformation.message)
 				return
 			}
+
+			console.log('before update')
 			await update()
+			console.log('after update')
 			loadingSubmission = false
 			toast.success(actionResult.data?.basicInformation.message)
 			basicInformation = actionResult.data?.basicInformation
@@ -110,7 +114,7 @@
 				placeholder="Registration Date"
 				type="datetime"
 				label="Registration Date"
-				value={new Date(user.registration)}
+				value={new Date(user.profile.registration_date)}
 				style="--height: 3em;--border-size-focus: 2px; --border-color-focus: var(--custom-color-brand);"
 				disabled
 			/>

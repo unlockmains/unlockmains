@@ -37,7 +37,7 @@ export const load: LayoutLoad = async ({ data, depends, fetch }) => {
             ...user,
             profile: userProfile as IUserProfile
         };
-        return { session, user: userWithProfile }
+        return { session, user: userWithProfile, supabase }
     }
     return { session, user, supabase }
 }

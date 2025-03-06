@@ -49,9 +49,10 @@ export const actions: Actions = {
     // await account.updatePassword(newPassword, oldPassword);
     // await supabase.auth.updateUser()
     // await account.updatePhone(validPhone, oldPassword);
-    const { error } = await supabase.auth.updateUser({
+    const { data, error } = await supabase.auth.updateUser({
       data: { name }
     })
+
     if (error) {
       console.error('Error updating user information:', error);
       return fail(400, { basicInformation: { name, phone, email, success: false, message: (error as Error).message } });

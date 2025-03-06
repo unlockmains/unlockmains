@@ -108,16 +108,18 @@
 				bind:value={basicInformation.phone}
 				style="--height: 3em;--border-size-focus: 2px; --border-color-focus: var(--custom-color-brand);"
 			/>
-			<Input
-				id="registationDate"
-				name="registrationDate"
-				placeholder="Registration Date"
-				type="datetime"
-				label="Registration Date"
-				value={new Date(user.profile.registration_date)}
-				style="--height: 3em;--border-size-focus: 2px; --border-color-focus: var(--custom-color-brand);"
-				disabled
-			/>
+			{#if user && user?.created_at}
+				<Input
+					id="registationDate"
+					name="registrationDate"
+					placeholder="Registration Date"
+					type="datetime"
+					label="Registration Date"
+					value={new Date(user.created_at)}
+					style="--height: 3em;--border-size-focus: 2px; --border-color-focus: var(--custom-color-brand);"
+					disabled
+				/>
+			{/if}
 		</div>
 		<!-- <div class="row">
 			<Input

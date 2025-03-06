@@ -45,12 +45,8 @@ export const actions: Actions = {
     //   return fail(400, { basicInformation: { name, phone, email, success: false, message: "Password does not meet the requirements" } })
     // }
 
-
-    // await account.updatePassword(newPassword, oldPassword);
-    // await supabase.auth.updateUser()
-    // await account.updatePhone(validPhone, oldPassword);
-    const { data, error } = await supabase.auth.updateUser({
-      data: { name }
+    const { error } = await supabase.auth.updateUser({
+      data: { name, phone: validPhone }
     })
 
     if (error) {
@@ -75,16 +71,15 @@ export const actions: Actions = {
     const otherPreparingFor = formData.get('otherPreparingFor') as string
     const rollNumberPre = formData.get('rollNumberPre') as string
     const rollNumberMains = formData.get('rollNumberMains') as string
-
+    console.log("studentProfileId", studentProfileId)
     const { error } = await supabase.from("student_profile").update({
-      id: studentProfileId,
       optional_subject: optionalSubject,
       target_year: targetYear,
       preparing_for: preparingFor,
       other_preparing_for: preparingFor === "Others" ? otherPreparingFor : null,
       roll_number_pre: rollNumberPre,
       roll_number_mains: rollNumberMains
-    });
+    }).eq("id", studentProfileId);
     if (error) {
       console.error('Error updating user information:', error);
       return fail(400, {

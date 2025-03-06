@@ -28,7 +28,6 @@
 	})
 
 	const userStore = getContext<Writable<IUser>>('userStore')
-	console.log('userStore', $userStore)
 	let userAvatar = $state(false)
 </script>
 

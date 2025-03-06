@@ -87,8 +87,8 @@
 		method="post"
 		use:enhance={handleSubmit}
 	>
-		<input type="hidden" name="userId" value={user?.$id} />
-		<input type="hidden" name="studentProfileId" value={profile?.$id} />
+		<input type="hidden" name="userId" value={user?.id} />
+		<input type="hidden" name="studentProfileId" value={profile?.id} />
 		<div class="row">
 			<Combobox
 				options={optionalSubjects}

@@ -142,7 +142,9 @@ export type IUser = (User & { profile: IUserProfile }) | undefined
 
 interface ISubmittedFile {
     file_id: string;
-    $id: string;
+    id: string;
+    full_path: string;
+    path: string;
 }
 
 interface IEvaluation {

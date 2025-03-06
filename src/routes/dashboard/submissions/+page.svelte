@@ -12,7 +12,7 @@
 	let pdfFileData = $state<{
 		loading: boolean
 		error: string | null
-		data?: Uint8Array
+		data?: Uint8Array | string
 	}>({
 		loading: false,
 		error: null
@@ -22,14 +22,20 @@
 		pdfFileData.loading = true
 		showModal = false
 		pdfFileData.data = undefined
-		const response = await fetch(`/api/files/view/${fileId}?type=${type}`, {
-			method: 'POST'
-		})
-		if (response.ok) {
-			const fileData = await response.arrayBuffer()
-			pdfFileData.data = new Uint8Array(fileData)
+		try {
+			const response = await fetch(`/api/files/view/${fileId}`)
+			if (!response.ok) {
+				const errorData = await response.json()
+				console.error('Error fetching file:', errorData)
+				return
+			}
+			const signedUrl = await response.json()
+			// Now use the signedUrl to download or open the file
+			pdfFileData.data = signedUrl
 			pdfFileData.loading = false
 			showModal = true
+		} catch (error) {
+			console.error('Error fetching file:', error)
 		}
 	}
 
@@ -92,9 +98,10 @@
 		const response = await fetch('/api/student/all-submissions')
 		if (response.ok) {
 			const data = await response.json()
+			console.log('data', data)
 			submissions = data.map((submission: IRecentEvaluation) => ({
 				...submission,
-				submittedFile: submission.submittedFiles[0].file_id,
+				submittedFile: submission.submittedFiles[0].path,
 				evaluatedFile: submission.evaluations[0]?.evaluatedFiles[0]?.file_id,
 				evaluationRemark: submission.evaluations[0]?.remarks,
 				is_pyq: submission.is_pyq ? 'Yes' : 'No'

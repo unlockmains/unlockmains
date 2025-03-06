@@ -15,7 +15,7 @@
 <div class="dashboard-container">
 	<div class="dashboard-left">
 		<div class="greeting">
-			<h2>Hello, {$userStore?.name} 👋</h2>
+			<h2>Hello, {$userStore?.user_metadata.name} 👋</h2>
 			<h6>Nice to have you back, exciting day ahead!</h6>
 		</div>
 		{#if userPermission === 'STUDENT'}
@@ -31,7 +31,7 @@
 			</div>
 			<div class="profile-details">
 				<h4>Profile Details</h4>
-				<p>Name: {$userStore?.name}</p>
+				<p>Name: {$userStore?.user_metadata.name}</p>
 				<p>Email: {$userStore?.email}</p>
 			</div>
 		</div>

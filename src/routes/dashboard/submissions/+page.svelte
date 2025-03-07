@@ -23,15 +23,18 @@
 		showModal = false
 		pdfFileData.data = undefined
 		try {
-			const response = await fetch(`/api/files/view/${fileId}`)
+			const response = await fetch(`/api/files/view`, {
+				method: 'POST',
+				body: JSON.stringify({ fileId, type })
+			})
 			if (!response.ok) {
 				const errorData = await response.json()
 				console.error('Error fetching file:', errorData)
 				return
 			}
-			const signedUrl = await response.json()
-			// Now use the signedUrl to download or open the file
-			pdfFileData.data = signedUrl
+
+			const fileData = await response.arrayBuffer()
+			pdfFileData.data = new Uint8Array(fileData)
 			pdfFileData.loading = false
 			showModal = true
 		} catch (error) {

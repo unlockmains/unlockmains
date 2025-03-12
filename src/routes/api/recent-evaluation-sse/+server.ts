@@ -2,7 +2,6 @@ import { error } from '@sveltejs/kit';
 import { getRecentEvaluations } from './server.js';
 
 export async function GET({ locals: { user, supabase } }) {
-    console.log("supabase", supabase)
     const userId = user?.profile.id;
     if (!userId) {
         throw error(400, 'Missing userId');

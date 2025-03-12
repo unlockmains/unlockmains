@@ -46,16 +46,12 @@
 					}
 				}
 			}
-			console.log('action', actionResult, userStore, $userStore)
 			if (actionResult.status === 400) {
 				loadingSubmission = false
 				toast.error(actionResult.data?.basicInformation.message)
 				return
 			}
-
-			console.log('before update')
 			await update()
-			console.log('after update')
 			loadingSubmission = false
 			toast.success(actionResult.data?.basicInformation.message)
 			basicInformation = actionResult.data?.basicInformation

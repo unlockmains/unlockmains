@@ -4,21 +4,16 @@ import { ID, Query, type Models } from "node-appwrite";
 import { PUBLIC_APPWRITE_EVALUATION_REGISTER_BUCKET, PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_LEAD_DB, PUBLIC_APPWRITE_EVALUATOR_LEAD_ASSIGNMENT, PUBLIC_APPWRITE_EVALUATOR_PROFILE_DB, PUBLIC_APPWRITE_USER_PROFILE_DB } from '$env/static/public'
 import { getFileWithUpdatedFileName } from '$lib/api/utils';
 
-export const load: PageServerLoad = async ({ url, locals: { user, databases } }) => {
-  const evaluatorLead: Models.DocumentList<Models.Document> = await databases.listDocuments(
-    PUBLIC_APPWRITE_DATABASE,
-    PUBLIC_APPWRITE_EVALUATOR_LEAD_DB,
-    [
-      Query.equal("users_profile", user?.profile.$id)
-    ]);
+export const load: PageServerLoad = async ({ url, locals: { user, supabase } }) => {
+  const { data: evaluatorLead } = await supabase.from("evaluator_lead").select("*").eq("user_id", user?.id).single();
 
-  return { url: url.origin, userName: user?.name, evaluatorLead: evaluatorLead.documents[0] }
+  return { url: url.origin, userName: user?.user_metadata.name, evaluatorLead }
 }
 
 export const actions: Actions = {
   basicInfo: async (event) => {
     const {
-      locals: { databases, storage, user }
+      locals: { supabase, user }
     } = event;
     const formData = await event.request.formData()
     const error: { fieldName: string, message: string }[] = []
@@ -58,12 +53,8 @@ export const actions: Actions = {
       return fail(400, { basicInfo: error })
     }
 
-    let evaluatorLead: Models.DocumentList<Models.Document> | Models.Document = await databases.listDocuments(
-      PUBLIC_APPWRITE_DATABASE,
-      PUBLIC_APPWRITE_EVALUATOR_LEAD_DB,
-      [
-        Query.equal("users_profile", user?.profile.$id)
-      ]);
+    const { data: evaluatorLeadData } = await supabase.from("evaluator_lead").select("*").eq("user_id", user?.id).single();
+    let evaluatorLead = evaluatorLeadData;
 
     const documentToCreateUpdate = {
       "name": name,
@@ -78,20 +69,19 @@ export const actions: Actions = {
       "current_step": 2
     }
 
-    if (!evaluatorLead.documents[0]) {
+    if (!evaluatorLead) {
       const file = formData.get('marksheet') as File;
       const fileId = ID.unique();
       const fileToUpload = getFileWithUpdatedFileName({ file, fileId })
-      const marksheetFile = await storage.createFile(PUBLIC_APPWRITE_EVALUATION_REGISTER_BUCKET, fileId, fileToUpload);
-      evaluatorLead = await databases.createDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_LEAD_DB, ID.unique(), {
-        "users_profile": user?.profile.$id,
+      const marksheetFile = await supabase.storage.from("evaluator_lead").upload(fileId, fileToUpload);
+      await supabase.from("evaluator_lead").upsert({
         ...documentToCreateUpdate,
-        "marksheet_id": marksheetFile.$id,
-      })
+        "marksheet_id": marksheetFile.data?.id,
+      }).eq("user_id", user?.id)
     } else {
-      evaluatorLead = await databases.updateDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_LEAD_DB, evaluatorLead.documents[0].$id, {
+      evaluatorLead = await supabase.from("evaluator_lead").upsert({
         ...documentToCreateUpdate,
-      })
+      }).eq("user_id", user?.id)
     }
     return { "message": "success" }
   },

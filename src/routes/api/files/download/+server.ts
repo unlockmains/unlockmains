@@ -8,7 +8,6 @@ export const POST: RequestHandler = async ({ locals: { supabase }, request }) =>
     const storageBucket = type === 'evaluation' ? "evaluations" : "submissions";
     const { data, error } = await supabase.storage.from(storageBucket).download(fileId);
     if (error) {
-        console.error("error", error)
         return new Response(JSON.stringify({ error: error.message }), {
             headers: {
                 'Content-Type': 'application/json',

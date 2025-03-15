@@ -54,7 +54,7 @@ export const actions: Actions = {
                     }
                 }
             }
-            await supabase.from("evaluation_remarks").update(updatingData).eq("id", id);
+            await supabase.from("evaluator_remarks").update(updatingData).eq("id", id);
             event.cookies.set('toastMessage', "Evaluation Submission successful", { path: '/' });
 
             throw redirect(303, "/dashboard");

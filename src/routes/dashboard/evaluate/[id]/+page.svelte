@@ -224,7 +224,12 @@
 				cols={50}
 			/>
 		</div>
-		<Button type="submit" label="Submit" withLoader={pdfFileData.loading} />
+		<Button
+			type="submit"
+			label="Submit"
+			withLoader={loadingSubmission}
+			disabled={loadingSubmission}
+		/>
 	</form>
 {:else if pdfFileData.loading}
 	<PageSpinner />

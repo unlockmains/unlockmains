@@ -3,7 +3,7 @@
 	import Modal from '$lib/components/atoms/Modal.svelte'
 	import OpenPdf from '$lib/components/atoms/OpenPDF.svelte'
 	import PageSpinner from '$lib/components/atoms/PageSpinner.svelte'
-	import type { IEvaluations, IRecentAssignments, IRecentEvaluation } from '$lib/types'
+	import type { IEvaluations, IRecentAssignments } from '$lib/types'
 	import { onMount } from 'svelte'
 
 	let evaluations = $state<IEvaluations[]>([])
@@ -21,8 +21,9 @@
 		pdfFileData.loading = true
 		showModal = false
 		pdfFileData.data = undefined
-		const response = await fetch(`/api/files/view/${fileId}?type=${type}`, {
-			method: 'POST'
+		const response = await fetch(`/api/files/view`, {
+			method: 'POST',
+			body: JSON.stringify({ fileId, type })
 		})
 		if (response.ok) {
 			const fileData = await response.arrayBuffer()
@@ -85,8 +86,8 @@
 			evaluations = data.map((submission: IRecentAssignments) => ({
 				...submission.submissionDetails,
 				is_pyq: submission.submissionDetails.is_pyq ? 'Yes' : 'No',
-				submittedFile: submission.submittedFiles[0].file_id,
-				evaluatedFile: submission.evaluations[0]?.evaluatedFiles[0]?.file_id,
+				submittedFile: submission.submittedFiles,
+				evaluatedFile: submission.evaluations[0]?.evaluatedFiles,
 				remarks: submission.evaluations[0]?.remarks,
 				evaluationStart: submission.evaluations[0]?.evaluation_start,
 				evaluationEnd: submission.evaluations[0]?.evaluation_end

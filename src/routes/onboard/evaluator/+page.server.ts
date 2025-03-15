@@ -1,7 +1,6 @@
 import { fail, redirect, type Actions } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
-import { ID, Query, type Models } from "node-appwrite";
-import { PUBLIC_APPWRITE_EVALUATION_REGISTER_BUCKET, PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_LEAD_DB, PUBLIC_APPWRITE_EVALUATOR_LEAD_ASSIGNMENT, PUBLIC_APPWRITE_EVALUATOR_PROFILE_DB, PUBLIC_APPWRITE_USER_PROFILE_DB } from '$env/static/public'
+import { v4 as uuidv4 } from "uuid";
 import { getFileWithUpdatedFileName } from '$lib/api/utils';
 
 export const load: PageServerLoad = async ({ url, locals: { user, supabase } }) => {
@@ -70,7 +69,7 @@ export const actions: Actions = {
     }
 
     const file = formData.get('marksheet') as File;
-    const fileId = ID.unique();
+    const fileId = uuidv4();
     const fileToUpload = getFileWithUpdatedFileName({ file, fileId })
 
     const marksheetFile = await supabase.storage.from("new_evaluators").upload(`${user?.id}/${fileId}_${file.name}`, fileToUpload);
@@ -143,7 +142,7 @@ export const actions: Actions = {
 
     const { data: evaluatorLead } = await supabase.from("evaluator_lead").select("*").eq("user_id", user?.id).single();
 
-    const fileId = ID.unique();
+    const fileId = uuidv4();
     const updatedEvaluatedFile1 = getFileWithUpdatedFileName({ file: evaluatedFile1, fileId, additionalName: evaluatorLead.id })
 
     const assignment1File = await supabase.storage.from("new_evaluators").upload(`${user?.id}/${fileId}_${updatedEvaluatedFile1.name}`, updatedEvaluatedFile1);
@@ -177,7 +176,7 @@ export const actions: Actions = {
 
     const { data: evaluatorLead } = await supabase.from("evaluator_lead").select("*").eq("user_id", user?.id).single();
 
-    const fileId = ID.unique();
+    const fileId = uuidv4();
     const updatedEvaluatedFile2 = getFileWithUpdatedFileName({ file: evaluatedFile2, fileId, additionalName: evaluatorLead.id })
 
     const assignment1File = await supabase.storage.from("new_evaluators").upload(`${user?.id}/${fileId}_${updatedEvaluatedFile2.name}`, updatedEvaluatedFile2);

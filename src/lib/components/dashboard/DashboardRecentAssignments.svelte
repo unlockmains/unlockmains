@@ -15,7 +15,7 @@
 
 	onMount(async () => {
 		loading = true
-		setupEventSource()
+		// setupEventSource()
 		const response = await fetch('/api/recent-assignments')
 		if (response.ok) {
 			const data = await response.json()
@@ -77,7 +77,7 @@
 		{:else}
 			{#each assignments as assignment}
 				<a
-					href={`/dashboard/evaluate/${assignment.$id}`}
+					href={`/dashboard/evaluate/${assignment.id}`}
 					onclick={() => browser && localStorage.setItem('evaluate', JSON.stringify(assignment))}
 					class="each-assignments"
 				>

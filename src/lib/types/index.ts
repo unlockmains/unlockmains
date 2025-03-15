@@ -25,16 +25,13 @@ export type ISubmission = {
     total_questions: number,
     is_pyq: boolean,
     status: ESubmissionStatus,
-    $id: string,
-    $createdAt: string,
-    $updatedAt: string[],
+    id: string,
+    createdAt: string,
     student_profile: IStudentProfile,
-    $databaseId: string,
-    $collectionId: string,
 }
 
 export type IEvaluations = {
-    $id: string,
+    id: string,
     assignment_date: string,
     status: EEvaluationStatus,
     student_submissions: string,
@@ -149,8 +146,8 @@ interface ISubmittedFile {
 
 interface IEvaluation {
     remarks: string | null;
-    $id: string;
-    evaluatedFiles: { $id: string, file_id: string }[];
+    id: string;
+    evaluatedFiles: { id: string, file_id: string, path: string, full_path: string }[];
     evaluation_start: string;
     evaluation_end: string;
 }
@@ -162,21 +159,19 @@ export interface IRecentEvaluation {
     question_type_lvl3: string;
     total_questions: number;
     is_pyq: boolean;
-    $id: string;
-    $updatedAt: string;
+    id: string;
+    updatedAt: string;
     submittedFiles: ISubmittedFile[];
     evaluations: IEvaluation[];
 }
 
 export interface IRecentAssignments {
-    $id: string;
+    id: string;
     assignment_date: string;
     status: EEvaluationStatus;
     submittedFiles: ISubmittedFile[];
     student_submissions: {
-        '$id': string,
-        '$databaseId': string,
-        '$collectionId': string
+        'id': string,
     }
     submissionDetails: {
         status: string;
@@ -192,7 +187,9 @@ export interface IRecentAssignments {
         evaluation_end: string;
         evaluatedFiles: {
             file_id: string;
-            $id: string;
+            id: string;
+            path: string,
+            full_path: string
         }[]
     }[]
 }
@@ -246,9 +243,8 @@ export interface IEvaluatorProfile {
 }
 
 export interface IPricingStructure {
-    $id: string;
-    $createdAt: string;
-    $updatedAt: string;
+    id: string;
+    createdAt: string;
     duration: 'Day' | 'Month' | '{Year}' | '{Year+1}',
     plan_code: string,
     gs_allowed: number,

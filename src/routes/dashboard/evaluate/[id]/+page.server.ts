@@ -1,9 +1,8 @@
 import { fail, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 import { EEvaluationStatus } from "$lib/types/enums";
-import { ID } from "node-appwrite";
+import { v4 as uuidv4 } from "uuid";
 import { getFileWithUpdatedFileName } from "$lib/api/utils";
-import { PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATED_FILES_BUCKET, PUBLIC_APPWRITE_EVALUATION_FILES_DB, PUBLIC_APPWRITE_EVALUATOR_REMARK_DB } from "$env/static/public";
 
 export const ssr = false;
 
@@ -18,7 +17,7 @@ export const actions: Actions = {
     offlineEvaluation: async (event) => {
         const {
             request,
-            locals: { databases, storage }
+            locals: { supabase, user }
         } = event;
 
         let success = false;
@@ -42,17 +41,20 @@ export const actions: Actions = {
 
             for (const file of files) {
                 if (file instanceof File) {
-                    const fileId = ID.unique();
+                    const fileId = uuidv4();
                     const fileToUpload = getFileWithUpdatedFileName({ file, fileId })
-                    const uploadedFile = await storage.createFile(PUBLIC_APPWRITE_EVALUATED_FILES_BUCKET, fileId, fileToUpload);
-                    await databases.createDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATION_FILES_DB, ID.unique(), {
-                        evaluation_remark: id,
-                        file_id: uploadedFile.$id,
-                    });
+                    const { data: uploadedFile, error: uploadError } = await supabase.storage.from("evaluations").upload(`${user?.id}/${fileId}_${file.name}`, fileToUpload);
+                    if (!uploadError) {
+                        await supabase.from("evaluation_files").insert({
+                            evaluation_remarks: id,
+                            file_id: uploadedFile.id,
+                            path: uploadedFile.path,
+                            full_path: uploadedFile.fullPath,
+                        })
+                    }
                 }
             }
-
-            await databases.updateDocument(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_EVALUATOR_REMARK_DB, id, updatingData);
+            await supabase.from("evaluation_remarks").update(updatingData).eq("id", id);
             event.cookies.set('toastMessage', "Evaluation Submission successful", { path: '/' });
 
             throw redirect(303, "/dashboard");
@@ -64,7 +66,6 @@ export const actions: Actions = {
             } else if ((err as unknown as { message: string, status: number }).status === 303) {
                 throw err;
             }
-
             success = false;
             message = "An unexpected error occurred";
             return fail(500, { success, message });

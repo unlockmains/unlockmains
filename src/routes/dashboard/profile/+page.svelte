@@ -36,13 +36,13 @@
 		<div class="avatar-name">
 			<button class="user-avatar" onclick={() => (userAvatar = true)}>
 				<img
-					src={`${PUBLIC_AVATAR_API}${$userStore?.name}`}
+					src={`${PUBLIC_AVATAR_API}${$userStore?.user_metadata.name}`}
 					alt="avatar"
 					width="8em"
 					height="8em"
 				/>
 			</button>
-			<h3>{$userStore?.name}</h3>
+			<h3>{$userStore?.user_metadata.name}</h3>
 			<p>{$userStore?.email}</p>
 		</div>
 		<nav>

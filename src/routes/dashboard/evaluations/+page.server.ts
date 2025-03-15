@@ -9,5 +9,5 @@ export const load: PageServerLoad = async ({ locals: { user }, parent }) => {
     }
     const data = await parent();
 
-    return { user, evaluatorProfile: data.profile?.documents[0] }
+    return { user, evaluatorProfile: data.profile?.data }
 }

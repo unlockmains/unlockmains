@@ -4,7 +4,9 @@ import { redirect } from "@sveltejs/kit";
 
 export const ssr = true;
 
-export const load: PageServerLoad = async ({ route, locals: { user, supabase } }) => {
+export const load: PageServerLoad = async ({ route, locals: { safeGetSession, supabase } }) => {
+      const { user } = await safeGetSession()
+
       if (!user) {
             redirect(303, '/')
       }

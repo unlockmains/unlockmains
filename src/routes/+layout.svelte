@@ -5,21 +5,22 @@
 	import { Toaster } from 'svelte-sonner'
 	import Banner from '$lib/components/atoms/Banner.svelte'
 	import { toggleTopBannerVisible, topBannerVisible } from '$lib/stores/topBannerStore'
-	import type { LayoutData } from './$types'
 	import HeaderUser from '$lib/components/molecules/HeaderUser.svelte'
 	import { writable } from 'svelte/store'
 	import type { IUser } from '$lib/types'
 	import { onMount, setContext, type Snippet } from 'svelte'
 	import type { Session, SupabaseClient } from '@supabase/supabase-js'
 	import { goto, invalidate } from '$app/navigation'
+	import type { LayoutData } from './$types'
 
 	let { data, children } = $props<{ data: LayoutData; children: Snippet }>()
 
 	let {
 		top_banner,
 		supabase,
-		session
-	}: { top_banner: string; supabase: SupabaseClient; session: Session | null } = data
+		session,
+		user
+	}: { top_banner: string; supabase: SupabaseClient; session: Session | null; user: IUser } = data
 
 	if (top_banner) {
 		toggleTopBannerVisible()
@@ -31,7 +32,7 @@
 	}
 
 	onMount(() => {
-		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
+		const { data } = supabase?.auth.onAuthStateChange((_, newSession) => {
 			if (session) goto('/dashboard')
 			if (newSession?.expires_at !== session?.expires_at) {
 				invalidate('supabase:auth')
@@ -49,8 +50,8 @@
 		}
 	})
 
-	const userStore = writable<IUser>(data.user || null)
-	userStore.set(data.user)
+	const userStore = writable<IUser>(user)
+	userStore.set(user)
 
 	setContext('userStore', userStore)
 </script>

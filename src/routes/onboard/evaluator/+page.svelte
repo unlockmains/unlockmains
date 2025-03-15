@@ -19,7 +19,7 @@
 	}>()
 
 	let formDataStep1: IEvaluatorOnBoardStep1Data = $state({
-		name: data.userName,
+		name: data.evaluatorLead.name,
 		phoneNumber: data.evaluatorLead?.phone_number ?? '',
 		prelimsAttempts: data.evaluatorLead?.prelims_attempts ?? undefined,
 		mainsAttempts: data.evaluatorLead?.mains_attempts ?? undefined,

@@ -68,7 +68,7 @@ export const actions: Actions = {
                     const fileToUpload = getFileWithUpdatedFileName({ file, fileId })
                     const { data } = await supabase.storage.from("submissions").upload(`${user?.id}/${fileId}_${file.name}`, fileToUpload);
                     if (data) {
-                        await supabase.from("student_submissions_files").insert({
+                        const insert = await supabase.from("student_submission_files").insert({
                             student_submissions: studentSubmissionId,
                             file_id: data.id,
                             full_path: data.fullPath,

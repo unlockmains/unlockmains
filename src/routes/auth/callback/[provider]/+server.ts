@@ -12,7 +12,10 @@ export async function GET(event) {
   const code = url.searchParams.get('code');
   const secret = url.searchParams.get('secret');
   const email = url.searchParams.get('email');
-  let { data } = await supabase.from("user_profile").select("*").eq("email", email).single();
+  const userType = url.searchParams.get('userType');
+  console.log("---", userType, code, secret, email)
+  let { data: userProfileData } = await supabase.from("user_profile").select("*").eq("email", email).single();
+
   let user: User | null = null;
   try {
     if (code && provider === 'google') {
@@ -43,22 +46,31 @@ export async function GET(event) {
       const res = await supabase.auth.verifyOtp({
         email,
         token: secret,
-        type: data ? 'email' : 'signup'
+        type: userProfileData ? 'email' : 'signup'
       })
       user = res.data.user
     }
     if (user) {
       const { data } = await supabase.from("user_profile").select("*").eq("user_id", user.id);
+      const isEvaluator = userType === "evaluator"
       if (!data?.length) {
         await supabase.from("user_profile").insert({
           user_id: user.id,
-          user_type: "STUDENT",
-          admin_approved: true,
+          user_type: isEvaluator ? "EVALUATOR" : "STUDENT",
+          admin_approved: !isEvaluator,
           email
         });
-        await supabase.from("student_profile").insert({
-          user_id: user.id,
-        })
+        if (!isEvaluator) {
+          await supabase.from("student_profile").insert({
+            user_id: user.id,
+          })
+        } else {
+          console.log("evaluator")
+          const { data, error } = await supabase.from("evaluator_lead").insert({
+            user_id: user.id,
+          })
+          console.log("evaluator lead", data, error)
+        }
       }
     }
   } catch (err) {

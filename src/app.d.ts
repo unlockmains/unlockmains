@@ -1,18 +1,17 @@
-import type { IUserProfile } from '$lib/types';
-import type { Session, SupabaseClient, User } from '@supabase/supabase-js';
-import type { Account, Client, Databases, Models, Storage, Teams, Avatars, Functions } from 'node-appwrite';
+import type { IUser, IUserProfile } from '$lib/types';
+import type { Session, SupabaseClient } from '@supabase/supabase-js';
 declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
 			supabase: SupabaseClient
-			safeGetSession(): Promise<{ session: Session | null; user: User | null }>
+			safeGetSession(): Promise<{ session: null; user: null; } | { session: Session; user: IUser; }>
 			session: Session | null
-			user: User & { profile: IUserProfile } | null
 			toastMessage: string
+			user: IUser | null
 		}
 		interface PageData {
-			user: User | null
+			user: IUser | null
 			session: Session | null
 		}
 		// interface PageState {}

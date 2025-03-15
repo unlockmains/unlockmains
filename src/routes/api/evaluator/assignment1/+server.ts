@@ -1,20 +1,18 @@
-import { PUBLIC_APPWRITE_EVALUATOR_LEAD_ASSIGNMENT } from '$env/static/public';
 import type { RequestHandler } from '@sveltejs/kit';
-import { Query } from 'node-appwrite';
 
-export const POST: RequestHandler = async ({ locals: { storage } }) => {
-    const assignment1 = await storage.listFiles(PUBLIC_APPWRITE_EVALUATOR_LEAD_ASSIGNMENT, [Query.equal("name", "Assignment_1.pdf")]);
+export const POST: RequestHandler = async ({ locals: { supabase } }) => {
+    const { data, error } = await supabase.storage.from("sample_files").download("evaluator_assignment/Assignment_1.pdf");
 
-    if (assignment1.total === 0) {
-        return new Response('File not found', { status: 404 });
+    if (error) {
+        return new Response(JSON.stringify({ error: error.message }), {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
     }
-
-    const fileData = await storage.getFileDownload(PUBLIC_APPWRITE_EVALUATOR_LEAD_ASSIGNMENT, assignment1.files[0].$id);
-
-    return new Response(fileData, {
+    return new Response(data, {
         headers: {
-            'Content-Type': 'application/pdf',
-            'Content-Disposition': 'attachment; filename="Assignment_1.pdf"'
+            'Content-Type': 'application/octet-stream',
         }
     });
 }

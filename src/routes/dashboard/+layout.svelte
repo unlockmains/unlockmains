@@ -6,7 +6,7 @@
 	import type { IStudentProfile, IUser } from '$lib/types'
 	import { getContext, type Snippet } from 'svelte'
 	import { Toaster } from 'svelte-sonner'
-	import { writable, type Writable } from 'svelte/store'
+	import { type Writable } from 'svelte/store'
 	let { data, children } = $props<{
 		slug: string
 		parentSlug: string
@@ -34,6 +34,7 @@
 			return () => window.removeEventListener('resize', checkMobile)
 		}
 	})
+
 	const userStore = getContext<Writable<IUser>>('userStore')
 	if (!$userStore) {
 		userStore.set(data.user)

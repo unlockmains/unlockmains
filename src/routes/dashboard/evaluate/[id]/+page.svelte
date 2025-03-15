@@ -50,12 +50,10 @@
 
 	const getFileDownload = async () => {
 		pdfFileData.loading = true
-		const response = await fetch(
-			`/api/files/download/${assignmentToView?.submittedFiles[0].file_id}`,
-			{
-				method: 'POST'
-			}
-		)
+		const response = await fetch(`/api/files/download`, {
+			method: 'POST',
+			body: JSON.stringify({ fileId: assignmentToView?.submittedFiles })
+		})
 		if (response.ok) {
 			const blob = await response.blob()
 			const url = window.URL.createObjectURL(blob)
@@ -73,8 +71,10 @@
 	const getFileView = async () => {
 		pdfFileData.loading = true
 		pdfFileData.viewClicked = true
-		const response = await fetch(`/api/files/view/${assignmentToView?.submittedFiles[0].file_id}`, {
-			method: 'POST'
+		console.log('assignmentToView', assignmentToView)
+		const response = await fetch(`/api/files/view`, {
+			method: 'POST',
+			body: JSON.stringify({ fileId: assignmentToView?.submittedFiles, type: 'student' })
 		})
 		if (response.ok) {
 			pdfFileData.data = (await response.body?.getReader().read())?.value
@@ -224,7 +224,12 @@
 				cols={50}
 			/>
 		</div>
-		<Button type="submit" label="Submit" withLoader={pdfFileData.loading} />
+		<Button
+			type="submit"
+			label="Submit"
+			withLoader={loadingSubmission}
+			disabled={loadingSubmission}
+		/>
 	</form>
 {:else if pdfFileData.loading}
 	<PageSpinner />

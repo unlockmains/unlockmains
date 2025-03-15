@@ -7,7 +7,7 @@
 	import { toast } from 'svelte-sonner'
 	import type { Writable } from 'svelte/store'
 	import { getContext } from 'svelte'
-	let { user } = $props<{
+	let { user }: { user: IUser } = $props<{
 		user: IUser
 	}>()
 	let loadingSubmission = $state(false)
@@ -20,9 +20,9 @@
 		oldPassword: string
 		newPassword: string
 	}>({
-		name: user.name,
-		email: user.email,
-		phone: user.phone,
+		name: user?.user_metadata.name,
+		email: user?.user_metadata.email,
+		phone: user?.user_metadata.phone,
 		oldPassword: '',
 		newPassword: ''
 	})
@@ -55,7 +55,10 @@
 			loadingSubmission = false
 			toast.success(actionResult.data?.basicInformation.message)
 			basicInformation = actionResult.data?.basicInformation
-			userStore.set({ ...$userStore!, name: basicInformation.name })
+			userStore.set({
+				...$userStore!,
+				user_metadata: { ...$userStore?.user_metadata, name: basicInformation.name }
+			})
 		}
 	}
 </script>
@@ -101,16 +104,18 @@
 				bind:value={basicInformation.phone}
 				style="--height: 3em;--border-size-focus: 2px; --border-color-focus: var(--custom-color-brand);"
 			/>
-			<Input
-				id="registationDate"
-				name="registrationDate"
-				placeholder="Registration Date"
-				type="datetime"
-				label="Registration Date"
-				value={new Date(user.registration)}
-				style="--height: 3em;--border-size-focus: 2px; --border-color-focus: var(--custom-color-brand);"
-				disabled
-			/>
+			{#if user && user?.created_at}
+				<Input
+					id="registationDate"
+					name="registrationDate"
+					placeholder="Registration Date"
+					type="datetime"
+					label="Registration Date"
+					value={new Date(user.created_at)}
+					style="--height: 3em;--border-size-focus: 2px; --border-color-focus: var(--custom-color-brand);"
+					disabled
+				/>
+			{/if}
 		</div>
 		<!-- <div class="row">
 			<Input

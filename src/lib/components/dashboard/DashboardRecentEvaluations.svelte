@@ -14,16 +14,16 @@
 	let eventSource: EventSource
 	let connectionStatus = 'Disconnected'
 
-	// onMount(async () => {
-	// 	loading = true
-	// 	setupEventSource()
-	// 	const response = await fetch('/api/recent-evaluation')
-	// 	if (response.ok) {
-	// 		const data = await response.json()
-	// 		evaluations = data
-	// 		loading = false
-	// 	}
-	// })
+	onMount(async () => {
+		loading = true
+		// setupEventSource()
+		const response = await fetch('/api/recent-evaluation')
+		if (response.ok) {
+			const data = await response.json()
+			evaluations = data
+			loading = false
+		}
+	})
 
 	function setupEventSource() {
 		eventSource = new EventSource('/api/recent-evaluation-sse')

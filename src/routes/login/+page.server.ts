@@ -23,15 +23,23 @@ export const actions: Actions = {
 			supabase,
 		} = locals;
 
-		const oAuth2Client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, PUBLIC_GOOGLE_REDIRECT_URI);
+		// const oAuth2Client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, PUBLIC_GOOGLE_REDIRECT_URI);
 
-		const authorizedUrl = oAuth2Client.generateAuthUrl({
-			access_type: 'offline',
-			scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
-			prompt: 'consent',
+		// const authorizedUrl = oAuth2Client.generateAuthUrl({
+		// 	access_type: 'offline',
+		// 	scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
+		// 	prompt: 'consent',
+		// });
+
+		// throw redirect(302, authorizedUrl);
+		const { data, error } = await supabase.auth.signInWithOAuth({
+			provider: 'google',
+			options: {
+				redirectTo: PUBLIC_GOOGLE_REDIRECT_URI
+			}
 		});
-
-		throw redirect(302, authorizedUrl);
+		if (error) throw redirect(404, error.message);
+		throw redirect(302, data.url);
 	},
 	signInOtp: async (event) => {
 		const {

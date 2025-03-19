@@ -19,12 +19,14 @@ export async function GET(event) {
   let user: User | null = null;
   try {
     if (code && provider === 'google') {
+      /** used one
       const oAuth2Client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, PUBLIC_GOOGLE_REDIRECT_URI);
       const token = await oAuth2Client.getToken(code);
       oAuth2Client.setCredentials(token.tokens);
       const user = oAuth2Client.credentials;
       const id_token = user.id_token?.split(".")[1];
       const id_token_payload = JSON.parse(atob(id_token!));
+      */
       /*
       ID Token Payload: {
         iss: 'https://accounts.google.com',
@@ -42,12 +44,16 @@ export async function GET(event) {
         exp: 1740928135
       } 
       */
+
+      const { data, error } = await supabase.auth.exchangeCodeForSession(code.split("/")[1]);
+      console.log("data", data, error)
     } else if (email && secret && provider === 'otp') {
       const res = await supabase.auth.verifyOtp({
         email,
         token: secret,
         type: userProfileData ? 'email' : 'signup'
       })
+      console.log("res.data.session", res.data.session)
       user = res.data.user
     }
     if (user) {
@@ -65,7 +71,6 @@ export async function GET(event) {
             user_id: user.id,
           })
         } else {
-          console.log("evaluator")
           const { data, error } = await supabase.from("evaluator_lead").insert({
             user_id: user.id,
           })

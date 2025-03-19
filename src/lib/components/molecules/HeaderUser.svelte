@@ -24,6 +24,7 @@
 	})
 
 	const userStore = getContext<Writable<IUser>>('userStore')
+	console.log('userStore', $userStore)
 </script>
 
 <header bind:this={headerElement} style={$topBannerVisible ? '--top: 3em;' : '--top: 0em;'}>
@@ -32,9 +33,9 @@
 	</a>
 
 	<div class="user">
-		<img src={`${PUBLIC_AVATAR_API}${$userStore?.name}`} alt="avatar" width="32px" height="32px" />
+		<img src={`${$userStore?.user_metadata.avatar_url}`} alt="avatar" width="32px" height="32px" />
 		<div class="name-email">
-			<p>{$userStore?.name}</p>
+			<p>{$userStore?.user_metadata.name}</p>
 			<p>{$userStore?.email}</p>
 		</div>
 		<form action="/auth/logout" method="post">

@@ -130,7 +130,7 @@
 					onclick={() => (activeKey = 'profile')}
 				>
 					<img
-						src={`${PUBLIC_AVATAR_API}${$userStore?.name}`}
+						src={`${PUBLIC_AVATAR_API}${$userStore?.user_metadata.name}`}
 						alt="avatar"
 						width="32px"
 						height="32px"

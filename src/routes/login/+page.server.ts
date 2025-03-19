@@ -18,28 +18,16 @@ export const actions: Actions = {
 	googleAuth: async (event) => {
 		const formData = await event.request.formData();
 		const userType = formData.get('userType') as string;
-		const { locals } = event;
-		const {
-			supabase,
-		} = locals;
 
-		// const oAuth2Client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, PUBLIC_GOOGLE_REDIRECT_URI);
+		const oAuth2Client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, PUBLIC_GOOGLE_REDIRECT_URI);
 
-		// const authorizedUrl = oAuth2Client.generateAuthUrl({
-		// 	access_type: 'offline',
-		// 	scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
-		// 	prompt: 'consent',
-		// });
-
-		// throw redirect(302, authorizedUrl);
-		const { data, error } = await supabase.auth.signInWithOAuth({
-			provider: 'google',
-			options: {
-				redirectTo: PUBLIC_GOOGLE_REDIRECT_URI
-			}
+		const authorizedUrl = oAuth2Client.generateAuthUrl({
+			access_type: 'offline',
+			scope: 'https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email openid',
+			prompt: 'consent',
 		});
-		if (error) throw redirect(404, error.message);
-		throw redirect(302, data.url);
+
+		throw redirect(302, `${authorizedUrl}`);
 	},
 	signInOtp: async (event) => {
 		const {

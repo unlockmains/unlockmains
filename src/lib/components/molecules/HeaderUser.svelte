@@ -24,7 +24,6 @@
 	})
 
 	const userStore = getContext<Writable<IUser>>('userStore')
-	console.log('userStore', $userStore)
 </script>
 
 <header bind:this={headerElement} style={$topBannerVisible ? '--top: 3em;' : '--top: 0em;'}>

@@ -1,4 +1,3 @@
-import { PUBLIC_APPWRITE_BUCKET, PUBLIC_APPWRITE_EVALUATED_FILES_BUCKET } from '$env/static/public';
 import type { RequestHandler } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ locals: { supabase }, request }) => {

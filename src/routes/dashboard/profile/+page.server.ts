@@ -1,6 +1,5 @@
 import { fail, redirect } from '@sveltejs/kit'
 import type { Actions, PageServerLoad } from './$types'
-import { PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_STUDENT_PROFILE_DB } from '$env/static/public'
 
 export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase }, parent }) => {
   const { user } = await safeGetSession()
@@ -10,7 +9,6 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 
   const layoutData = await parent();
   const { data: allPlans, error } = await supabase.from("pricing_structure").select("*");
-  //layoutData.paymentHistory.documents
   return { user, profile: layoutData.profile ? layoutData.profile.data : null, allPlans: allPlans, paymentHistory: layoutData.paymentHistory ? [] : [] }
 }
 

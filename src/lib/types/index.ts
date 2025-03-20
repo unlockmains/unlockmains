@@ -1,4 +1,3 @@
-import type { Models } from "node-appwrite";
 import type { EEvaluationStatus, ESubmissionStatus } from "./enums";
 import type { User } from "@supabase/supabase-js";
 

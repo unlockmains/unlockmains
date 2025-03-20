@@ -22,7 +22,7 @@ export async function GET({ locals: { user, databases } }) {
                     try {
                         const response = await getRecentAssignments(databases, userId);
                         if (!response.ok) {
-                            throw new Error('Failed to fetch from Appwrite');
+                            throw new Error('Failed to fetch');
                         }
                         const data = await response.json();
 

@@ -9,12 +9,11 @@
 	import Timeline from '$lib/components/onboard/Timeline.svelte'
 	import type { IEvaluatorOnBoardStep1Data, IEvaluatorOnBoardStep2Data } from '$lib/types'
 	import type { SubmitFunction } from '@sveltejs/kit'
-	import type { Models, Storage } from 'node-appwrite'
 
 	const { data } = $props<{
 		data: {
 			userName: string
-			evaluatorLead: Models.Document
+			evaluatorLead: any
 		}
 	}>()
 

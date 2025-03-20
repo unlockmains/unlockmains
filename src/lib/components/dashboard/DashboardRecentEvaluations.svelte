@@ -78,7 +78,7 @@
 		{:else}
 			{#each evaluations as evaluation}
 				<a
-					href={`/dashboard/view-evaluation/${evaluation.$id}`}
+					href={`/dashboard/view-evaluation/${evaluation.id}`}
 					onclick={() =>
 						browser && localStorage.setItem('view-evaluation', JSON.stringify(evaluation))}
 					class="each-evaluation"
@@ -86,7 +86,7 @@
 					<PdfIcon color="#414040" />
 					<div class="date">
 						<span>Evaluation Completed</span>
-						{convertISODateToDate(evaluation.evaluations[0].evaluation_start)}
+						{convertISODateToDate(evaluation.evaluations[0].evaluation_end)}
 					</div>
 					<div class="date">
 						<span>Questions Evaluated</span>

@@ -1,6 +1,4 @@
-import { PUBLIC_APPWRITE_EVALUATOR_LEAD_ASSIGNMENT } from '$env/static/public';
 import type { RequestHandler } from '@sveltejs/kit';
-import { Query } from 'node-appwrite';
 
 export const POST: RequestHandler = async ({ locals: { supabase } }) => {
     const { data, error } = await supabase.storage.from("sample_files").download("evaluator_assignment/Assignment_2.pdf");

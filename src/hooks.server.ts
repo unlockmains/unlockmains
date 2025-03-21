@@ -25,7 +25,10 @@ export const authentication: Handle = async ({ event, resolve }) => {
       if (!session) {
         return { session: null, user: null }
       }
-
+      if (isUserInformationPresentInCache(session.access_token)) {
+        const user = getUserFromCache(session.access_token);
+        return { session, user }
+      }
       const {
         data: { user },
         error,
@@ -40,6 +43,7 @@ export const authentication: Handle = async ({ event, resolve }) => {
           ...user,
           profile: userProfile as IUserProfile
         };
+      setUserToCache(session.access_token, userWithProfile);
       return { session, user: userWithProfile }
     }
 

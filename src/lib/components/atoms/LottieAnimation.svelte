@@ -2,44 +2,53 @@
 	import { onMount, onDestroy } from 'svelte'
 	import { browser } from '$app/environment'
 
-	export let src
+	export let src: string
 	export let loop = true
 	export let autoplay = true
-	export let rendererType = 'svg'
+	export let rendererType: 'svg' | 'canvas' | 'html' = 'svg'
 
 	let container: HTMLDivElement
 	let animation: any
 
-	onMount(() => {
-		if (browser) {
-			import('lottie-web').then((lottie) => {
-				animation = lottie.loadAnimation({
-					container,
-					renderer: rendererType,
-					loop,
-					autoplay,
-					path: src
-				})
-			})
+	const preloadAnimation = async () => {
+		try {
+			const response = await fetch(src)
+			return await response.json()
+		} catch (error) {
+			console.error('Failed to preload animation:', error)
 		}
+	}
+
+	onMount(async () => {
+		if (!browser) return
+		const lottie = (await import('lottie-web')).default
+		const animationData = await preloadAnimation()
+
+		animation = lottie.loadAnimation({
+			container,
+			renderer: rendererType,
+			loop,
+			autoplay,
+			...(animationData ? { animationData } : { path: src })
+		})
 	})
 
 	onDestroy(() => {
-		if (animation) {
+		if (browser && animation) {
 			animation.destroy()
 		}
 	})
 
 	export function play() {
-		animation?.play()
+		if (browser) animation?.play()
 	}
 
 	export function pause() {
-		animation?.pause()
+		if (browser) animation?.pause()
 	}
 
 	export function stop() {
-		animation?.stop()
+		if (browser) animation?.stop()
 	}
 </script>
 

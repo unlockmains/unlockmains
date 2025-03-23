@@ -1,8 +1,8 @@
 import { error } from '@sveltejs/kit';
 import { getRecentAssignments } from './server.js';
 
-export async function GET({ locals: { user, databases } }) {
-    const userId = user?.profile.$id;
+export async function GET({ locals: { user, supabase } }) {
+    const userId = user?.id;
     if (!userId) {
         throw error(400, 'Missing userId');
     }
@@ -20,9 +20,9 @@ export async function GET({ locals: { user, databases } }) {
                     }
 
                     try {
-                        const response = await getRecentAssignments(databases, userId);
+                        const response = await getRecentAssignments(supabase, userId);
                         if (!response.ok) {
-                            throw new Error('Failed to fetch from Appwrite');
+                            throw new Error('Failed to fetch');
                         }
                         const data = await response.json();
 

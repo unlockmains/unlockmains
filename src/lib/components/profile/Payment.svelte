@@ -59,9 +59,9 @@
 				...response,
 				amount: order.amount / 100,
 				currency: order.currency,
-				name: user?.name,
+				name: user?.user_metadata.name,
 				email: user?.email,
-				studentProfileId: studentProfile.$id,
+				studentProfileId: studentProfile.id,
 				planDetails
 			})
 		})
@@ -107,7 +107,7 @@
 				handler: (response: RazorpayResponse) =>
 					handleRazorpayResponse(response, order, planDetails),
 				prefill: {
-					name: user?.name,
+					name: user?.user_metadata.name,
 					email: user?.email,
 					contact: user?.phone
 				},

@@ -18,10 +18,6 @@ export const actions: Actions = {
 	googleAuth: async (event) => {
 		const formData = await event.request.formData();
 		const userType = formData.get('userType') as string;
-		const { locals } = event;
-		const {
-			supabase,
-		} = locals;
 
 		const oAuth2Client = new OAuth2Client(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, PUBLIC_GOOGLE_REDIRECT_URI);
 
@@ -31,7 +27,7 @@ export const actions: Actions = {
 			prompt: 'consent',
 		});
 
-		throw redirect(302, authorizedUrl);
+		throw redirect(302, `${authorizedUrl}`);
 	},
 	signInOtp: async (event) => {
 		const {

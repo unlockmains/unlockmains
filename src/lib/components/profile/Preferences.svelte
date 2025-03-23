@@ -90,8 +90,8 @@
 	<p>Manage you information and preferences.</p>
 	<div class="separator"></div>
 	<form class="preferences-form" action="?/preferences" method="post" use:enhance={handleSubmit}>
-		<input type="hidden" name="userId" value={user?.$id} />
-		<input type="hidden" name="evaluatorProfileId" value={profile?.$id} />
+		<input type="hidden" name="userId" value={user?.id} />
+		<input type="hidden" name="evaluatorProfileId" value={profile?.id} />
 		<div class="row">
 			<CheckboxGroup
 				options={[

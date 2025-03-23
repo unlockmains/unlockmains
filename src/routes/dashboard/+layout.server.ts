@@ -20,9 +20,7 @@ export const load: PageServerLoad = async ({ route, locals: { safeGetSession, su
                   profile = await supabase.from("evaluator_profile").select("*").eq("user_id", user.id).single();
             } else if (user.profile.user_type === "STUDENT") {
                   profile = await supabase.from("student_profile").select("*").eq("user_id", user.id).single();
-                  // paymentHistory = await databases.listDocuments(PUBLIC_APPWRITE_DATABASE, PUBLIC_APPWRITE_PAYMENT_HISTORY, [
-                  //       Query.equal('users_profile', user.profile.$id),
-                  // ])
+                  paymentHistory = await supabase.from("payment_history").select("*").eq("user_id", user.id).order("created_at", { ascending: false });
             }
       } catch (error) {
             console.error("Error fetching profile in dashboard/layout:", error);

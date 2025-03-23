@@ -22,7 +22,7 @@ export async function GET({ locals: { user, supabase } }) {
                     try {
                         const response = await getRecentEvaluations(supabase, userId);
                         if (!response.ok) {
-                            throw new Error('Failed to fetch from Appwrite');
+                            throw new Error('Failed to fetch');
                         }
                         const data = await response.json();
 

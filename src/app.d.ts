@@ -17,6 +17,12 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+	interface Window {
+		$chatwoot: {
+			setUser: (userId: string, user: any) => void;
+			reset: () => void;
+		};
+	}
 }
 
 export { };

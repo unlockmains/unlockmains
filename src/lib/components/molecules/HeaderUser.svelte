@@ -38,7 +38,7 @@
 			<p>{$userStore?.email}</p>
 		</div>
 		<form action="/auth/logout" method="post">
-			<button><LogoutIcon /></button>
+			<button onclick={() => window.$chatwooot.reset()}><LogoutIcon /></button>
 		</form>
 	</div>
 </header>

@@ -15,21 +15,22 @@
 	<div style="display: contents">%sveltekit.body%</div>
 	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 	<script>
-        (function(d,t) {
-          var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-          g.src="https://chat.unlockmains.com/embed.js"
-          s.parentNode.insertBefore(g,s);
-          g.onload=function(){
-            new window.ChaskiqMessengerEncrypted({
-              domain: 'https://chat.unlockmains.com',
-              ws:  'wss://chat.unlockmains.com/cable',
-              app_id: "s8kV6N6JCXChKwgWUmgw1TP4",
-              data: "YOUR_ENCRYPTED_JWE_DATA",
-              lang: "USER_LANG_OR_DEFAULTS_TO_BROWSER_LANG" 
-            })
-          }
-        })(document,"script");
-      </script>
+    (function(d,t) {
+      var BASE_URL="https://chat.unlockmains.com";
+      var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+      g.src=BASE_URL+"/packs/js/sdk.js";
+      g.defer = true;
+      g.async = true;
+      s.parentNode.insertBefore(g,s);
+      g.onload=function(){
+        window.chatwootSDK.run({
+          websiteToken: '9hQy8ebNS5aEZBQQqy53F5co',
+          baseUrl: BASE_URL
+        })
+      }
+    })(document,"script");
+  </script>
+  
 </body>
 
 </html>

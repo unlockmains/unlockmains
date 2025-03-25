@@ -26,12 +26,10 @@
   "dependencies": {
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.49.1",
-    "appwrite": "^16.1.0",
     "crypto-js": "^4.2.0",
     "fabric": "^6.4.3",
     "google-auth-library": "^9.15.1",
     "lottie-web": "^5.12.2",
-    "node-appwrite": "^14.1.0",
     "pdf-annotate.js": "^1.0.0",
     "pdf-lib": "^1.17.1",
     "pdfjs-dist": "^4.7.76",

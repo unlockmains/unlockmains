@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ locals: { safeGetSession, supabase 
 
   const layoutData = await parent();
   const { data: allPlans, error } = await supabase.from("pricing_structure").select("*");
-  return { user, profile: layoutData.profile ? layoutData.profile.data : null, allPlans: allPlans, paymentHistory: layoutData.paymentHistory ? [] : [] }
+  return { user, profile: layoutData.profile ? layoutData.profile.data : null, allPlans: allPlans, paymentHistory: layoutData.paymentHistory ? layoutData.paymentHistory.data : [] }
 }
 
 export const actions: Actions = {

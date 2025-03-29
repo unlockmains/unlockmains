@@ -329,3 +329,43 @@ body {
 	font-size: 0.75em;
 	color: var(--color-zinc-400);
 }
+
+.woot-widget-bubble {
+	height: 32px !important;
+	width: 32px !important;
+	bottom: 66px !important;
+}
+
+.woot-widget-bubble svg {
+	height: 12px !important;
+    margin: 10px !important;
+    width: 12px !important;
+}
+
+.woot--close::before, .woot--close::after {
+	height: 12px !important;
+	left: 15px !important;
+	top: 10px !important;
+}
+
+@media only screen and (min-width: 60em) {
+	.woot-widget-bubble {
+		height: 48px !important;
+		width: 48px !important;
+		bottom: 20px !important;
+	}
+	
+	.woot-widget-bubble svg {
+		height: 20px !important;
+		margin: 14px !important;
+		width: 20px !important;
+	}
+	
+	.woot--close::before, .woot--close::after {
+		height: 20px !important;
+		left: 23px !important;
+		top: 14px !important;
+	}
+
+	
+}

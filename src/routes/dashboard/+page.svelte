@@ -21,7 +21,7 @@
 
 	onMount(() => {
 		if (user && browser) {
-			window?.$chatwoot.setUser(user.id, {
+			window.$chatwoot.setUser(user.id, {
 				email: user.email,
 				name: user.user_metadata.full_name,
 				avatar_url: user.user_metadata.avatar_url,

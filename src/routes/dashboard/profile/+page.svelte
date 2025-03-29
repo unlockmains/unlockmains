@@ -1,10 +1,9 @@
 <!-- src/routes/account/+page.svelte -->
 <script lang="ts">
 	import { browser } from '$app/environment'
-	import UserAvatarIcon from '$lib/components/icons/UserAvatarIcon.svelte'
 	import BasicInformation from '$lib/components/profile/BasicInformation.svelte'
 	import MainsInformation from '$lib/components/profile/MainsInformation.svelte'
-	import type { IPricingStructure, IStudentProfile, IUser } from '$lib/types'
+	import type { IPaymentHistory, IPricingStructure, IStudentProfile, IUser } from '$lib/types'
 	import Payment from '$lib/components/profile/Payment.svelte'
 	import BillingHistory from '$lib/components/profile/BillingHistory.svelte'
 	import Preferences from '$lib/components/profile/Preferences.svelte'
@@ -13,7 +12,11 @@
 	import { PUBLIC_AVATAR_API } from '$env/static/public'
 
 	let { data } = $props<{
-		data: { studentProfile: IStudentProfile; allPlans: IPricingStructure[] }
+		data: {
+			studentProfile: IStudentProfile
+			allPlans: IPricingStructure[]
+			paymentHistory: IPaymentHistory[]
+		}
 	}>()
 
 	let activeLink = $state<
